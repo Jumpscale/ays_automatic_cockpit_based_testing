@@ -26,6 +26,7 @@ class RequestCockpitAPI(BaseTest):
             print 'CREATED : %s repo' % self.repo['name']
         else:
             print ('ERROR : response status code %i' % response.status_code)
+            raise NameError('ERROR : response status code %i' % response.status_code)
 
     def send_blueprint(self, bp):
         API = self.build_api(['repository', self.repo['name'], 'blueprint'])
@@ -38,6 +39,7 @@ class RequestCockpitAPI(BaseTest):
             print 'CREATED : %s blueprint in %s repo' % (self.blueprint['name'], self.repo['name'])
         else:
             print ('ERROR : response status code %i' % response.status_code)
+            raise NameError('ERROR : response status code %i' % response.status_code)
 
     def execute_blueprint(self):
         API = self.build_api(['repository', self.repo['name'], 'blueprint', self.blueprint['name']])
@@ -47,6 +49,7 @@ class RequestCockpitAPI(BaseTest):
             print 'EXECUTED : %s blueprint in %s repo' % (self.blueprint['name'], self.repo['name'])
         else:
             print ('ERROR : response status code %i %s ' % (response.status_code, response.content))
+            raise NameError('ERROR : response status code %i %s ' % (response.status_code, response.content))
 
     def run_repo(self):
         API = self.build_api(['repository', self.repo['name'], 'aysrun'])
@@ -59,3 +62,4 @@ class RequestCockpitAPI(BaseTest):
             print 'RAN : %s repo' % self.repo['name']
         else:
             print ('ERROR : response status code %i' % response.status_code)
+            raise NameError('ERROR : response status code %i' % response.status_code)

@@ -4,8 +4,6 @@
 
 from cockpit.api_testing.utilz.utilz import BaseTest
 import os
-import yaml
-
 
 class CreateBluePrint(BaseTest):
     
@@ -18,13 +16,6 @@ class CreateBluePrint(BaseTest):
     def __init__(self):
         super(CreateBluePrint, self).__init__()
         self.new_blueprint = []
-
-        self.values = {'environment':'be-scale-3.demo.greenitglobe.com',
-                       'username':'ramez',
-                       'password':'saeedramez1',
-                       'account':'Automated QA',
-                       'location':'be-scale-3'
-                       }
 
     def create_blueprint(self):
         self.new_blueprint = []
