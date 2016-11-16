@@ -1,0 +1,21 @@
+g8client__{random_g8client}:
+    url: '{environment}'
+    login: '{username}'
+    password: '{password}'
+
+# create the vdc that will contain the vm of the cockpit
+vdc__{random_vdc}:
+    description: '{random}'
+    g8client: '{random_g8client}'
+    account: '{account}'
+    location: '{location}'
+    uservdc:
+        - '{username}'
+
+vdc_test__{random}:
+   vdc: {random_vdc}
+
+actions:
+   - action: 'install'
+   - action: 'test'
+     actor: vdc_test
