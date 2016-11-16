@@ -1,0 +1,21 @@
+g8client__18d8ced8fa:
+    url: 'be-scale-3.demo.greenitglobe.com'
+    login: 'ramez'
+    password: 'saeedramez1'
+
+# create the vdc that will contain the vm of the cockpit
+vdc__f2a52e5deb:
+    description: '54f707c705'
+    g8client: '18d8ced8fa'
+    account: 'Automated QA'
+    location: 'be-scale-3'
+    uservdc:
+        - 'ramez'
+
+vdc_test__d51b972458:
+   vdc: f2a52e5deb
+
+actions:
+   - action: 'install'
+   - action: 'test'
+     actor: vdc_test
