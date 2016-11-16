@@ -1,4 +1,4 @@
-g8client__{random_g8client}:
+g8client__islam:
     url: '{environment}'
     login: '{username}'
     password: '{password}'
@@ -6,7 +6,7 @@ g8client__{random_g8client}:
 # create the vdc that will contain the vm of the cockpit
 vdc__{random_vdc}:
     description: '{random}'
-    g8client: '{random_g8client}'
+    g8client: 'islam'
     account: '{account}'
     location: '{location}'
     uservdc:

@@ -8,6 +8,9 @@ if __name__ == '__main__':
     send_bp(load_yaml_bp())
     ays_blueprint()
     ays_run()
+
+    ASSERTION:
+        Call ASSERTION PART
     '''
     create_blueprint = CreateBluePrint()
     request_cockpit_api = RequestCockpitAPI()
@@ -18,3 +21,4 @@ if __name__ == '__main__':
 
     request_cockpit_api.execute_blueprint()
     request_cockpit_api.run_repo()
+

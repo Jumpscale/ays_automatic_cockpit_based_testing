@@ -7,6 +7,12 @@ class BaseTest(object):
     def __init__(self):
         self.base_url = 'https://cockpit1.aydo2.com/api/ays'
         self.jwt = 'eyJhbGciOiJFUzM4NCIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsicXVhbGl0eV9jb2NrcGl0XyIsInF1YWxpdHlfY29ja3BpdF8iXSwiZXhwIjoxNDc5MzEyODY2LCJpc3MiOiJpdHN5b3VvbmxpbmUiLCJzY29wZSI6InVzZXI6bWVtYmVyb2Y6cXVhbGl0eV9jb2NrcGl0XyIsInVzZXJuYW1lIjoiaXNsYW10ZXN0In0.gru8xu32eYyG1b7pOAaGJICUE61kG3lo8vEGsEMnP5P0Ho_2e0EPUrBB-manpmlGo6g8odvsqjTfdVLZtfwSuolAooAEiYphVs4LynP981tGQpI0IqJXsVAQaZMAnMzt'
+        self.values = {'environment':'be-scale-3.demo.greenitglobe.com',
+                       'username':'ramez',
+                       'password':'saeedramez1',
+                       'account':'Automated QA',
+                       'location':'be-scale-3'
+                       }
         self.header = {'Authorization': 'bearer ' + self.jwt,
                        'content-type': 'application/json'}
         self.requests = requests
@@ -23,3 +29,9 @@ class BaseTest(object):
     def build_json(self, data):
         # This method take dict data and return json data.
         return json.dumps(data)
+
+    def build_env_api(self, api_list):
+        api = self.values['environment'] + '/'
+        for value in api_list:
+            api += value + '/'
+        return api[:-1]
