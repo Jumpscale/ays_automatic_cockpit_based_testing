@@ -6,8 +6,6 @@ import sys
 cmdargs = sys.argv
 config = ConfigParser()
 config.read('config.ini')
-if not config.has_section('main'):
-    config.add_section('main')
 config.set('main', 'environment', cmdargs[1])
 config.set('main', 'username', cmdargs[2])
 config.set('main', 'password', cmdargs[3])
