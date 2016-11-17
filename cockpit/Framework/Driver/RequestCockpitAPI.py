@@ -4,7 +4,7 @@
         - Post the cockpit API with Json bp
         - Run this bp
 '''
-from cockpit.Framework.utilz.utilz import BaseTest
+from cockpit.Framework.utils.utils import BaseTest
 import json
 
 

@@ -1,5 +1,5 @@
-from cockpit.Framework.Driver.CreateBluePrint import CreateBluePrint
-from cockpit.Framework.Driver.RequestCockpitAPI import RequestCockpitAPI
+from CreateBluePrint import CreateBluePrint
+from RequestCockpitAPI import RequestCockpitAPI
 
 if __name__ == '__main__':
     create_blueprint = CreateBluePrint()
