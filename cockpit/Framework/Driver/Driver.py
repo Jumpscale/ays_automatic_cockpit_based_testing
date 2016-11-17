@@ -1,5 +1,5 @@
-from cockpit.api_testing.drivers.CreateBluePrint import CreateBluePrint
-from cockpit.api_testing.drivers.RequestCockpitAPI import RequestCockpitAPI
+from cockpit.Framework.Driver.CreateBluePrint import CreateBluePrint
+from cockpit.Framework.Driver.RequestCockpitAPI import RequestCockpitAPI
 
 if __name__ == '__main__':
     '''

@@ -2,14 +2,15 @@
     This file should manipulate the bps. It should replace each variable with its correct value.
 '''
 
-from cockpit.api_testing.utilz.utilz import BaseTest
+from cockpit.Framework.utilz.utilz import BaseTest
 import os
+
 
 class CreateBluePrint(BaseTest):
     
     script_dir = os.path.dirname(__file__)
-    blueprint_template = "../testcases_template/demo_bp.yaml"
-    blueprint = "../testcases/demo_bp.yaml"
+    blueprint_template = "../TestCasesTemplate/demo_bp.yaml"
+    blueprint = "../TestCases/demo_bp.yaml"
     bp_template_file_path = os.path.join(script_dir, blueprint_template)
     bp_file_path = os.path.join(script_dir, blueprint)
 

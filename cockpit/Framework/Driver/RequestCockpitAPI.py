@@ -4,13 +4,12 @@
         - Post the cockpit API with Json bp
         - Run this bp
 '''
-from cockpit.api_testing.utilz.utilz import BaseTest
+from cockpit.Framework.utilz.utilz import BaseTest
 
 
 class RequestCockpitAPI(BaseTest):
     def __init__(self):
         super(RequestCockpitAPI, self).__init__()
-        self.url = self.base_url
         self.repo = {'name': self.random_string()}
         self.blueprint = {'name' : self.random_string()}
 
