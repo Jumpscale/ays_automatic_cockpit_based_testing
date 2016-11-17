@@ -42,6 +42,15 @@ class CreateBluePrint(BaseTest):
         for item in self.new_blueprint:
             new_blueprint_.write(item)
 
+        self.delete_random_from_values()
+
     def load_bp(self):
         with open(self.bp_file_path, 'r') as bp:
             return bp.read()
+
+    def delete_random_from_values(self):
+        # This method will delete 'random_' from the self.values' key
+        for key in self.values:
+            if 'random_' in key:
+                new_key = key[key.index('random_')+7:]
+                self.values[new_key] = self.values.pop(key)

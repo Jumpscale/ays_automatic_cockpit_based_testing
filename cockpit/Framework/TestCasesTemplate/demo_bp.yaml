@@ -12,7 +12,7 @@ vdc__{random_vdc}:
     uservdc:
         - '{username}'
 
-vdc_test__{random}:
+vdc_test__{random_vdc_test}:
    vdc: {random_vdc}
 
 actions:
