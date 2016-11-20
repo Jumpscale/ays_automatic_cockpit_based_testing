@@ -2,6 +2,7 @@ import requests
 import json
 import uuid
 import os
+import urllib
 
 
 class BaseTest(object):
@@ -15,6 +16,7 @@ class BaseTest(object):
                        'jwt': ''
                        }
         self.get_config_values()
+        self.get_jwt()
         self.header = {'Authorization': 'bearer ' + self.values['jwt'],
                        'content-type': 'application/json'}
         self.requests = requests
@@ -48,3 +50,23 @@ class BaseTest(object):
                 self.values[key] = value
 
         config.close()
+
+    def get_jwt(self):
+        organization_name = 'quality_cockpit_'
+        secret_key = 'ymVtPAgrm8AQB7cpdpY0d7yBFE1YtUFc_Z84F0uESzg7ErxiPWK_'
+
+        params = {
+                'grant_type': 'client_credentials',
+                'client_id': organization_name,
+                'client_secret': secret_key
+        }
+
+        url = 'https://itsyou.online/v1/oauth/access_token?'
+        resp = requests.post(url, params=params)
+        resp.raise_for_status()
+        access_token = resp.json()['access_token']
+        url = 'https://itsyou.online/v1/oauth/jwt'
+        headers = {'Authorization': 'token %s' % access_token}
+        data = {'scope': 'user:memberOf:%s' % organization_name}
+        resp = requests.post(url, data=json.dumps(data), headers=headers)
+        self.values['jwt'] = resp.content
