@@ -3,7 +3,7 @@ g8client__islam:
     login: 'gig'
     password: 'KrOe6gE9K5nCQdmretfXnj'
 
-# create the vdc that will contain the vm of the cockpit
+# create the vdc that will contain the vm of the CockpitTesting
 vdc__041f88cd8c:
     description: '8c3e443a55'
     g8client: 'islam'

@@ -3,7 +3,7 @@ g8client__islam:
     login: '{username}'
     password: '{password}'
 
-# create the vdc that will contain the vm of the cockpit
+# create the vdc that will contain the vm of the CockpitTesting
 vdc__{random_vdc}:
     description: '{random}'
     g8client: 'islam'
