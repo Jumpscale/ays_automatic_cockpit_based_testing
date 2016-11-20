@@ -9,8 +9,8 @@ import os
 class CreateBluePrint(BaseTest):
     
     script_dir = os.path.dirname(__file__)
-    blueprint_template = "../TestCasesTemplate/demo_bp.yaml"
-    blueprint = "../TestCases/demo_bp.yaml"
+    blueprint_template = "../TestCasesTemplate/create_cloudspace.yaml"
+    blueprint = "../TestCases/create_cloudspace.yaml"
     bp_template_file_path = os.path.join(script_dir, blueprint_template)
     bp_file_path = os.path.join(script_dir, blueprint)
 
