@@ -16,7 +16,7 @@ def test(job):
     import unittest
     vdc = job.service.producers['vdc'][0]
     g8client = vdc.producers['g8client'][0]
-
+    
     cl = j.clients.openvcloud.getFromService(g8client)
     acc = cl.account_get(vdc.model.data.account)
 
