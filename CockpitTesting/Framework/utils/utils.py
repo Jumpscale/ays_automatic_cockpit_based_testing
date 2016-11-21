@@ -2,7 +2,6 @@ import requests
 import json
 import uuid
 import os
-import urllib
 
 
 class BaseTest(object):
@@ -13,7 +12,9 @@ class BaseTest(object):
                        'account': '',
                        'location': '',
                        'cockpit_url': '',
-                       'jwt': ''
+                       'jwt': '',
+                       'client_id' : '',
+                       'client_secret': ''
                        }
         self.get_config_values()
         self.get_jwt()
@@ -52,13 +53,13 @@ class BaseTest(object):
         config.close()
 
     def get_jwt(self):
-        organization_name = 'quality_cockpit_'
-        secret_key = 'ymVtPAgrm8AQB7cpdpY0d7yBFE1YtUFc_Z84F0uESzg7ErxiPWK_'
+        client_id = self.values['client_id']
+        client_secret = self.values['client_secret']
 
         params = {
                 'grant_type': 'client_credentials',
-                'client_id': organization_name,
-                'client_secret': secret_key
+                'client_id': client_id,
+                'client_secret': client_secret
         }
 
         url = 'https://itsyou.online/v1/oauth/access_token?'
@@ -67,6 +68,6 @@ class BaseTest(object):
         access_token = resp.json()['access_token']
         url = 'https://itsyou.online/v1/oauth/jwt'
         headers = {'Authorization': 'token %s' % access_token}
-        data = {'scope': 'user:memberOf:%s' % organization_name}
+        data = {'scope': 'user:memberOf:%s' % client_id}
         resp = requests.post(url, data=json.dumps(data), headers=headers)
         self.values['jwt'] = resp.content

@@ -4,16 +4,16 @@ g8client__islam:
     password: 'KrOe6gE9K5nCQdmretfXnj'
 
 # create the vdc that will contain the vm of the CockpitTesting
-vdc__55b79c704d:
-    description: '9a699246c5'
+vdc__885310de66:
+    description: '4cf4f5d148'
     g8client: 'islam'
     account: 'Automatedqa'
     location: 'du-conv-2'
     uservdc:
         - 'gig'
 
-vdc_test__d004eb2ebc:
-   vdc: 55b79c704d
+vdc_test__fc4d1a0658:
+   vdc: 885310de66
 
 actions:
    - action: 'install'
