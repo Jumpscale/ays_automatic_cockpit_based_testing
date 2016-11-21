@@ -1,0 +1,21 @@
+g8client__islam:
+    url: 'du-conv-2.demo.greenitglobe.com'
+    login: 'gig'
+    password: 'KrOe6gE9K5nCQdmretfXnj'
+
+# create the vdc that will contain the vm of the CockpitTesting
+vdc__55b79c704d:
+    description: '9a699246c5'
+    g8client: 'islam'
+    account: 'Automatedqa'
+    location: 'du-conv-2'
+    uservdc:
+        - 'gig'
+
+vdc_test__d004eb2ebc:
+   vdc: 55b79c704d
+
+actions:
+   - action: 'install'
+   - action: 'test'
+     actor: vdc_test

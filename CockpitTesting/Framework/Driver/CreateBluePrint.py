@@ -9,14 +9,13 @@ import os
 class CreateBluePrint(BaseTest):
 
     script_dir = os.path.dirname(__file__)
-    directory = "../TestCases/"
     blueprint_template = "../TestCasesTemplate/create_cloudspace.yaml"
     blueprint = "../TestCases/create_cloudspace.yaml"
     bp_template_file_path = os.path.join(script_dir, blueprint_template)
     bp_file_path = os.path.join(script_dir, blueprint)
     bp_directory = os.path.join(script_dir, "../TestCases/")
     if not os.path.exists(bp_directory):
-        os.makedirs(directory)
+        os.makedirs(bp_directory)
 
     def __init__(self):
         super(CreateBluePrint, self).__init__()
