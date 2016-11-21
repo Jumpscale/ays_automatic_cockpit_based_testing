@@ -6,7 +6,7 @@
 '''
 from CockpitTesting.Framework.utils.utils import BaseTest
 import json
-
+import time
 
 class RequestCockpitAPI(BaseTest):
     def __init__(self):
@@ -70,6 +70,7 @@ class RequestCockpitAPI(BaseTest):
         if response.status_code == 200:
             print 'RAN : %s repo' % self.repo['name']
             self.repo['key'] = json.loads(response.content)['key']
+            self.start_time = time.time()
         else:
             print ('ERROR : response status code %i' % response.status_code)
             raise NameError('ERROR : response status code %i' % response.status_code)
@@ -82,7 +83,10 @@ class RequestCockpitAPI(BaseTest):
 
         response = self.requests.get(url=API, headers=self.header)
         if response.status_code == 200:
-            print 'RESULT: %s' % json.loads(response.content)['data']
+            result = json.loads(response.content)['data']
+            print 'RESULT: %s' % result
+            self.testcase_time = '{:0.2f}'.format(time.time() - self.start_time)
+            return [result, self.testcase_time]
         else:
             print ('ERROR : response status code %i' % response.status_code)
             raise NameError('ERROR : response status code %i' % response.status_code)

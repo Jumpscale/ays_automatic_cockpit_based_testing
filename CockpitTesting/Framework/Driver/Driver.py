@@ -13,6 +13,10 @@ if __name__ == '__main__':
     request_cockpit_api.execute_blueprint(repository=request_cockpit_api.repo['name'],
                                           blueprint=request_cockpit_api.blueprint['name'])
     request_cockpit_api.run_repository(repository=request_cockpit_api.repo['name'])
-    request_cockpit_api.get_service_data(repository=request_cockpit_api.repo['name'],
-                                         role='vdc_test',
-                                         service=create_blueprint.values['vdc_test'])
+    request_cockpit_api.Testcases_results[request_cockpit_api.blueprint['name']] = request_cockpit_api.get_service_data(
+        repository=request_cockpit_api.repo['name'],
+        role='vdc_test',
+        service=create_blueprint.values['vdc_test'])
+
+    request_cockpit_api.generate_xml_results()
+

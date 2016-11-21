@@ -2,6 +2,7 @@ import requests
 import json
 import uuid
 import os
+from xml.etree.ElementTree import Element, SubElement, tostring
 
 
 class BaseTest(object):
@@ -13,13 +14,15 @@ class BaseTest(object):
                        'location': '',
                        'cockpit_url': '',
                        'jwt': '',
-                       'client_id' : '',
+                       'client_id': '',
                        'client_secret': ''
                        }
         self.get_config_values()
         self.get_jwt()
         self.header = {'Authorization': 'bearer ' + self.values['jwt'],
                        'content-type': 'application/json'}
+
+        self.Testcases_results = {'Blueprint Name': ['Test Result', 'Execution Time']}
         self.requests = requests
 
     @staticmethod
@@ -57,9 +60,9 @@ class BaseTest(object):
         client_secret = self.values['client_secret']
 
         params = {
-                'grant_type': 'client_credentials',
-                'client_id': client_id,
-                'client_secret': client_secret
+            'grant_type': 'client_credentials',
+            'client_id': client_id,
+            'client_secret': client_secret
         }
 
         url = 'https://itsyou.online/v1/oauth/access_token?'
@@ -71,3 +74,40 @@ class BaseTest(object):
         data = {'scope': 'user:memberOf:%s' % client_id}
         resp = requests.post(url, data=json.dumps(data), headers=headers)
         self.values['jwt'] = resp.content
+
+    def generate_xml_results(self):
+        Succeeded = 0
+        Errors = 0
+        Failures = 0
+        Skip = 0
+        self.Testcases_results.pop("Blueprint Name")
+
+        for key in self.Testcases_results:
+            if 'Errors' in self.Testcases_results[key][0]:
+                Errors += 1
+            elif 'Failures' in self.Testcases_results[key][0]:
+                Failures += 1
+            elif 'Skip' in self.Testcases_results[key][0]:
+                Skip += 1
+            elif 'Succeeded' in self.Testcases_results[key][0]:
+                Succeeded += 1
+            else:
+                print 'The result is missing an indicator element'
+
+        testsuit_params = {'name': 'Cockpit_Testing',
+                           'tests': str(len(self.Testcases_results)),
+                           'succeeded': str(Succeeded),
+                           'errors': str(Errors),
+                           'failures': str(Failures),
+                           'skip': str(Skip)}
+
+        testsuit = Element('testsuite', testsuit_params)
+
+        for key in self.Testcases_results:
+            testcase_params = {'blueprint_template': 'CockpitTesting/Framework/TestCasesTemplate',
+                               'name': 'create_cloudspace',
+                               'result': str(self.Testcases_results[key][0]),
+                               'time': str(self.Testcases_results[key][1])}
+            testcase = SubElement(testsuit, 'testcase', testcase_params)
+
+        print tostring(testsuit)
