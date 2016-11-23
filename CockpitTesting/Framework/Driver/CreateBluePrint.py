@@ -8,52 +8,78 @@ import os
 
 class CreateBluePrint(BaseTest):
 
-    script_dir = os.path.dirname(__file__)
-    blueprint_template = "../TestCasesTemplate/create_cloudspace.yaml"
-    blueprint = "../TestCases/create_cloudspace.yaml"
-    bp_template_file_path = os.path.join(script_dir, blueprint_template)
-    bp_file_path = os.path.join(script_dir, blueprint)
-    bp_directory = os.path.join(script_dir, "../TestCases/")
-    if not os.path.exists(bp_directory):
-        os.makedirs(bp_directory)
-
     def __init__(self):
         super(CreateBluePrint, self).__init__()
-        self.new_blueprint = []
 
-    def create_blueprint(self):
-        self.new_blueprint = []
-        blueprint = open(self.bp_template_file_path, 'r')
-        
-        for line in blueprint:
-            if '{random_' in line:
-                key = line[line.index('{')+1 : line.index('}')]
-                if key not in self.values:
-                    generate = self.random_string()
-                    self.values[key] = generate
-                new_line = line.replace('{'+key+'}', self.values[key])
-            elif '{random}' in line:
-                new_line = line.replace('{random}', self.random_string())
-            elif '{' in line and '}' in line:
-                key = line[line.index('{')+1 : line.index('}')]
-                new_line = line.replace('{'+key+'}', self.values[key])
+        script_dir = os.path.dirname(__file__)
+        self.testCasesTemplateDirectory = os.path.join(script_dir, "../TestCasesTemplate/")
+        self.TestCasesTemplatePath = []
+        self.TestCasesPath = []
+        self.testCasesDirectory = os.path.join(script_dir, "../TestCases/")
+        self.get_TestcasesTemplate_files()
+
+        if not os.path.exists(self.testCasesDirectory):
+            os.makedirs(self.testCasesDirectory)
+
+    def get_TestcasesTemplate_files(self):
+
+        files = os.listdir(self.testCasesTemplateDirectory)
+
+        for file_name in files:
+            if 'yaml' in file_name:
+                self.TestCasesTemplatePath.append(os.path.join(self.testCasesTemplateDirectory, file_name))
+                self.TestCasesPath.append(os.path.join(self.testCasesDirectory, file_name))
+
+    def create_blueprint(self, name=''):
+        if name:
+            try:
+                index = self.TestCasesTemplatePath.index(name)
+            except:
+                raise NameError('ERROR : There is no blueprint template with %s name ' % name)
             else:
-                new_line = line
-            self.new_blueprint.append(new_line)
+                testCasesTemplatePath = self.TestCasesTemplatePath[index]
+                self.pre_blueprint(index, testCasesTemplatePath)
+        else:
+            for index, testCasesTemplatePath in enumerate(self.TestCasesTemplatePath):
+                self.pre_blueprint(index, testCasesTemplatePath)
 
-        new_blueprint_ = open(self.bp_file_path, 'w')
-        for item in self.new_blueprint:
-            new_blueprint_.write(item)
+    def pre_blueprint(self, index, testCasesTemplatePath):
+        blueprintTemplate = open(testCasesTemplatePath, 'r')
+        blueprint = self.convert_blueprintTemplate(blueprintTemplate)
+
+        blueprintFile = open(self.TestCasesPath[index], 'w')
+        for item in blueprint:
+            blueprintFile.write(item)
 
         self.delete_random_from_values()
 
-    def load_bp(self):
-        with open(self.bp_file_path, 'r') as bp:
-            return bp.read()
+    def convert_blueprintTemplate(self, blueprintTemplate):
+        blueprint = []
+        self.blueprint_values = dict(self.values)
+        for line in blueprintTemplate:
+            if '{random_' in line:
+                key = line[line.index('{') + 1: line.index('}')]
+                if key not in self.blueprint_values:
+                    generate = self.random_string()
+                    self.blueprint_values[key] = generate
+                new_line = line.replace('{' + key + '}', self.blueprint_values[key])
+            elif '{random}' in line:
+                new_line = line.replace('{random}', self.random_string())
+            elif '{' in line and '}' in line:
+                key = line[line.index('{') + 1: line.index('}')]
+                new_line = line.replace('{' + key + '}', self.blueprint_values[key])
+            else:
+                new_line = line
+            blueprint.append(new_line)
+        return blueprint
+
+    def load_blueprint(self, testCasesPath):
+        blueprint = open(testCasesPath, 'r')
+        return blueprint.read()
 
     def delete_random_from_values(self):
         # This method will delete 'random_' from the self.values' key
         for key in self.values:
             if 'random_' in key:
-                new_key = key[key.index('random_')+7:]
+                new_key = key[key.index('random_') + 7:]
                 self.values[new_key] = self.values.pop(key)

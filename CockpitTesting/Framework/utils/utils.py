@@ -111,3 +111,13 @@ class BaseTest(object):
             testcase = SubElement(testsuit, 'testcase', testcase_params)
 
         print tostring(testsuit)
+
+    def get_jobs(self):
+        # Return : All paths which is under TestCases dir.
+        utils_dir = os.path.dirname(__file__)
+        test_cases_directory = os.path.join(utils_dir, "../TestCases/")
+        test_cases_files = os.listdir(test_cases_directory)
+        test_cases_path = []
+        for file in test_cases_files:
+            test_cases_path.append(os.path.join(test_cases_directory, file))
+        return test_cases_path

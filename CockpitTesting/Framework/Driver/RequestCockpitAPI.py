@@ -8,6 +8,7 @@ from CockpitTesting.Framework.utils.utils import BaseTest
 import json
 import time
 
+
 class RequestCockpitAPI(BaseTest):
     def __init__(self):
         super(RequestCockpitAPI, self).__init__()
