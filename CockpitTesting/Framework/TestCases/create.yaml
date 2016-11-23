@@ -3,8 +3,8 @@ g8client__islam:
     login: 'gig'
     password: 'KrOe6gE9K5nCQdmretfXnj'
 
-vdc__63bb6bf1c7:
-    description: 'd102c0ce12'
+vdc__5f0bc71b78:
+    description: '430e1d16f5'
     g8client: 'islam'
     account: 'Automatedqa'
     location: 'du-conv-2'
@@ -12,8 +12,8 @@ vdc__63bb6bf1c7:
         - 'gig'
 
 # 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
-vdc_test__f3c6776c81:
-   vdc: 63bb6bf1c7
+vdc_test__f202f63a80:
+   vdc: 5f0bc71b78
 
 actions:
    - action: 'install'
