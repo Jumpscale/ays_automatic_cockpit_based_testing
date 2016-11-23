@@ -6,8 +6,10 @@ from CockpitTesting.Framework.utils.utils import BaseTest
 
 
 if __name__ == '__main__':
+    BLUEPRINT_NAME = '' # Leave it empty to load all blueprints in the TestCases dir.
     THREADS_NUMBER = 2
 
+    base_test = BaseTest()
     create_blueprint = CreateBluePrint()
     create_blueprint.create_blueprint()
     role = {}
@@ -25,8 +27,7 @@ if __name__ == '__main__':
         role[thread_name] = [role_line[:role_line.find('__')], role_line[role_line.find('__')+2:-1]]
 
     queue = Queue.Queue()
-    base_test = BaseTest()
-    jobs = base_test.get_jobs()
+    jobs = base_test.get_jobs(specific_blueprint=BLUEPRINT_NAME)
     for job in jobs:
         queue.put(job)
 
