@@ -1,0 +1,21 @@
+g8client__islam:
+    url: 'du-conv-2.demo.greenitglobe.com'
+    login: 'gig'
+    password: 'KrOe6gE9K5nCQdmretfXnj'
+
+vdc__5f0bc71b78:
+    description: '430e1d16f5'
+    g8client: 'islam'
+    account: 'Automatedqa'
+    location: 'du-conv-2'
+    uservdc:
+        - 'gig'
+
+# 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
+vdc_test__f202f63a80:
+   vdc: 5f0bc71b78
+
+actions:
+   - action: 'install'
+   - action: 'test'
+     actor: vdc_test
