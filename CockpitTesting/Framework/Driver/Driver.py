@@ -11,6 +11,7 @@ if __name__ == '__main__':
 
     base_test = BaseTest()
     base_test.setup()
+    base_test.teardown()
     import ipdb; ipdb.set_trace()
     create_blueprint = CreateBluePrint()
     create_blueprint.create_blueprint()
@@ -59,3 +60,6 @@ if __name__ == '__main__':
 
     for _ in range(THREADS_NUMBER):
         threading.Thread(target=work).start()
+
+    queue.join()
+    base_test.teardown()

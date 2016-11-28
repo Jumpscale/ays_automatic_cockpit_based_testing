@@ -26,30 +26,47 @@ class BaseTest(object):
 
         self.Testcases_results = {'Blueprint Name': ['Test Result', 'Execution Time']}
         self.requests = requests
-
-        self.client = Client(self.values['environment'], self.values['username'], self.values['password'])
+        self.client = Client('https://' + self.values['environment'], self.values['username'], self.values['password'])
 
     def setup(self):
         # create new account
         if not self.account:
             self.account = self.random_string()
-        api = self.values['environment'] + '/restmachine/cloudbroker/account/create'
+        api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/create'
         client_header = {'Content-Type': 'application/x-www-form-urlencoded',
                          'Accept': 'application/json'}
-        client_body = self.build_json({'name': self.account,
-                                       'username': self.values['username']})
-                                        #'maxMemoryCapacity'=-1&maxVDiskCapacity=-1&maxCPUCapacity=-1&maxNASCapacity=-1&maxArchiveCapacity=-1&maxNetworkOptTransfer=-1&maxNetworkPeerTransfer=-1&maxNumPublicIP=-1'})
-        client_response = self.client._session.post(api, client_header, client_body)
-        print client_response.text
+        client_body = {'name': self.account,
+                       'username': self.values['username'],
+                       'maxMemoryCapacity': -1,
+                       'maxVDiskCapacity': -1,
+                       'maxCPUCapacity': -1,
+                       '&maxNASCapacity': - 1,
+                       'maxArchiveCapacity': -1,
+                       'maxNetworkOptTransfer': - 1,
+                       'maxNetworkPeerTransfer': - 1,
+                       'maxNumPublicIP': - 1}
+        client_response = self.client._session.post(url=api, headers=client_header, data=client_body)
+        self.account_id = client_response.text
+
         if client_response.status_code == 200:
             self.values['account'] = self.account
+            print 'DONE : Create %s account' % self.account
         else:
             client_response.raise_for_status()
 
     def teardown(self):
-        # Delete the account
-        pass
+        # Delete account
+        api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/delete'
+        client_header = {'Content-Type': 'application/x-www-form-urlencoded',
+                         'Accept': 'application/json'}
+        client_body = {'accountId': self.account_id,
+                       'reason': 'TearDown by Cockpit Driver'}
+        client_response = self.client._session.post(url=api, headers=client_header, data=client_body)
 
+        if client_response.status_code == 200:
+            print 'DONE: Delete %s account' % self.values['account']
+        else:
+            client_response.raise_for_status()
 
     @staticmethod
     def random_string():
@@ -146,7 +163,7 @@ class BaseTest(object):
         test_cases_path = []
         for file in test_cases_files:
             if specific_blueprint:
-                if specific_blueprint != file[file.find('TestCases/')+10:]:
+                if specific_blueprint != file[file.find('TestCases/') + 10:]:
                     continue
                 else:
                     test_cases_path.append(os.path.join(test_cases_directory, file))
