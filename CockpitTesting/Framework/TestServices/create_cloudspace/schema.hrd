@@ -1,0 +1,2 @@
+vdc=type:str consume:vdc
+result=type:str
