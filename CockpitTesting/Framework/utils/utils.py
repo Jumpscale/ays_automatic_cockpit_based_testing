@@ -3,10 +3,12 @@ import json
 import uuid
 import os
 from xml.etree.ElementTree import Element, SubElement, tostring
+from client import Client
 
 
 class BaseTest(object):
     def __init__(self):
+        self.account = ''
         self.values = {'environment': '',
                        'username': '',
                        'password': '',
@@ -24,6 +26,30 @@ class BaseTest(object):
 
         self.Testcases_results = {'Blueprint Name': ['Test Result', 'Execution Time']}
         self.requests = requests
+
+        self.client = Client(self.values['environment'], self.values['username'], self.values['password'])
+
+    def setup(self):
+        # create new account
+        if not self.account:
+            self.account = self.random_string()
+        api = self.values['environment'] + '/restmachine/cloudbroker/account/create'
+        client_header = {'Content-Type': 'application/x-www-form-urlencoded',
+                         'Accept': 'application/json'}
+        client_body = self.build_json({'name': self.account,
+                                       'username': self.values['username']})
+                                        #'maxMemoryCapacity'=-1&maxVDiskCapacity=-1&maxCPUCapacity=-1&maxNASCapacity=-1&maxArchiveCapacity=-1&maxNetworkOptTransfer=-1&maxNetworkPeerTransfer=-1&maxNumPublicIP=-1'})
+        client_response = self.client._session.post(api, client_header, client_body)
+        print client_response.text
+        if client_response.status_code == 200:
+            self.values['account'] = self.account
+        else:
+            client_response.raise_for_status()
+
+    def teardown(self):
+        # Delete the account
+        pass
+
 
     @staticmethod
     def random_string():

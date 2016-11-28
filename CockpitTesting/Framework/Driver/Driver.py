@@ -10,6 +10,8 @@ if __name__ == '__main__':
     THREADS_NUMBER = 2
 
     base_test = BaseTest()
+    base_test.setup()
+    import ipdb; ipdb.set_trace()
     create_blueprint = CreateBluePrint()
     create_blueprint.create_blueprint()
     role = {}
