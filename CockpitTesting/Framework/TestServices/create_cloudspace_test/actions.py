@@ -12,7 +12,7 @@ def init_actions_(service, args):
     }
 
 
-def test(job):
+def create_cloudspace_test(job):
     import unittest
     vdc = job.service.producers['vdc'][0]
     g8client = vdc.producers['g8client'][0]

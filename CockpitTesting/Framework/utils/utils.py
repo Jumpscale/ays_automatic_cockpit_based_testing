@@ -148,7 +148,7 @@ class BaseTest(object):
 
         for key in self.Testcases_results:
             testcase_params = {'blueprint_template': 'CockpitTesting/Framework/TestCasesTemplate',
-                               'name': 'create_cloudspace',
+                               'name': 'create_cloudspace_test',
                                'result': str(self.Testcases_results[key][0]),
                                'time': str(self.Testcases_results[key][1])}
             testcase = SubElement(testsuit, 'testcase', testcase_params)
@@ -162,8 +162,10 @@ class BaseTest(object):
         test_cases_files = os.listdir(test_cases_directory)
         test_cases_path = []
         for file in test_cases_files:
+            print file
             if specific_blueprint:
-                if specific_blueprint != file[file.find('TestCases/') + 10:]:
+                #if specific_blueprint != file[file.find('TestCases/') + 10:]:
+                if specific_blueprint != file:
                     continue
                 else:
                     test_cases_path.append(os.path.join(test_cases_directory, file))

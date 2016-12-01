@@ -6,13 +6,12 @@ from CockpitTesting.Framework.utils.utils import BaseTest
 
 
 if __name__ == '__main__':
-    BLUEPRINT_NAME = '' # Leave it empty to load all blueprints in the TestCases dir.
-    THREADS_NUMBER = 2
+    BLUEPRINT_NAME = 'create_cloudspace.yaml' # Leave it empty to load all blueprints in the TestCases dir.
+    THREADS_NUMBER = 1
 
     base_test = BaseTest()
     base_test.setup()
     base_test.teardown()
-    import ipdb; ipdb.set_trace()
     create_blueprint = CreateBluePrint()
     create_blueprint.create_blueprint()
     role = {}
