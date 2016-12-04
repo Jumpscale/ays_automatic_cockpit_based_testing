@@ -4,16 +4,25 @@ g8client__islam:
     password: 'KrOe6gE9K5nCQdmretfXnj'
 
 # create the vdc that will contain the vm of the CockpitTesting
-vdc__418a20928d:
-    description: '7cf7d007fd'
+vdc__8a5f0e5983:
+    description: 'ce66678a27'
     g8client: 'islam'
     account: 'Automatedqa'
     location: 'du-conv-2'
     uservdc:
         - 'gig'
+    maxMemoryCapacity: 2
+    maxVDiskCapacity: 20
+    maxCPUCapacity: 2
+    maxNASCapacity: 20
+    maxArchiveCapacity: 20
+    maxNetworkOptTransfer: 5
+    maxNetworkPeerTransfer: 15
+    maxNumPublicIP: 1
+            
 # 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
-create_cloudspace_test__dc256b29a4:
-   vdc: 418a20928d
+create_cloudspace_test__9db52e0692:
+   vdc: 8a5f0e5983
 
 actions:
    - action: 'install'

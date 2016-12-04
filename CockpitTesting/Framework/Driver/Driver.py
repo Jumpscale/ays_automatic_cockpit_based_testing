@@ -11,7 +11,6 @@ if __name__ == '__main__':
 
     base_test = BaseTest()
     base_test.setup()
-    base_test.teardown()
     create_blueprint = CreateBluePrint()
     create_blueprint.create_blueprint()
     role = {}
