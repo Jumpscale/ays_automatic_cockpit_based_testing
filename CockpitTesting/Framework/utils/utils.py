@@ -124,6 +124,7 @@ class BaseTest(object):
         Errors = 0
         Failures = 0
         Skip = 0
+        # remove first one
         self.Testcases_results.pop("Blueprint Name")
 
         for key in self.Testcases_results:

@@ -10,7 +10,6 @@ if __name__ == '__main__':
     THREADS_NUMBER = 1
 
     base_test = BaseTest()
-    base_test.setup()
     create_blueprint = CreateBluePrint()
     create_blueprint.create_blueprint()
     role = {}
@@ -58,6 +57,7 @@ if __name__ == '__main__':
 
     for _ in range(THREADS_NUMBER):
         threading.Thread(target=work).start()
-
+'''
     queue.join()
     base_test.teardown()
+'''

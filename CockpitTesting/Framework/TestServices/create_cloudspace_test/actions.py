@@ -13,23 +13,34 @@ def init_actions_(service, args):
 
 
 def create_cloudspace_test(job):
-    import unittest
-    vdc = job.service.producers['vdc'][0]
-    g8client = vdc.producers['g8client'][0]
-    
-    cl = j.clients.openvcloud.getFromService(g8client)
-    acc = cl.account_get(vdc.model.data.account)
+    import requests, sys
+    service = job.service
+    try:
+        g8client = service.producers['g8client'][0]
+        url = g8client.model.data.url
+        username = g8client.model.data.login
+        password = g8client.model.data.password
 
-    space = acc.space_get(vdc.model.dbobj.name, vdc.model.data.location)
-    #unittest.TestCase.assertEqual(space.model['name'], vdc.model.dbobj.name)
-    result = ''
-    log = open('/optvar/log.log', 'w')
-    if space.model['name'] ==  vdc.model.dbobj.name:
-        log.write('SUCCEEDED: %s == %s' % (space.model['name'], vdc.model.dbobj.name))
-        log.write('/n')
-        result = 'succeeded'
-    else:
-        log.write('FAIL: %s != %s' % (space.model['name'], vdc.model.dbobj.name))
-        log.write('/n')
-        result = 'fail'
-    job.service.model.data.result = result
+        login_url = url + '/restmachine/system/usermanager/authenticate'
+        credential = {'name': username,
+                      'secret': password}
+        session = requests.Session.post(url=login_url, data=credential)
+
+        vdc = service.producers['vdc'][0]
+        vdcId = vdc.model.data.cloudspaceId
+
+        API_URL = url + '/restmachine/cloudapi/cloudspaces/get'
+        API_BODY = {'cloudspaceId': vdcId}
+
+        response = session.get(url=API_URL, data=API_BODY)
+
+        if response.status_code == 200:
+            service.model.data.result = 'Succeeded : %s ' % create_cloudspace_test.__name__
+        else:
+            response_data = {'status_code': response.status_code,
+                             'content': response.content}
+            service.model.data.result = 'Failures : %s' % str(response_data)
+
+    except:
+        service.model.result = 'Errors : %s' % str(sys.exc_info()[:2])
+    service.save()

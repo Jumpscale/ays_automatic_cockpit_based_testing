@@ -19,9 +19,6 @@ def test_snapshot(job):
     service = job.service
 
     g8client = service.producers['g8client'][0]
-    machine = service.producers['node.ovc'][0]
-    machineId = machine.model.data.machineId
-
     url = g8client.model.data.url
     username = g8client.model.data.login
     password = g8client.model.data.password
@@ -30,6 +27,9 @@ def test_snapshot(job):
     credential = {'name': username,
                   'secret': password}
     session = requests.Session.post(url=login_url, data=credential)
+
+    machine = service.producers['node.ovc'][0]
+    machineId = machine.model.data.machineId
 
     API_URL = url + '/cloudapi/machine/listSnapshots'
     API_BODY = {'machineId': machineId,

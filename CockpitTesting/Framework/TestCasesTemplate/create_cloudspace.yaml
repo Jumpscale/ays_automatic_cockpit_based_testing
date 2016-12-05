@@ -11,15 +11,7 @@ vdc__{random_vdc}:
     location: '{location}'
     uservdc:
         - '{username}'
-    maxMemoryCapacity: 2
-    maxVDiskCapacity: 20
-    maxCPUCapacity: 2
-    maxNASCapacity: 20
-    maxArchiveCapacity: 20
-    maxNetworkOptTransfer: 5
-    maxNetworkPeerTransfer: 15
-    maxNumPublicIP: 1
-            
+
 # 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
 create_cloudspace_test__{random}:
    vdc: {random_vdc}

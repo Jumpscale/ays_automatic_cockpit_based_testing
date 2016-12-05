@@ -10,7 +10,7 @@ class CreateBluePrint(BaseTest):
 
     def __init__(self):
         super(CreateBluePrint, self).__init__()
-
+        self.setup()
         script_dir = os.path.dirname(__file__)
         self.testCasesTemplateDirectory = os.path.join(script_dir, "../TestCasesTemplate/")
         self.TestCasesTemplatePath = []
