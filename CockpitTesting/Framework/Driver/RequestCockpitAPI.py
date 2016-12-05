@@ -42,6 +42,7 @@ class RequestCockpitAPI(BaseTest):
                                     'content': blueprint})
 
         response = self.requests.post(url=API, headers=self.header, data=API_BODY)
+        import ipdb; ipdb.set_trace()
         if response.status_code == 201:
             print 'CREATED : %s blueprint in %s repo' % (self.blueprint['name'], self.repo['name'])
         else:
@@ -62,6 +63,9 @@ class RequestCockpitAPI(BaseTest):
             raise NameError('ERROR : response status code %i %s ' % (response.status_code, response.content))
 
     def run_repository(self, repository):
+        '''
+            POST :  /ays/repository/{repository}/aysrun
+        '''
         API = self.build_api(['repository', repository, 'aysrun'])
 
         API_BODY = self.build_json({'callback_url ': self.random_string(),
@@ -83,6 +87,7 @@ class RequestCockpitAPI(BaseTest):
         API = self.build_api(['repository', repository, 'service', role, service])
 
         response = self.requests.get(url=API, headers=self.header)
+        import ipdb; ipdb.set_trace()
         if response.status_code == 200:
             result = json.loads(response.content)['data']
             print 'RESULT: %s' % result

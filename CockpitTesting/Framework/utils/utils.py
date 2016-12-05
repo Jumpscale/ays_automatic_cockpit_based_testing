@@ -26,6 +26,7 @@ class BaseTest(object):
 
         self.Testcases_results = {'Blueprint Name': ['Test Result', 'Execution Time']}
         self.requests = requests
+        # Get environment client to create/delete an account
         self.client = Client('https://' + self.values['environment'], self.values['username'], self.values['password'])
 
     def setup(self):
@@ -162,7 +163,6 @@ class BaseTest(object):
         test_cases_files = os.listdir(test_cases_directory)
         test_cases_path = []
         for file in test_cases_files:
-            print file
             if specific_blueprint:
                 #if specific_blueprint != file[file.find('TestCases/') + 10:]:
                 if specific_blueprint != file:

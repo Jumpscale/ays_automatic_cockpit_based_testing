@@ -4,9 +4,9 @@ g8client__main:
     password: 'KrOe6gE9K5nCQdmretfXnj'
     account: 'Automatedqa'
 
-vdc__7a213137a0:
+vdc__319eba8e1c:
     g8client: 'main'
-    description: 'd8a28e065f'
+    description: '062e8ea90a'
     account: 'Automatedqa'
     location: 'du-conv-2'
     uservdc:
@@ -18,7 +18,7 @@ node.ovc__vm:
     memory: 4
     ports:
         - '2222:22'
-    vdc: '7a213137a0'
+    vdc: '319eba8e1c'
 
 js8_install_test__test:
     os: 'vm'
