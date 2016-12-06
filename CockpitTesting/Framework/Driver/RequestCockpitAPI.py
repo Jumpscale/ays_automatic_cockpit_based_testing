@@ -80,6 +80,36 @@ class RequestCockpitAPI(BaseTest):
             print ('ERROR : response status code %i' % response.status_code)
             raise NameError('ERROR : response status code %i' % response.status_code)
 
+    def get_run_status(self, repository, run_key):
+        '''
+            GET : /ays/repository/{repository}/aysrun/{aysrun}
+        '''
+
+        API = self.build_api(['repository', repository, 'aysrun', run_key])
+
+        while True:
+            response = self.requests.get(url=API, headers=self.header)
+
+            if response.status_code == 200:
+                content = json.loads(response.content)
+
+                if content['state'] == 'Running' or content['state'] == 'new':
+                    print ('The Running state is %s' % content['state'])
+                    time.sleep(3)
+                    continue
+                elif content['state'] == 'ok':
+                    print ('The Running state is %s' % content['state'])
+                    return True
+                elif content['state'] == 'error':
+                    print ('ERROR : The Running state is %s') % content['state']
+                    self.blueprint['log'] = content['steps']
+                    return False
+            else:
+                print ('ERROR : response status code %i' % response.status_code)
+                raise NameError('ERROR : response status code %i' % response.status_code)
+
+
+
     def get_service_data(self, repository, role, service):
         '''
             Get :  /ays/repository/{repository}/service/{role}/{name}

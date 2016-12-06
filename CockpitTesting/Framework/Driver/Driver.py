@@ -3,16 +3,17 @@ import Queue
 from CreateBluePrint import CreateBluePrint
 from RequestCockpitAPI import RequestCockpitAPI
 from CockpitTesting.Framework.utils.utils import BaseTest
-
+import time
 
 if __name__ == '__main__':
-    BLUEPRINT_NAME = 'create_cloudspace.yaml' # Leave it empty to load all blueprints in the TestCases dir.
+    BLUEPRINT_NAME = 'create_cloudspace.yaml'  # Leave it empty to load all blueprints in the TestCases dir.
     THREADS_NUMBER = 1
 
     base_test = BaseTest()
     create_blueprint = CreateBluePrint()
     create_blueprint.create_blueprint()
     role = {}
+
 
     def get_testService_role(blueprint, thread_name):
         global role
@@ -24,12 +25,14 @@ if __name__ == '__main__':
         else:
             raise NameError("The blueprint doesn't have 'QA SERVICE' indicator line")
         role_line = blueprint[index]
-        role[thread_name] = [role_line[:role_line.find('__')], role_line[role_line.find('__')+2:-1]]
+        role[thread_name] = [role_line[:role_line.find('__')], role_line[role_line.find('__') + 2:-1]]
+
 
     queue = Queue.Queue()
     jobs = base_test.get_jobs(specific_blueprint=BLUEPRINT_NAME)
     for job in jobs:
         queue.put(job)
+
 
     def work():
         while not queue.empty():
@@ -46,18 +49,27 @@ if __name__ == '__main__':
                                                   blueprint=request_cockpit_api.blueprint['name'])
             request_cockpit_api.run_repository(repository=request_cockpit_api.repo['name'])
 
-            request_cockpit_api.Testcases_results[
-                request_cockpit_api.blueprint['name']] = request_cockpit_api.get_service_data(
-                repository=request_cockpit_api.repo['name'],
-                role=role[threading.current_thread().name][0],
-                service=role[threading.current_thread().name][1])
+            if request_cockpit_api.get_run_status(repository=request_cockpit_api.repo['name'],
+                                                  run_key=request_cockpit_api.repo['key']):
+                request_cockpit_api.Testcases_results[
+                    request_cockpit_api.blueprint['name']] = request_cockpit_api.get_service_data(
+                    repository=request_cockpit_api.repo['name'],
+                    role=role[threading.current_thread().name][0],
+                    service=role[threading.current_thread().name][1])
+            else:
+                request_cockpit_api.testcase_time = '{:0.2f}'.format(time.time() - request_cockpit_api.start_time)
+                error_message = 'ERROR : %s %s' % (
+                    request_cockpit_api.blueprint['name'], request_cockpit_api.blueprint['log'])
+
+                request_cockpit_api.Testcases_results[request_cockpit_api.blueprint['name']] = [error_message,
+                                                                                                request_cockpit_api.testcase_time]
 
             request_cockpit_api.generate_xml_results()
             queue.task_done()
 
+
     for _ in range(THREADS_NUMBER):
         threading.Thread(target=work).start()
-'''
+
     queue.join()
-    base_test.teardown()
-'''
+    create_blueprint.teardown()

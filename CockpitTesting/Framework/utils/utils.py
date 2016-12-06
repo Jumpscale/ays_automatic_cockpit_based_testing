@@ -128,13 +128,13 @@ class BaseTest(object):
         self.Testcases_results.pop("Blueprint Name")
 
         for key in self.Testcases_results:
-            if 'Errors' in self.Testcases_results[key][0]:
+            if 'ERROR' in self.Testcases_results[key][0]:
                 Errors += 1
-            elif 'Failures' in self.Testcases_results[key][0]:
+            elif 'FAILED' in self.Testcases_results[key][0]:
                 Failures += 1
             elif 'Skip' in self.Testcases_results[key][0]:
                 Skip += 1
-            elif 'Succeeded' in self.Testcases_results[key][0]:
+            elif 'OK' in self.Testcases_results[key][0]:
                 Succeeded += 1
             else:
                 print 'The result is missing an indicator element'

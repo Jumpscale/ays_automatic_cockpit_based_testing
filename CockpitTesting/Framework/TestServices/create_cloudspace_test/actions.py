@@ -8,7 +8,7 @@ def init_actions_(service, args):
 
 
     return {
-        'test': ['install']
+        'create_cloudspace_test': ['install']
     }
 
 
@@ -35,12 +35,12 @@ def create_cloudspace_test(job):
         response = session.get(url=API_URL, data=API_BODY)
 
         if response.status_code == 200:
-            service.model.data.result = 'Succeeded : %s ' % create_cloudspace_test.__name__
+            service.model.data.result = 'OK : %s ' % create_cloudspace_test.__name__
         else:
             response_data = {'status_code': response.status_code,
                              'content': response.content}
-            service.model.data.result = 'Failures : %s' % str(response_data)
+            service.model.data.result = 'FAILED : %s %s' % (create_cloudspace_test.__name__,str(response_data))
 
     except:
-        service.model.result = 'Errors : %s' % str(sys.exc_info()[:2])
+        service.model.result = 'ERROR : %s %s' % (create_cloudspace_test.__name__, str(sys.exc_info()[:2]))
     service.save()

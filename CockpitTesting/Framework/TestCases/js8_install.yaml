@@ -2,12 +2,12 @@ g8client__main:
     url: 'du-conv-2.demo.greenitglobe.com'
     login: 'gig'
     password: 'KrOe6gE9K5nCQdmretfXnj'
-    account: '8e61451cc8'
+    account: 'd6b8e4511a'
 
-vdc__aa0348c75f:
+vdc__2f13bc9951:
     g8client: 'main'
-    description: 'ff90d32b1b'
-    account: '8e61451cc8'
+    description: 'ff934f2849'
+    account: 'd6b8e4511a'
     location: 'du-conv-2'
     uservdc:
         - 'gig'
@@ -18,7 +18,7 @@ node.ovc__vm:
     memory: 4
     ports:
         - '2222:22'
-    vdc: 'aa0348c75f'
+    vdc: '2f13bc9951'
 
 # 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
 js8_install_test__test:
