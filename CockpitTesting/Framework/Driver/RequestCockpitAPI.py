@@ -55,7 +55,10 @@ class RequestCockpitAPI(BaseTest):
         '''
         API = self.build_api(['repository', self.repo['name'], 'blueprint', self.blueprint['name']])
 
-        response = self.requests.post(url=API, headers=self.header)
+        API_BODY = self.build_json({'blueprint': blueprint,
+                                    'repository': repository})
+
+        response = self.requests.post(url=API, headers=self.header, data=API_BODY)
         if response.status_code == 200:
             print 'EXECUTED : %s blueprint in %s repo' % (self.blueprint['name'], self.repo['name'])
         else:
