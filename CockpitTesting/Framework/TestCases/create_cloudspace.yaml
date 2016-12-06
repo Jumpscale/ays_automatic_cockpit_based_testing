@@ -4,17 +4,17 @@ g8client__islam:
     password: 'KrOe6gE9K5nCQdmretfXnj'
 
 # create the vdc that will contain the vm of the CockpitTesting
-vdc__c3be1e0cea:
-    description: 'ede3ca3810'
+vdc__79ada46d69:
+    description: 'f27eaaf32e'
     g8client: 'islam'
-    account: 'f5c4196334'
+    account: '06eecc9344'
     location: 'du-conv-2'
     uservdc:
         - 'gig'
 
 # 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
-create_cloudspace_test__65ac0adbc2:
-   vdc: c3be1e0cea
+create_cloudspace_test__3cdaa1806b:
+   vdc: 79ada46d69
 
 actions:
    - action: 'install'
