@@ -78,6 +78,7 @@ class RequestCockpitAPI(BaseTest):
         if response.status_code == 200:
             print 'RAN : %s repo' % self.repo['name']
             self.repo['key'] = json.loads(response.content)['key']
+            print 'key : %s' % self.repo['key']
             self.start_time = time.time()
         else:
             print ('ERROR : response status code %i' % response.status_code)
@@ -125,6 +126,8 @@ class RequestCockpitAPI(BaseTest):
             temp = json.loads(response.content)['data']
             result = temp['result']
             print 'RESULT: %s' % result
+            if not result:
+                import ipdb; ipdb.set_trace()
             self.testcase_time = '{:0.2f}'.format(time.time() - self.start_time)
             return [result, self.testcase_time]
         else:

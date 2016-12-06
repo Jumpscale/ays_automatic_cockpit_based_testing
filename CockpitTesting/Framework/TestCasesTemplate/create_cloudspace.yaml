@@ -13,10 +13,10 @@ vdc__{random_vdc}:
         - '{username}'
 
 # 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
-create_cloudspace_test__{random}:
+test_create_cloudspace__{random}:
    vdc: {random_vdc}
 
 actions:
    - action: 'install'
-   - action: 'create_cloudspace_test'
-     actor: create_cloudspace_test
+   - action: 'test_create_cloudspace'
+     actor: test_create_cloudspace

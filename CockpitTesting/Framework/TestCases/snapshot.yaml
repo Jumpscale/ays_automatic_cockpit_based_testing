@@ -3,10 +3,10 @@ g8client__islam:
     login: 'gig'
     password: 'KrOe6gE9K5nCQdmretfXnj'
 
-vdc__41eac8b6c3:
-    description: '2b4f94945c'
+vdc__525a80a325:
+    description: '350654e3c1'
     g8client: 'islam'
-    account: '06eecc9344'
+    account: 'c027fee68e'
     location: 'du-conv-2'
     uservdc:
         - 'gig'
@@ -19,23 +19,23 @@ vdc__41eac8b6c3:
     maxNetworkPeerTransfer: 15
     maxNumPublicIP: 1
 
-node.ovc__91452b37c8:
+node.ovc__55790ed8b7:
     os.image: 'ubuntu 16.04 x64'
     disk.size: 10
     os.size: 2
-    vdc: 41eac8b6c3
+    vdc: 525a80a325
 
-autosnap__af6fc0c5f7:
-  vdc: 41eac8b6c3
+autosnap__2f81281b11:
+  vdc: 525a80a325
   startdate:
   enddate:
   snapshotInterval: '45m'
   retentionScheme: '5d'
 
 # 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
-snapshot_test__33a51115db:
+snapshot_test__20c506d544:
    g8.client: 'islam'
-   node.ovc: 91452b37c8
+   node.ovc: 55790ed8b7
 
 actions:
    - action: 'install'

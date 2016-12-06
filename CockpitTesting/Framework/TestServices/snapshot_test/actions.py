@@ -8,36 +8,43 @@ def init_actions_(service, args):
 
 
     return {
-        'test': ['install']
+        'test_snapshot': ['install']
     }
 
 
 def test_snapshot(job):
-    from unittest import TestCase
-    import requests
-
+    import requests, sys
     service = job.service
+    try:
+        g8client = service.producers['g8client'][0]
+        url = g8client.model.data.url
+        username = g8client.model.data.login
+        password = g8client.model.data.password
 
-    g8client = service.producers['g8client'][0]
-    url = g8client.model.data.url
-    username = g8client.model.data.login
-    password = g8client.model.data.password
+        login_url = url + '/restmachine/system/usermanager/authenticate'
+        credential = {'name': username,
+                      'secret': password}
+        session = requests.Session.post(url=login_url, data=credential)
 
-    login_url = url + '/restmachine/system/usermanager/authenticate'
-    credential = {'name': username,
-                  'secret': password}
-    session = requests.Session.post(url=login_url, data=credential)
+        machine = service.producers['node.ovc'][0]
+        machineId = machine.model.data.machineId
 
-    machine = service.producers['node.ovc'][0]
-    machineId = machine.model.data.machineId
+        API_URL = url + '/cloudapi/machine/listSnapshots'
+        API_BODY = {'machineId': machineId,
+                    'result': 'QA TESTING'}
 
-    API_URL = url + '/cloudapi/machine/listSnapshots'
-    API_BODY = {'machineId': machineId,
-                'result': 'QA TESTING'}
+        response = session.get(url=API_URL, data=API_BODY)
 
-    response = session.get(url=API_URL, data=API_BODY)
-    TestCase.assertEqual(response.status_code, 200)
-    TestCase.assertGreater(len(response.content), 0)
+        if response.status_code == 200:
+            service.model.data.result = 'OK : %s ' % 'test_snapshot'
+        else:
+            response_data = {'status_code': response.status_code,
+                             'content': response.content}
+            service.model.data.result = 'FAILED : %s %s' % ('test_snapshot',str(response_data))
 
-    service.model.data.result = 'success'
+    except:
+        service.model.result = 'ERROR : %s %s' % ('test_snapshot', str(sys.exc_info()[:2]))
+
     service.save()
+
+
