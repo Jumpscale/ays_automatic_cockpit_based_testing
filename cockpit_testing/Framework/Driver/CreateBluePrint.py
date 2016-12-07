@@ -2,7 +2,7 @@
     This file should manipulate the bps. It should replace each variable with its correct value.
 '''
 
-from CockpitTesting.Framework.utils.utils import BaseTest
+from cockpit_testing.Framework.utils.utils import BaseTest
 import os
 
 

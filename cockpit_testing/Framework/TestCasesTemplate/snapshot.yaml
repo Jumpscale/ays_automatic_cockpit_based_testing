@@ -10,34 +10,24 @@ vdc__{random_vdc}:
     location: '{location}'
     uservdc:
         - '{username}'
-    maxMemoryCapacity: 2
-    maxVDiskCapacity: -1
-    maxCPUCapacity: -1
-    maxNASCapacity: 20
-    maxArchiveCapacity: 20
-    maxNetworkOptTransfer: 5
-    maxNetworkPeerTransfer: 15
-    maxNumPublicIP: 1
 
 node.ovc__{random_node}:
-    os.image: 'ubuntu 16.04 x64'
-    disk.size: 10
-    os.size: 2
+    os.image: 'Ubuntu 16.04 x64'
+    bootdisk.size: 10
+    sizeID: 2
     vdc: {random_vdc}
 
-autosnap__{random_snap}:
+autosnapshotting__{random_snap}:
   vdc: {random_vdc}
-  startdate:
-  enddate:
   snapshotInterval: '45m'
-  retentionScheme: '5d'
+  retention: '5d'
 
 # 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
-snapshot_test__{random}:
-   g8.client: 'islam'
+test_snapshot__{random}:
+   g8client: 'islam'
    node.ovc: {random_node}
 
 actions:
    - action: 'install'
-   - action: 'snapshot_test'
-     actor: snapshot_test
+   - action: 'test_snapshot'
+     actor: test_snapshot

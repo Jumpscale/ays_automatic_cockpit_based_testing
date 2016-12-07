@@ -1,0 +1,23 @@
+g8client__islam:
+    url: 'be-g8-4.demo.greenitglobe.com'
+    login: 'ramez'
+    password: '123456789'
+
+vdc__f0d7583879:
+    description: '9008985629'
+    g8client: 'islam'
+    account: '553137d912'
+    location: 'be-g8-4'
+    uservdc:
+        - 'ramez'
+
+node.ovc__238c1acd8a:
+    os.image: 'Ubuntu 16.04 x64'
+    bootdisk.size: 10
+    sizeID: 2
+    vdc: f0d7583879
+
+# 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
+
+actions:
+   - action: 'install'

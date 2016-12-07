@@ -4,7 +4,7 @@
         - Post the cockpit API with Json bp
         - Run this bp
 '''
-from CockpitTesting.Framework.utils.utils import BaseTest
+from cockpit_testing.Framework.utils.utils import BaseTest
 import json
 import time
 
@@ -47,6 +47,7 @@ class RequestCockpitAPI(BaseTest):
             print 'CREATED : %s blueprint in %s repo' % (self.blueprint['name'], self.repo['name'])
         else:
             print ('ERROR : response status code %i' % response.status_code)
+            import ipdb; ipdb.set_trace()
             raise NameError('ERROR : response status code %i' % response.status_code)
 
     def execute_blueprint(self, repository='', blueprint=''):

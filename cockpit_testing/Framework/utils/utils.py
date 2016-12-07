@@ -33,27 +33,27 @@ class BaseTest(object):
         # create new account
         if not self.account:
             self.account = self.random_string()
-        api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/create'
-        client_header = {'Content-Type': 'application/x-www-form-urlencoded',
-                         'Accept': 'application/json'}
-        client_body = {'name': self.account,
-                       'username': self.values['username'],
-                       'maxMemoryCapacity': -1,
-                       'maxVDiskCapacity': -1,
-                       'maxCPUCapacity': -1,
-                       '&maxNASCapacity': - 1,
-                       'maxArchiveCapacity': -1,
-                       'maxNetworkOptTransfer': - 1,
-                       'maxNetworkPeerTransfer': - 1,
-                       'maxNumPublicIP': - 1}
-        client_response = self.client._session.post(url=api, headers=client_header, data=client_body)
-        self.account_id = client_response.text
+            api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/create'
+            client_header = {'Content-Type': 'application/x-www-form-urlencoded',
+                             'Accept': 'application/json'}
+            client_body = {'name': self.account,
+                           'username': self.values['username'],
+                           'maxMemoryCapacity': -1,
+                           'maxVDiskCapacity': -1,
+                           'maxCPUCapacity': -1,
+                           '&maxNASCapacity': - 1,
+                           'maxArchiveCapacity': -1,
+                           'maxNetworkOptTransfer': - 1,
+                           'maxNetworkPeerTransfer': - 1,
+                           'maxNumPublicIP': - 1}
+            client_response = self.client._session.post(url=api, headers=client_header, data=client_body)
+            self.account_id = client_response.text
 
-        if client_response.status_code == 200:
-            self.values['account'] = self.account
-            print 'DONE : Create %s account' % self.account
-        else:
-            client_response.raise_for_status()
+            if client_response.status_code == 200:
+                self.values['account'] = self.account
+                print 'DONE : Create %s account' % self.account
+            else:
+                client_response.raise_for_status()
 
     def teardown(self):
         # Delete account
@@ -149,7 +149,7 @@ class BaseTest(object):
         testsuit = Element('testsuite', testsuit_params)
 
         for key in self.Testcases_results:
-            testcase_params = {'blueprint_template': 'CockpitTesting/Framework/TestCasesTemplate',
+            testcase_params = {'blueprint_template': 'cockpit_testing/Framework/TestCasesTemplate',
                                'name': 'create_cloudspace_test',
                                'result': str(self.Testcases_results[key][0]),
                                'time': str(self.Testcases_results[key][1])}

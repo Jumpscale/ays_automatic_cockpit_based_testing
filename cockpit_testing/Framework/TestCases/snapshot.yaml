@@ -1,0 +1,33 @@
+g8client__islam:
+    url: 'be-g8-4.demo.greenitglobe.com'
+    login: 'ramez'
+    password: '123456789'
+
+vdc__c352595ab6:
+    description: '2bbc82ba4d'
+    g8client: 'islam'
+    account: '553137d912'
+    location: 'be-g8-4'
+    uservdc:
+        - 'ramez'
+
+node.ovc__6a111f5242:
+    os.image: 'Ubuntu 16.04 x64'
+    bootdisk.size: 10
+    sizeID: 2
+    vdc: c352595ab6
+
+autosnapshotting__69ea8abb21:
+  vdc: c352595ab6
+  snapshotInterval: '45m'
+  retention: '5d'
+
+# 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
+test_snapshot__0453211a0e:
+   g8client: 'islam'
+   node.ovc: 6a111f5242
+
+actions:
+   - action: 'install'
+   - action: 'test_snapshot'
+     actor: test_snapshot

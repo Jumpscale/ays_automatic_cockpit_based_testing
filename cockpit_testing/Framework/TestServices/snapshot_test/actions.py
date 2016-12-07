@@ -17,21 +17,21 @@ def test_snapshot(job):
     service = job.service
     try:
         g8client = service.producers['g8client'][0]
-        url = g8client.model.data.url
+        url = 'https://' + g8client.model.data.url
         username = g8client.model.data.login
         password = g8client.model.data.password
 
         login_url = url + '/restmachine/system/usermanager/authenticate'
         credential = {'name': username,
                       'secret': password}
-        session = requests.Session.post(url=login_url, data=credential)
+        session = requests.Session()
+        session.post(url=login_url, data=credential)
 
         machine = service.producers['node.ovc'][0]
-        machineId = machine.model.data.machineId
+        machineId = machine.model.data.machineID
 
         API_URL = url + '/cloudapi/machine/listSnapshots'
-        API_BODY = {'machineId': machineId,
-                    'result': 'QA TESTING'}
+        API_BODY = {'machineId': machineId}
 
         response = session.get(url=API_URL, data=API_BODY)
 
@@ -43,8 +43,7 @@ def test_snapshot(job):
             service.model.data.result = 'FAILED : %s %s' % ('test_snapshot',str(response_data))
 
     except:
-        service.model.result = 'ERROR : %s %s' % ('test_snapshot', str(sys.exc_info()[:2]))
-
+        service.model.data.result = 'ERROR : %s %s' % ('test_snapshot', str(sys.exc_info()[:2]))
     service.save()
 
 
