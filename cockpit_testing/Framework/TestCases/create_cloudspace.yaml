@@ -1,20 +1,20 @@
 g8client__islam:
-    url: 'be-g8-4.demo.greenitglobe.com'
-    login: 'ramez'
-    password: '123456789'
+    url: 'du-conv-2.demo.greenitglobe.com'
+    login: 'gig'
+    password: 'KrOe6gE9K5nCQdmretfXnj'
 
 # create the vdc that will contain the vm of the cockpit_testing
-vdc__42ed9642e4:
-    description: 'aa697b655d'
+vdc__4585dc92d8:
+    description: '6b6cf213be'
     g8client: 'islam'
-    account: '553137d912'
-    location: 'be-g8-4'
+    account: 'd0a4a5ec69'
+    location: 'du-conv-2'
     uservdc:
-        - 'ramez'
+        - 'gig'
 
 # 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
-test_create_cloudspace__fc611a7db4:
-   vdc: 42ed9642e4
+test_create_cloudspace__c27e4f8d58:
+   vdc: 4585dc92d8
 
 actions:
    - action: 'install'

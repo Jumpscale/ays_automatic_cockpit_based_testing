@@ -26,12 +26,13 @@ class BaseTest(object):
 
         self.Testcases_results = {'Blueprint Name': ['Test Result', 'Execution Time']}
         self.requests = requests
-        # Get environment client to create/delete an account
-        self.client = Client('https://' + self.values['environment'], self.values['username'], self.values['password'])
+
 
     def setup(self):
+        self.client = Client('https://' + self.values['environment'], self.values['username'], self.values['password'])
         # create new account
         if not self.account:
+            print 'Create new account'
             self.account = self.random_string()
             api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/create'
             client_header = {'Content-Type': 'application/x-www-form-urlencoded',
@@ -45,7 +46,8 @@ class BaseTest(object):
                            'maxArchiveCapacity': -1,
                            'maxNetworkOptTransfer': - 1,
                            'maxNetworkPeerTransfer': - 1,
-                           'maxNumPublicIP': - 1}
+                           'maxNumPublicIP': - 1,
+                           'location': self.values['location']}
             client_response = self.client._session.post(url=api, headers=client_header, data=client_body)
             self.account_id = client_response.text
 

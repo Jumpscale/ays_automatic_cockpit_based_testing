@@ -4,9 +4,9 @@ g8client__main:
     password: 'KrOe6gE9K5nCQdmretfXnj'
     account: 'd0a4a5ec69'
 
-vdc__d3f6cd838e:
+vdc__8024fad6c0:
     g8client: 'main'
-    description: '41ddaa3386'
+    description: 'c39f8a02e8'
     account: 'd0a4a5ec69'
     location: 'du-conv-2'
     uservdc:
@@ -18,9 +18,8 @@ node.ovc__vm:
     memory: 4
     ports:
         - '2222:22'
-    vdc: 'd3f6cd838e'
+    vdc: '8024fad6c0'
 
-# 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
 js8_install_test__test:
     os: 'vm'
     branch: 'master'
@@ -29,3 +28,5 @@ actions:
     - action: 'install'
     - action: 'test'
       actor: js8_install_test
+
+

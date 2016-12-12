@@ -1,21 +1,21 @@
 g8client__islam:
-    url: 'be-g8-4.demo.greenitglobe.com'
-    login: 'ramez'
-    password: '123456789'
+    url: 'du-conv-2.demo.greenitglobe.com'
+    login: 'gig'
+    password: 'KrOe6gE9K5nCQdmretfXnj'
 
-vdc__f0d7583879:
-    description: '9008985629'
+vdc__1b7700ab43:
+    description: 'cf1153076a'
     g8client: 'islam'
-    account: '553137d912'
-    location: 'be-g8-4'
+    account: 'd0a4a5ec69'
+    location: 'du-conv-2'
     uservdc:
-        - 'ramez'
+        - 'gig'
 
-node.ovc__238c1acd8a:
+node.ovc__4e22843f8a:
     os.image: 'Ubuntu 16.04 x64'
     bootdisk.size: 10
     sizeID: 2
-    vdc: f0d7583879
+    vdc: 1b7700ab43
 
 # 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
 
