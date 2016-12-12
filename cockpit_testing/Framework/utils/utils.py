@@ -20,7 +20,7 @@ class BaseTest(object):
                        'client_secret': ''
                        }
         self.get_config_values()
-        self.get_jwt()
+        #self.get_jwt()
         self.header = {'Authorization': 'bearer ' + self.values['jwt'],
                        'content-type': 'application/json'}
 

@@ -2,12 +2,12 @@ g8client__main:
     url: 'du-conv-2.demo.greenitglobe.com'
     login: 'gig'
     password: 'KrOe6gE9K5nCQdmretfXnj'
-    account: 'd0a4a5ec69'
+    account: '213777ff02'
 
-vdc__8024fad6c0:
+vdc__cd0a06426a:
     g8client: 'main'
-    description: 'c39f8a02e8'
-    account: 'd0a4a5ec69'
+    description: 'c50137c0bf'
+    account: '213777ff02'
     location: 'du-conv-2'
     uservdc:
         - 'gig'
@@ -18,7 +18,7 @@ node.ovc__vm:
     memory: 4
     ports:
         - '2222:22'
-    vdc: '8024fad6c0'
+    vdc: 'cd0a06426a'
 
 js8_install_test__test:
     os: 'vm'

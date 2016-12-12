@@ -6,7 +6,7 @@ from cockpit_testing.Framework.utils.utils import BaseTest
 import time, traceback, sys
 
 if __name__ == '__main__':
-    BLUEPRINT_NAME = 'create_virtualmachine.yaml'  # Leave it empty to load all blueprints in the TestCases dir.
+    BLUEPRINT_NAME = 'snapshot.yaml'  # Leave it empty to load all blueprints in the TestCases dir.
     THREADS_NUMBER = 1
 
     base_test = BaseTest()
