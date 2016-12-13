@@ -6,10 +6,15 @@ from cockpit_testing.Framework.utils.utils import BaseTest
 import time, traceback, sys
 
 if __name__ == '__main__':
-    THREADS_NUMBER = 1
 
     base_test = BaseTest()
-    BLUEPRINT_NAME = base_test.values['blueprint_name']
+    THREADS_NUMBER = int(base_test.values['threads_number'])
+    cmdargs = sys.argv
+    if len(cmdargs) > 1:
+        BLUEPRINT_NAME = cmdargs[1]
+    else:
+        BLUEPRINT_NAME = None
+    import ipdb; ipdb.set_trace()
     create_blueprint = CreateBluePrint()
     create_blueprint.create_blueprint()
     role = {}

@@ -16,5 +16,6 @@ config.set('main', 'client_id', cmdargs[7])
 config.set('main', 'client_secret', cmdargs[8])
 config.set('main', 'repo', cmdargs[9])
 config.set('main', 'branch', cmdargs[10])
+config.set('main', 'threads_number', cmdargs[11])
 with open('config.ini', 'w') as configfile:
     config.write(configfile)
