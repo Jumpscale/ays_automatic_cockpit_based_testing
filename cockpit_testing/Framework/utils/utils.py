@@ -61,7 +61,8 @@ class BaseTest(object):
     def teardown(self):
         print 'START : Tear down'
         # Delete TestCasesTemplates
-        self.run_cmd_via_subprocess('cd ..; rm -rf TestCasesTemplate')
+        self.run_cmd_via_subprocess('rm -rf cockpit_testing/FrameworkTestCasesTemplate')
+
         print 'DELETED : TestCasesTemplate'
         # Delete account
         api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/delete'
@@ -123,7 +124,8 @@ class BaseTest(object):
         bps_driver_path = 'TestCasesTemplate'
 
         # make directory to clone repos on
-        self.run_cmd_via_subprocess('cd ..; mkdir %s' % bps_driver_path)
+        self.run_cmd_via_subprocess('pwd')
+        self.run_cmd_via_subprocess('cd cockpit_testing/Framework/; mkdir %s' % bps_driver_path)
 
         self.run_cmd_via_subprocess('mkdir removable')
 
@@ -133,7 +135,7 @@ class BaseTest(object):
         if branch != 'master':
             self.run_cmd_via_subprocess('cd removable/%s; git checkout %s' % (repo_name, branch))
         self.run_cmd_via_subprocess(
-            'cp -r removable/%s/tests/bp_test_templates/. ../%s' % (repo_name, bps_driver_path))
+            'cp -r removable/%s/tests/bp_test_templates/. cockpit_testing/Framework/%s' % (repo_name, bps_driver_path))
 
         self.run_cmd_via_subprocess('rm -rf removable')
 
