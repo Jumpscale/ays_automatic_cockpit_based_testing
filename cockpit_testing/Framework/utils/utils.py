@@ -61,7 +61,7 @@ class BaseTest(object):
     def teardown(self):
         print 'START : Tear down'
         # Delete TestCasesTemplates
-        self.run_cmd_via_subprocess('rm -rf cockpit_testing/FrameworkTestCasesTemplate')
+        self.run_cmd_via_subprocess('rm -rf cockpit_testing/Framework/TestCasesTemplate')
 
         print 'DELETED : TestCasesTemplate'
         # Delete account
