@@ -5,7 +5,6 @@ from subprocess import Popen, PIPE
 from argparse import ArgumentParser
 import re
 
-
 def run_cmd_via_subprocess(cmd):
     sub = Popen([cmd], stdout=PIPE, stderr=PIPE, shell=True)
     out, err = sub.communicate()
@@ -33,7 +32,6 @@ def main(options):
         run_cmd_via_subprocess('cp -r removable/%s/tests/testcasestemplate/. %s' % (repo_name, bps_driver_path))
 
     run_cmd_via_subprocess('rm -rf removable')
-
 
 if __name__ == "__main__":
     parser = ArgumentParser()

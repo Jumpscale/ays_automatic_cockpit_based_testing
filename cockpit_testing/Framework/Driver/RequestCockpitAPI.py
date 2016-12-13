@@ -92,7 +92,7 @@ class RequestCockpitAPI(BaseTest):
 
         API = self.build_api(['repository', repository, 'aysrun', run_key])
 
-        while True:
+        for _ in range(300):
             response = self.requests.get(url=API, headers=self.header)
 
             if response.status_code == 200:
@@ -100,7 +100,7 @@ class RequestCockpitAPI(BaseTest):
 
                 if content['state'] == 'Running' or content['state'] == 'new':
                     print ('The Running state is %s' % content['state'])
-                    time.sleep(3)
+                    time.sleep(5)
                     continue
                 elif content['state'] == 'ok':
                     print ('The Running state is %s' % content['state'])
@@ -112,6 +112,8 @@ class RequestCockpitAPI(BaseTest):
             else:
                 print ('ERROR : response status code %i' % response.status_code)
                 raise NameError('ERROR : response status code %i' % response.status_code)
+        else:
+            raise NameError('ERROR : Time out')
 
 
 

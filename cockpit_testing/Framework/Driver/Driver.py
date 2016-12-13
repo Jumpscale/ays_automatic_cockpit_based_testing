@@ -6,7 +6,7 @@ from cockpit_testing.Framework.utils.utils import BaseTest
 import time, traceback, sys
 
 if __name__ == '__main__':
-    BLUEPRINT_NAME = 'snapshot.yaml'  # Leave it empty to load all blueprints in the TestCases dir.
+    BLUEPRINT_NAME = 'create_cloudspace.yaml'  # Leave it empty to load all blueprints in the TestCases dir.
     THREADS_NUMBER = 1
 
     base_test = BaseTest()
@@ -30,7 +30,6 @@ if __name__ == '__main__':
 
     queue = Queue.Queue()
     jobs = base_test.get_jobs(specific_blueprint=BLUEPRINT_NAME)
-    error_state = False
     for job in jobs:
         queue.put(job)
 
@@ -69,15 +68,12 @@ if __name__ == '__main__':
                 request_cockpit_api.generate_xml_results()
                 queue.task_done()
             except:
-                create_blueprint.teardown()
+                queue.task_done()
                 print traceback.format_exc()
-                error_state = True
-
 
     for _ in range(THREADS_NUMBER):
         threading.Thread(target=work).start()
 
 
-    if not error_state:
-        queue.join()
-        create_blueprint.teardown()
+    queue.join()
+    create_blueprint.teardown()
