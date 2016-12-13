@@ -14,7 +14,6 @@ if __name__ == '__main__':
         BLUEPRINT_NAME = cmdargs[1]
     else:
         BLUEPRINT_NAME = None
-    import ipdb; ipdb.set_trace()
     create_blueprint = CreateBluePrint()
     create_blueprint.create_blueprint()
     role = {}
