@@ -6,10 +6,10 @@ from cockpit_testing.Framework.utils.utils import BaseTest
 import time, traceback, sys
 
 if __name__ == '__main__':
-    BLUEPRINT_NAME = 'create_cloudspace.yaml'  # Leave it empty to load all blueprints in the TestCases dir.
     THREADS_NUMBER = 1
 
     base_test = BaseTest()
+    BLUEPRINT_NAME = base_test.values['blueprint_name']
     create_blueprint = CreateBluePrint()
     create_blueprint.create_blueprint()
     role = {}

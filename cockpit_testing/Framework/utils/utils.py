@@ -1,7 +1,8 @@
 import requests
 import json
 import uuid
-import os
+import os, re
+from subprocess import Popen, PIPE
 from xml.etree.ElementTree import Element, SubElement, tostring
 from client import Client
 
@@ -20,15 +21,15 @@ class BaseTest(object):
                        'client_secret': ''
                        }
         self.get_config_values()
-        #self.get_jwt()
+        # self.get_jwt()
         self.header = {'Authorization': 'bearer ' + self.values['jwt'],
                        'content-type': 'application/json'}
 
         self.Testcases_results = {'Blueprint Name': ['Test Result', 'Execution Time']}
         self.requests = requests
 
-
     def setup(self):
+        self.get_testcases_templates()
         self.client = Client('https://' + self.values['environment'], self.values['username'], self.values['password'])
         # create new account
         if not self.account:
@@ -58,6 +59,10 @@ class BaseTest(object):
                 client_response.raise_for_status()
 
     def teardown(self):
+        print 'START : Tear down'
+        # Delete TestCasesTemplates
+        self.run_cmd_via_subprocess('cd ..; rm -rf TestCasesTemplate')
+        print 'DELETED : TestCasesTemplate'
         # Delete account
         api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/delete'
         client_header = {'Content-Type': 'application/x-www-form-urlencoded',
@@ -70,6 +75,8 @@ class BaseTest(object):
             print 'DONE: Delete %s account' % self.values['account']
         else:
             client_response.raise_for_status()
+
+
 
     @staticmethod
     def random_string():
@@ -100,6 +107,35 @@ class BaseTest(object):
                 self.values[key] = value
 
         config.close()
+
+    def run_cmd_via_subprocess(self, cmd):
+        sub = Popen([cmd], stdout=PIPE, stderr=PIPE, shell=True)
+        out, err = sub.communicate()
+        if sub.returncode == 0:
+            return out.decode('utf-8')
+        else:
+            error_output = err.decode('utf-8')
+            raise RuntimeError("Failed to execute command.\n\ncommand:\n{}\n\n".format(cmd, error_output))
+
+    def get_testcases_templates(self):
+        repo = self.values['repo']
+        branch = self.values['branch']
+        bps_driver_path = 'TestCasesTemplate'
+
+        # make directory to clone repos on
+        self.run_cmd_via_subprocess('cd ..; mkdir %s' % bps_driver_path)
+
+        self.run_cmd_via_subprocess('mkdir removable')
+
+        match = re.search(r'/(\S+).git', repo)
+        repo_name = match.group(1)
+        self.run_cmd_via_subprocess('cd removable; git clone %s' % repo)
+        if branch != 'master':
+            self.run_cmd_via_subprocess('cd removable/%s; git checkout %s' % (repo_name, branch))
+        self.run_cmd_via_subprocess(
+            'cp -r removable/%s/tests/bp_test_templates/. ../%s' % (repo_name, bps_driver_path))
+
+        self.run_cmd_via_subprocess('rm -rf removable')
 
     def get_jwt(self):
         client_id = self.values['client_id']
@@ -152,7 +188,7 @@ class BaseTest(object):
 
         for key in self.Testcases_results:
             testcase_params = {'blueprint_template': 'cockpit_testing/Framework/TestCasesTemplate',
-                               'name': 'create_cloudspace_test',
+                               'name': 'test_create_cloudspace',
                                'result': str(self.Testcases_results[key][0]),
                                'time': str(self.Testcases_results[key][1])}
             testcase = SubElement(testsuit, 'testcase', testcase_params)
@@ -167,7 +203,7 @@ class BaseTest(object):
         test_cases_path = []
         for file in test_cases_files:
             if specific_blueprint:
-                #if specific_blueprint != file[file.find('TestCases/') + 10:]:
+                # if specific_blueprint != file[file.find('TestCases/') + 10:]:
                 if specific_blueprint != file:
                     continue
                 else:
