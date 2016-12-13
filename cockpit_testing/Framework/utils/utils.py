@@ -122,22 +122,31 @@ class BaseTest(object):
         repo = self.values['repo']
         branch = self.values['branch']
         bps_driver_path = 'TestCasesTemplate'
-
-        # make directory to clone repos on
-        self.run_cmd_via_subprocess('pwd')
-        self.run_cmd_via_subprocess('cd cockpit_testing/Framework/; mkdir %s' % bps_driver_path)
-
-        self.run_cmd_via_subprocess('mkdir removable')
-
         match = re.search(r'/(\S+).git', repo)
         repo_name = match.group(1)
-        self.run_cmd_via_subprocess('cd removable; git clone %s' % repo)
-        if branch != 'master':
-            self.run_cmd_via_subprocess('cd removable/%s; git checkout %s' % (repo_name, branch))
-        self.run_cmd_via_subprocess(
-            'cp -r removable/%s/tests/bp_test_templates/. cockpit_testing/Framework/%s' % (repo_name, bps_driver_path))
 
-        self.run_cmd_via_subprocess('rm -rf removable')
+        # make directory to clone repos on
+        if self.clone:
+            self.run_cmd_via_subprocess('cd cockpit_testing/Framework/; mkdir %s' % bps_driver_path)
+            dirs = self.run_cmd_via_subprocess('ls').split('\n')[:-1]
+            if 'repos' not in dirs:
+                print '* create repos directory'
+                self.run_cmd_via_subprocess('mkdir repos')
+            else:
+                print '* repos directory already exists'
+
+            dirs = self.run_cmd_via_subprocess('ls repos').split('\n')[:-1]
+            if repo_name in dirs:
+                import ipdb; ipdb.set_trace()
+                self.run_cmd_via_subprocess('cd repos; rm -rf %s' % repo_name)
+            import ipdb; ipdb.set_trace()
+            print '* clone repo %s' %repo
+            print '  branch %s' %branch
+            self.run_cmd_via_subprocess('cd repos; git clone -b %s %s' % (branch, repo))
+        # copy blueprints test templates
+        import ipdb; ipdb.set_trace()
+        self.run_cmd_via_subprocess(
+            'cp -r repos/%s/tests/bp_test_templates/. cockpit_testing/Framework/%s' % (repo_name, bps_driver_path))
 
     def get_jwt(self):
         client_id = self.values['client_id']
