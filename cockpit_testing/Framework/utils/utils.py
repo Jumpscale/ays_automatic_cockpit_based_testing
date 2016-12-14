@@ -13,12 +13,15 @@ class BaseTest(object):
         self.values = {'environment': '',
                        'username': '',
                        'password': '',
-                       'account': '',
                        'location': '',
+                       'account': '',
                        'cockpit_url': '',
-                       'jwt': '',
                        'client_id': '',
-                       'client_secret': ''
+                       'client_secret': '',
+                       'jwt': '',
+                       'repo': '',
+                       'branch': '',
+                       'threads_number': ''
                        }
         self.get_config_values()
         # self.get_jwt()

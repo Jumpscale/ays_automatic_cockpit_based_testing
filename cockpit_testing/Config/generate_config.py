@@ -1,10 +1,13 @@
 #!/usr/bin/python
-from configparser import ConfigParser
+try:
+    import configparser
+except:
+    from six.moves import configparser
 import sys
 
 
 cmdargs = sys.argv
-config = ConfigParser()
+config = configparser.ConfigParser()
 config.read('config.ini')
 config.set('main', 'environment', cmdargs[1])
 config.set('main', 'username', cmdargs[2])
