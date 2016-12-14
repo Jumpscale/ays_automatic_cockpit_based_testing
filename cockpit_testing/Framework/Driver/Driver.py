@@ -4,17 +4,18 @@ from CreateBluePrint import CreateBluePrint
 from RequestCockpitAPI import RequestCockpitAPI
 from cockpit_testing.Framework.utils.utils import BaseTest
 import time, traceback, sys
+from optparse import OptionParser
 
 if __name__ == '__main__':
+    parser = OptionParser()
+    parser.add_option('-b', '--bpname', help='blueprint name', dest='bpname', default='', action='store')
+    parser.add_option('--no-clone', help='clone development repo', dest='clone', default=True, action='store_false')
+    (options, args) = parser.parse_args()
 
     base_test = BaseTest()
     THREADS_NUMBER = int(base_test.values['threads_number'])
-    cmdargs = sys.argv
-    if len(cmdargs) > 1:
-        BLUEPRINT_NAME = cmdargs[1]
-    else:
-        BLUEPRINT_NAME = None
-    create_blueprint = CreateBluePrint()
+    BLUEPRINT_NAME = options.bpname
+    create_blueprint = CreateBluePrint(clone=options.clone)
     create_blueprint.create_blueprint()
     role = {}
 

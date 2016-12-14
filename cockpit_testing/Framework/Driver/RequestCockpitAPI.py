@@ -133,8 +133,6 @@ class RequestCockpitAPI(BaseTest):
             temp = json.loads(response.content)['data']
             result = temp['result']
             print 'RESULT: %s' % result
-            if not result:
-                import ipdb; ipdb.set_trace()
             self.testcase_time = '{:0.2f}'.format(time.time() - self.start_time)
             return [result, self.testcase_time]
         else:

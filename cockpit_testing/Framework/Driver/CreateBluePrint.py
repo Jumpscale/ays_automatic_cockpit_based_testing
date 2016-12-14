@@ -8,8 +8,9 @@ import os
 
 class CreateBluePrint(BaseTest):
 
-    def __init__(self):
+    def __init__(self, clone=True):
         super(CreateBluePrint, self).__init__()
+        self.clone = clone
         self.setup()
         script_dir = os.path.dirname(__file__)
         self.testCasesTemplateDirectory = os.path.join(script_dir, "../TestCasesTemplate/")
