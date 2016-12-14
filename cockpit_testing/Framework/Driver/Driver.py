@@ -16,7 +16,6 @@ if __name__ == '__main__':
     THREADS_NUMBER = int(base_test.values['threads_number'])
     BLUEPRINT_NAME = options.bpname
     create_blueprint = CreateBluePrint(clone=options.clone)
-    import ipdb; ipdb.set_trace()
     create_blueprint.create_blueprint()
     role = {}
 
