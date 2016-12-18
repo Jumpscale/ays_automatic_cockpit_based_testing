@@ -4,6 +4,7 @@
 
 from cockpit_testing.Framework.utils.utils import BaseTest
 import os
+import shutil
 
 
 class CreateBluePrint(BaseTest):
@@ -43,6 +44,9 @@ class CreateBluePrint(BaseTest):
         else:
             for index, testCasesTemplatePath in enumerate(self.TestCasesTemplatePath):
                 self.pre_blueprint(index, testCasesTemplatePath)
+
+        # remove TestCasesTemplate
+        shutil.rmtree(self.testCasesTemplateDirectory)
 
     def pre_blueprint(self, index, testCasesTemplatePath):
         blueprintTemplate = open(testCasesTemplatePath, 'r')

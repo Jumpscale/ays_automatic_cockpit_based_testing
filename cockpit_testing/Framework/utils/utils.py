@@ -4,11 +4,14 @@ import uuid
 import os, re
 from subprocess import Popen, PIPE
 from xml.etree.ElementTree import Element, SubElement, tostring
+from bs4 import BeautifulSoup
 from client import Client
+import logging
 
 
 class BaseTest(object):
     def __init__(self):
+        self.clone = True
         self.account = ''
         self.values = {'environment': '',
                        'username': '',
@@ -27,6 +30,7 @@ class BaseTest(object):
 
         self.Testcases_results = {'Blueprint Name': ['Test Result', 'Execution Time']}
         self.requests = requests
+        self.logging = logging
 
     def setup(self):
         self.get_testcases_templates()
@@ -39,7 +43,7 @@ class BaseTest(object):
             client_header = {'Content-Type': 'application/x-www-form-urlencoded',
                              'Accept': 'application/json'}
             client_body = {'name': self.account,
-                           'username': self.values['username'],
+                            'username': self.values['username'],
                            'maxMemoryCapacity': -1,
                            'maxVDiskCapacity': -1,
                            'maxCPUCapacity': -1,
@@ -59,11 +63,6 @@ class BaseTest(object):
                 client_response.raise_for_status()
 
     def teardown(self):
-        print 'START : Tear down'
-        # Delete TestCasesTemplates
-        self.run_cmd_via_subprocess('rm -rf cockpit_testing/Framework/TestCasesTemplate')
-
-        print 'DELETED : TestCasesTemplate'
         # Delete account
         api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/delete'
         client_header = {'Content-Type': 'application/x-www-form-urlencoded',
@@ -195,13 +194,25 @@ class BaseTest(object):
         testsuit = Element('testsuite', testsuit_params)
 
         for key in self.Testcases_results:
-            testcase_params = {'blueprint_template': 'cockpit_testing/Framework/TestCasesTemplate',
-                               'name': 'test_create_cloudspace',
+            testcase_params = {'classname': "/cockpit_testing/Framework/TestCases/" + key,
+                               'name': key,
                                'result': str(self.Testcases_results[key][0]),
                                'time': str(self.Testcases_results[key][1])}
-            testcase = SubElement(testsuit, 'testcase', testcase_params)
 
-        print tostring(testsuit)
+            testcase = SubElement(testsuit, 'testcase', testcase_params)
+            if 'ERROR' in self.Testcases_results[key][0]:
+                error = SubElement(testcase, 'error')
+                error.text = str(self.Testcases_results[key][0])
+            elif 'FAILED' in self.Testcases_results[key][0]:
+                failuer = SubElement(testcase, 'failure')
+                failuer.text = str(self.Testcases_results[key][0])
+            elif 'Skip' in self.Testcases_results[key][0]:
+                skipped = SubElement(testcase, 'skipped')
+                skipped.text = str(self.Testcases_results[key][0])
+
+        resultFile = open('testresults.xml', 'w')
+        resultFile.write(BeautifulSoup((tostring(testsuit)), 'xml').prettify())
+
 
     def get_jobs(self, specific_blueprint):
         # Return : All paths which is under TestCases dir.
@@ -223,3 +234,12 @@ class BaseTest(object):
         if len(test_cases_path) == 0 and len(test_cases_files) > 0:
             raise NameError('There is no %s blueprint in TestCases dir' % specific_blueprint)
         return test_cases_path
+
+    def log(self):
+        self.logging.basicConfig(filename="log.log", filemode='w', level=logging.DEBUG)
+        '''
+        How to use:
+            self.logging.debug("This is a debug message")
+            self.logging.info("Informational message")
+            self.logging.error("An error has happened!")
+        '''
