@@ -13,6 +13,8 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
 
     base_test = BaseTest()
+    base_test.log()
+
     THREADS_NUMBER = int(base_test.values['threads_number'])
     BLUEPRINT_NAME = options.bpname
     create_blueprint = CreateBluePrint(clone=options.clone)
@@ -43,7 +45,8 @@ if __name__ == '__main__':
         while not queue.empty():
             try:
                 testCasesPath = queue.get()
-                print 'Test case path is : %s' % testCasesPath
+                bpFileName = testCasesPath[testCasesPath.index('/TestCases/') + 11:]
+                print '* Test case : %s' % bpFileName
                 blueprint = create_blueprint.load_blueprint(testCasesPath=testCasesPath)
                 get_testService_role(blueprint=blueprint, thread_name=threading.current_thread().name)
                 request_cockpit_api = RequestCockpitAPI()
@@ -57,8 +60,8 @@ if __name__ == '__main__':
 
                 if request_cockpit_api.get_run_status(repository=request_cockpit_api.repo['name'],
                                                       run_key=request_cockpit_api.repo['key']):
-                    request_cockpit_api.Testcases_results[
-                        request_cockpit_api.blueprint['name']] = request_cockpit_api.get_service_data(
+                    base_test.Testcases_results[
+                        bpFileName] = request_cockpit_api.get_service_data(
                         repository=request_cockpit_api.repo['name'],
                         role=role[threading.current_thread().name][0],
                         service=role[threading.current_thread().name][1])
@@ -67,18 +70,18 @@ if __name__ == '__main__':
                     error_message = 'ERROR : %s %s' % (
                         request_cockpit_api.blueprint['name'], request_cockpit_api.blueprint['log'])
 
-                    request_cockpit_api.Testcases_results[request_cockpit_api.blueprint['name']] = [error_message,
-                                                                                                    request_cockpit_api.testcase_time]
+                    base_test.Testcases_results[bpFileName] = [error_message,
+                                                               request_cockpit_api.testcase_time]
 
-                request_cockpit_api.generate_xml_results()
                 queue.task_done()
             except:
                 queue.task_done()
-                print traceback.format_exc()
+                base_test.logging.error(traceback.format_exc())
+
 
     for _ in range(THREADS_NUMBER):
         threading.Thread(target=work).start()
 
-
     queue.join()
+    base_test.generate_xml_results()
     create_blueprint.teardown()
