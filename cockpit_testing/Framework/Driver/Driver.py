@@ -7,6 +7,8 @@ import time, traceback, sys
 from optparse import OptionParser
 
 if __name__ == '__main__':
+    print ' * Driver is running ..... '
+
     parser = OptionParser()
     parser.add_option('-b', '--bpname', help='blueprint name', dest='bpname', default='', action='store')
     parser.add_option('--no-clone', help='clone development repo', dest='clone', default=True, action='store_false')

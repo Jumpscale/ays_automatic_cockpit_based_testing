@@ -102,16 +102,17 @@ class RequestCockpitAPI(BaseTest):
 
             if response.status_code == 200:
                 content = json.loads(response.content)
+                state = str(content['state'])
 
-                if content['state'] == 'Running' or content['state'] == 'new':
-                    self.logging.info('The Running state is %s' % content['state'])
+                if state == 'Running' or state == 'new':
+                    self.logging.info('The Running state is %s' % state)
                     time.sleep(10)
                     continue
-                elif content['state'] == 'ok':
-                    self.logging.info('The Running state is %s' % content['state'])
+                elif state == 'ok':
+                    self.logging.info('The Running state is %s' % state)
                     return True
-                elif content['state'] == 'error':
-                    self.logging.error('ERROR : The Running state is %s') % content['state']
+                elif state == 'error':
+                    self.logging.error('ERROR : The Running state is %s' % state)
                     self.blueprint['log'] = content['steps']
                     return False
             else:
