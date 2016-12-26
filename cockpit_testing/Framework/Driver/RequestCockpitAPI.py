@@ -14,6 +14,7 @@ class RequestCockpitAPI(BaseTest):
         super(RequestCockpitAPI, self).__init__()
         self.repo = {'name': self.random_string()}
         self.blueprint = {'name': self.random_string()}
+        self.response_error_content = ''
 
     def create_new_repository(self, repository):
         '''
@@ -32,6 +33,7 @@ class RequestCockpitAPI(BaseTest):
         else:
             self.logging.error('* ERROR : response status code %i' % response.status_code)
             self.logging.error('* ERROR : response content %s ' % response.content)
+            self.response_error_content = response.content
             raise NameError('ERROR : response status code %i' % response.status_code)
 
     def send_blueprint(self, repository, blueprint):
@@ -51,6 +53,7 @@ class RequestCockpitAPI(BaseTest):
         else:
             self.logging.error('ERROR : response status code %i' % response.status_code)
             self.logging.error('ERROR : response content %s ' % response.content)
+            self.response_error_content = response.content
             raise NameError('ERROR : response status code %i' % response.status_code)
 
     def execute_blueprint(self, repository='', blueprint=''):
@@ -68,6 +71,7 @@ class RequestCockpitAPI(BaseTest):
         else:
             self.logging.error('ERROR : response status code %i %s ' % (response.status_code, response.content))
             self.logging.error('ERROR : response content %s ' % response.content)
+            self.response_error_content = response.content
             raise NameError('ERROR : response status code %i %s ' % (response.status_code, response.content))
 
     def run_repository(self, repository):
@@ -88,6 +92,7 @@ class RequestCockpitAPI(BaseTest):
         else:
             self.logging.error('ERROR : response status code %i' % response.status_code)
             self.logging.error('ERROR : response content %s ' % response.content)
+            self.response_error_content = response.content
             raise NameError('ERROR : response status code %i' % response.status_code)
 
     def get_run_status(self, repository, run_key):
@@ -118,6 +123,7 @@ class RequestCockpitAPI(BaseTest):
             else:
                 self.logging.error('ERROR : response status code %i' % response.status_code)
                 self.logging.error('ERROR : response content %s ' % response.content)
+                self.response_error_content = response.content
                 raise NameError('ERROR : response status code %i' % response.status_code)
         else:
             raise NameError('ERROR : Time out')
@@ -139,4 +145,5 @@ class RequestCockpitAPI(BaseTest):
         else:
             self.logging.error('ERROR : response status code %i' % response.status_code)
             self.logging.error('ERROR : response content %s ' % response.content)
+            self.response_error_content = response.content
             raise NameError('ERROR : response status code %i' % response.status_code)
