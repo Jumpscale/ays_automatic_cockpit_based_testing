@@ -185,6 +185,7 @@ class BaseTest(object):
         self.values['jwt'] = resp.content
 
     def generate_xml_results(self):
+        print ' * Generate XML results'
         Succeeded = 0
         Errors = 0
         Failures = 0
@@ -216,7 +217,6 @@ class BaseTest(object):
         for key in self.Testcases_results:
             testcase_params = {'classname': "/cockpit_testing/Framework/TestCases/" + key,
                                'name': key,
-                               'result': str(self.Testcases_results[key][0]),
                                'time': str(self.Testcases_results[key][1])}
 
             testcase = SubElement(testsuit, 'testcase', testcase_params)
