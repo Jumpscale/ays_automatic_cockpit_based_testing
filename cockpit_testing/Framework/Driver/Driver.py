@@ -45,10 +45,13 @@ if __name__ == '__main__':
 
     def work():
         while not queue.empty():
+            testCasesPath = queue.get()
+            bpFileName = testCasesPath[testCasesPath.index('/TestCases/') + 11:]
+            print ' * Test case : %s' % bpFileName
+            base_test.logging.info('\n')
+            base_test.logging.info('* Test case : %s' % bpFileName)
+
             try:
-                testCasesPath = queue.get()
-                bpFileName = testCasesPath[testCasesPath.index('/TestCases/') + 11:]
-                print '* Test case : %s' % bpFileName
                 blueprint = create_blueprint.load_blueprint(testCasesPath=testCasesPath)
                 get_testService_role(blueprint=blueprint, thread_name=threading.current_thread().name)
                 request_cockpit_api = RequestCockpitAPI()
@@ -76,10 +79,15 @@ if __name__ == '__main__':
                                                                request_cockpit_api.testcase_time]
 
                 queue.task_done()
+
             except:
-                queue.task_done()
                 base_test.logging.error(traceback.format_exc())
 
+                # Add error message to xml result
+                error_message = 'ERROR : %s %s' % (request_cockpit_api.response_error_content , traceback.format_exc())
+                base_test.Testcases_results[bpFileName] = [error_message, 0]
+
+                queue.task_done()
 
     for _ in range(THREADS_NUMBER):
         threading.Thread(target=work).start()
