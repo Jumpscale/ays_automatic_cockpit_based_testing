@@ -111,7 +111,7 @@ class RequestCockpitAPI(BaseTest):
 
                 if state == 'Running' or state == 'new':
                     self.logging.info('The Running state is %s' % state)
-                    time.sleep(10)
+                    time.sleep(3)
                     continue
                 elif state == 'ok':
                     self.logging.info('The Running state is %s' % state)
