@@ -28,7 +28,7 @@ class BaseTest(object):
                        'threads_number': ''
                        }
         self.get_config_values()
-        #self.get_jwt()
+        # self.get_jwt()
         self.header = {'Authorization': 'bearer ' + self.values['jwt'],
                        'content-type': 'application/json'}
 
@@ -45,12 +45,14 @@ class BaseTest(object):
 
         for _ in range(30):
             try:
-                self.client = Client('https://' + self.values['environment'], self.values['username'], self.values['password'])
+                self.client = Client('https://' + self.values['environment'], self.values['username'],
+                                     self.values['password'])
                 break
             except:
                 time.sleep(1)
         else:
-            self.client = Client('https://' + self.values['environment'], self.values['username'], self.values['password'])
+            self.client = Client('https://' + self.values['environment'], self.values['username'],
+                                 self.values['password'])
 
         # create new account
         if not self.account:
@@ -60,7 +62,7 @@ class BaseTest(object):
             client_header = {'Content-Type': 'application/x-www-form-urlencoded',
                              'Accept': 'application/json'}
             client_body = {'name': self.account,
-                            'username': self.values['username'],
+                           'username': self.values['username'],
                            'maxMemoryCapacity': -1,
                            'maxVDiskCapacity': -1,
                            'maxCPUCapacity': -1,
@@ -75,7 +77,7 @@ class BaseTest(object):
 
             if client_response.status_code == 200:
                 self.values['account'] = self.account
-                self.logging.info(' * DONE : Create %s account' % self.account )
+                self.logging.info(' * DONE : Create %s account' % self.account)
             else:
                 self.logging.error(' * ERROR : response status code %i' % client_response.status_code)
                 self.logging.error(' * ERROR : response content %s' % client_response.content)
@@ -95,8 +97,6 @@ class BaseTest(object):
             self.logging.info('DONE: Delete %s account' % self.values['account'])
         else:
             client_response.raise_for_status()
-
-
 
     @staticmethod
     def random_string():
@@ -157,8 +157,8 @@ class BaseTest(object):
             dirs = self.run_cmd_via_subprocess('ls repos').split('\n')[:-1]
             if repo_name in dirs:
                 self.run_cmd_via_subprocess('cd repos; rm -rf %s' % repo_name)
-            print '* clone repo %s' %repo
-            print '  branch %s' %branch
+            print ' * clone repo %s' % repo
+            print ' * branch %s' % branch
             self.run_cmd_via_subprocess('cd repos; git clone -b %s %s' % (branch, repo))
         # copy blueprints test templates
         self.run_cmd_via_subprocess(
@@ -232,7 +232,6 @@ class BaseTest(object):
 
         resultFile = open('testresults.xml', 'w')
         resultFile.write(BeautifulSoup((tostring(testsuit)), 'xml').prettify())
-
 
     def get_jobs(self, specific_blueprint):
         # Return : All paths which is under TestCases dir.
