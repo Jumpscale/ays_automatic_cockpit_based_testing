@@ -43,45 +43,7 @@ class BaseTest(object):
         if not self.values['password']:
             self.values['password'] = str(input("Please, Enter %s's password : " % self.values['username']))
 
-        for _ in range(30):
-            try:
-                self.client = Client('https://' + self.values['environment'], self.values['username'],
-                                     self.values['password'])
-                break
-            except:
-                time.sleep(1)
-        else:
-            self.client = Client('https://' + self.values['environment'], self.values['username'],
-                                 self.values['password'])
-
-        # create new account
-        if not self.account:
-            self.logging.info(' * Create new account .... ')
-            self.account = self.random_string()
-            api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/create'
-            client_header = {'Content-Type': 'application/x-www-form-urlencoded',
-                             'Accept': 'application/json'}
-            client_body = {'name': self.account,
-                           'username': self.values['username'],
-                           'maxMemoryCapacity': -1,
-                           'maxVDiskCapacity': -1,
-                           'maxCPUCapacity': -1,
-                           '&maxNASCapacity': - 1,
-                           'maxArchiveCapacity': -1,
-                           'maxNetworkOptTransfer': - 1,
-                           'maxNetworkPeerTransfer': - 1,
-                           'maxNumPublicIP': - 1,
-                           'location': self.values['location']}
-            client_response = self.client._session.post(url=api, headers=client_header, data=client_body)
-            self.account_id = client_response.text
-
-            if client_response.status_code == 200:
-                self.values['account'] = self.account
-                self.logging.info(' * DONE : Create %s account' % self.account)
-            else:
-                self.logging.error(' * ERROR : response status code %i' % client_response.status_code)
-                self.logging.error(' * ERROR : response content %s' % client_response.content)
-                client_response.raise_for_status()
+        self.create_account()
 
     def teardown(self):
         print ' * Execute teardown method .... '
@@ -127,6 +89,47 @@ class BaseTest(object):
                 self.values[key] = value
 
         config.close()
+
+    def create_account(self):
+        for _ in range(30):
+            try:
+                self.client = Client('https://' + self.values['environment'], self.values['username'],
+                                     self.values['password'])
+                break
+            except:
+                time.sleep(1)
+        else:
+            self.client = Client('https://' + self.values['environment'], self.values['username'],
+                                 self.values['password'])
+
+        # create new account
+        if not self.account:
+            self.logging.info(' * Create new account .... ')
+            self.account = self.random_string()
+            api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/create'
+            client_header = {'Content-Type': 'application/x-www-form-urlencoded',
+                             'Accept': 'application/json'}
+            client_data = {'name': self.account,
+                           'username': self.values['username'],
+                           'maxMemoryCapacity': -1,
+                           'maxVDiskCapacity': -1,
+                           'maxCPUCapacity': -1,
+                           '&maxNASCapacity': - 1,
+                           'maxArchiveCapacity': -1,
+                           'maxNetworkOptTransfer': - 1,
+                           'maxNetworkPeerTransfer': - 1,
+                           'maxNumPublicIP': - 1,
+                           'location': self.values['location']}
+            client_response = self.client._session.post(url=api, headers=client_header, data=client_data)
+
+            if client_response.status_code == 200:
+                self.account_id = client_response.text
+                self.values['account'] = self.account
+                self.logging.info(' * DONE : Create %s account' % self.account)
+            else:
+                self.logging.error(' * ERROR : response status code %i' % client_response.status_code)
+                self.logging.error(' * ERROR : response content %s' % client_response.content)
+                client_response.raise_for_status()
 
     def run_cmd_via_subprocess(self, cmd):
         sub = Popen([cmd], stdout=PIPE, stderr=PIPE, shell=True)
