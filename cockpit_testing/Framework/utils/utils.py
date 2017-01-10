@@ -283,10 +283,10 @@ class BaseTest(object):
                     return [True, response]
                 else:
                     time.sleep(2)
-                    print '..',
+                    print response.url, response.status_code
             except:
                 time.sleep(2)
-                print '..',
+                print response.url, response.status_code
 
         return [False, response]
 

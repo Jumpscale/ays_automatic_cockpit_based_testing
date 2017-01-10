@@ -94,4 +94,4 @@ if __name__ == '__main__':
 
     queue.join()
     base_test.generate_xml_results()
-    #create_blueprint.teardown()
+    create_blueprint.teardown()
