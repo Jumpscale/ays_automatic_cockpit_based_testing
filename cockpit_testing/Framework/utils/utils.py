@@ -265,3 +265,28 @@ class BaseTest(object):
             self.logging.info("Informational message")
             self.logging.error("An error has happened!")
         '''
+
+    def request_handling(self, method, api, headers, body, expected_responce_code=200):
+        # This method handle the api request errors for 10 times.
+
+        if method not in ['post', 'get']:
+            raise NameError(" * %s method isn't handled" % method)
+
+        for _ in range(300):
+            try:
+                if method == 'get':
+                    response = self.requests.get(url=api, headers=headers, data=body)
+                elif method == 'post':
+                    response = self.requests.post(url=api, headers=headers, data=body)
+
+                if response.status_code == expected_responce_code:
+                    return [True, response]
+                else:
+                    time.sleep(2)
+                    print '..',
+            except:
+                time.sleep(2)
+                print '..',
+
+        return [False, response]
+

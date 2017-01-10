@@ -16,8 +16,8 @@ executeRemoteCommands = ExecuteRemoteCommands(ip=requestEnvAPI.cloudspace['ip'],
                                               password=requestEnvAPI.virtualmahine['password']
                                               )
 executeRemoteCommands.update_machine()
-executeRemoteCommands.install_js()
-executeRemoteCommands.install_cockpit()
+executeRemoteCommands.install_js(branch="8.1.0")
+executeRemoteCommands.install_cockpit(branch="8.1.0")
 
 updateConfigFile = UpdateConfigFile()
-updateConfigFile.update_config_file(cockpit_ip='2.2.2.2')
+updateConfigFile.update_config_file(cockpit_ip=requestEnvAPI.cloudspace['ip'])

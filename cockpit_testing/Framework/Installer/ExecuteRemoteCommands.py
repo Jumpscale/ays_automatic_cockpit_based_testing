@@ -34,18 +34,18 @@ class ExecuteRemoteCommands():
         command = 'echo %s | sudo -S apt-get update' % self.password
         self.execute_command(command=command)
 
-    def install_js(self):
+    def install_js(self, branch):
         self.baseTest.logging.info(' * Creating jsInstaller file .... ')
-        command = """echo 'cd $TMPDIR;\nexport JSBRANCH="8.1.0";\ncurl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core8/$JSBRANCH/install/install.sh?$RANDOM > install.sh;\nbash install.sh;' > jsInstaller.sh"""
+        command = """echo 'cd $TMPDIR;\nexport JSBRANCH=%s;\ncurl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core8/$JSBRANCH/install/install.sh?$RANDOM > install.sh;\nbash install.sh;' > jsInstaller.sh""" % branch
         self.execute_command(command=command)
 
         self.baseTest.logging.info(' * Executing jsInstaller .... ')
         command = 'echo %s | sudo -S bash jsInstaller.sh' % self.password
         self.execute_command(command=command)
 
-    def install_cockpit(self):
+    def install_cockpit(self, branch):
         self.baseTest.logging.info(' * Creating cockpitInstaller.py file ... ')
-        command = """echo 'from JumpScale import j\ncuisine = j.tools.cuisine.local\ncuisine.solutions.cockpit.install_all_in_one(start=True, branch="8.1.0", reset=True, ip="%s")' >  cockpitInstaller.py""" % self.ip
+        command = """echo 'from JumpScale import j\ncuisine = j.tools.cuisine.local\ncuisine.solutions.cockpit.install_all_in_one(start=True, branch="%s", reset=True, ip="%s")' >  cockpitInstaller.py""" % (branch, self.ip)
         self.execute_command(command=command)
 
         self.baseTest.logging.info(' * Executing cockpitInstaller.py file ... ')

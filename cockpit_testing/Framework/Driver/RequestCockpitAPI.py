@@ -27,8 +27,13 @@ class RequestCockpitAPI(BaseTest):
                                     "name": repository,
                                     "path": ""})
 
-        response = self.requests.post(url=API, headers=self.header, data=API_BODY)
-        if response.status_code == 201:
+        result, response = self.request_handling(method='post',
+                                                 api=API,
+                                                 headers=self.header,
+                                                 body=API_BODY,
+                                                 expected_responce_code=201)
+
+        if result:
             self.logging.info('* CREATED : %s repo' % self.repo['name'])
         else:
             self.logging.error('* ERROR : response status code %i' % response.status_code)
@@ -46,9 +51,13 @@ class RequestCockpitAPI(BaseTest):
         API_BODY = self.build_json({'name': self.blueprint['name'],
                                     'content': blueprint})
 
-        response = self.requests.post(url=API, headers=self.header, data=API_BODY)
+        result, response = self.request_handling(method='post',
+                                                 api=API,
+                                                 headers=self.header,
+                                                 body=API_BODY,
+                                                 expected_responce_code=201)
 
-        if response.status_code == 201:
+        if result:
             self.logging.info('CREATED : %s blueprint in %s repo' % (self.blueprint['name'], self.repo['name']))
         else:
             self.logging.error('ERROR : response status code %i' % response.status_code)
@@ -65,8 +74,13 @@ class RequestCockpitAPI(BaseTest):
         API_BODY = self.build_json({'blueprint': blueprint,
                                     'repository': repository})
 
-        response = self.requests.post(url=API, headers=self.header, data=API_BODY)
-        if response.status_code == 200:
+        result, response = self.request_handling(method='post',
+                                                 api=API,
+                                                 headers=self.header,
+                                                 body=API_BODY,
+                                                 expected_responce_code=200)
+
+        if result:
             self.logging.info('EXECUTED : %s blueprint in %s repo' % (self.blueprint['name'], self.repo['name']))
         else:
             self.logging.error('ERROR : response status code %i %s ' % (response.status_code, response.content))
@@ -83,8 +97,13 @@ class RequestCockpitAPI(BaseTest):
         API_BODY = self.build_json({'callback_url ': self.random_string(),
                                     'simulate': False})
 
-        response = self.requests.post(url=API, headers=self.header, data=API_BODY)
-        if response.status_code == 200:
+        result, response = self.request_handling(method='post',
+                                                 api=API,
+                                                 headers=self.header,
+                                                 body=API_BODY,
+                                                 expected_responce_code=200)
+
+        if result:
             self.logging.info('RAN : %s repo' % self.repo['name'])
             self.repo['key'] = response.json()['key']
             self.logging.info('key : %s' % self.repo['key'])
@@ -111,7 +130,7 @@ class RequestCockpitAPI(BaseTest):
 
                 if state == 'Running' or state == 'new':
                     self.logging.info('The Running state is %s' % state)
-                    time.sleep(3)
+                    time.sleep(10)
                     continue
                 elif state == 'ok':
                     self.logging.info('The Running state is %s' % state)
@@ -134,9 +153,13 @@ class RequestCockpitAPI(BaseTest):
         '''
         API = self.build_api(['repository', repository, 'service', role, service])
 
-        response = self.requests.get(url=API, headers=self.header)
+        result, response = self.request_handling(method='get',
+                                                 api=API,
+                                                 headers=self.header,
+                                                 body='',
+                                                 expected_responce_code=200)
 
-        if response.status_code == 200:
+        if result:
             temp = json.loads(response.content)['data']
             result = temp['result']
             self.logging.info('RESULT: %s' % result)
