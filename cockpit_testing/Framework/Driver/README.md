@@ -77,10 +77,10 @@ This sample is following the following rules to identify the instance:
   * {config_parameter} : Driver will replace it with the value of this parameter in the config file.
   * # 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE) : This line should be set before the testing service consuming line.
 
-# Add Blueprint templates to the repo:
+# Add Blueprint Templates To The Repo:
   The driver is looking for the blueprint templates in the /<repo_name>/tests/bp_test_templates directory so you have to craete this path and add your blueprint templates under it.
 
-# Add testing service to the AYS repo:
+# Add Testing Service To The AYS Repo:
   You have to add any new test service to the AYS repo and to consume these services you should have a cockpit machine which was installed from this repo.
 
 # Author
