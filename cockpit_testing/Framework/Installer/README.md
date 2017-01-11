@@ -1,5 +1,5 @@
 # Cockpit Installer
-cockpit installer is a script to automate the cockpit installation steps. It executes the following steps:
+The cockpit installer is a script to automate the cockpit installation steps in the development mode. It executes the following steps:
 * create an account.
 * Create an cloudspace.
 * Create a virtual machine with Ubuntu 16.04.
