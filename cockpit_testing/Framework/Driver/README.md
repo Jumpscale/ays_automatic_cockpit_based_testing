@@ -18,6 +18,7 @@ To use the Driver, follow the following commands:
 git clone git@github.com:Jumpscale/ays_automatic_cockpit_based_testing.git
 ```
 * Enter Username, Password, Environment, Location, cockpit_url, client_id, client_secret, repo and the branch values in the config.ini file.
+
  Hint : client_id and client_secret are using to get JWT from itsyou.online for the production cockpit mode. Repo and the branch which are having the blueprints and services which will be executed.
 
 * From your terminal make sure that the current directory is ays_automatic_cockpit_based_testing
