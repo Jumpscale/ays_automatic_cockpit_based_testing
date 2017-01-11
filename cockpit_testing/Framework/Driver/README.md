@@ -80,7 +80,8 @@ This sample is following the following rules to identify the instance:
 # Add Blueprint templates to the repo:
   The driver is looking for the blueprint templates in the /<repo_name>/tests/bp_test_templates directory so you have to craete this path and add your blueprint templates under it.
 
-
+# Add testing service to the AYS repo:
+  You have to add any new test service to the AYS repo and to consume these services you should have a cockpit machine which was installed from this repo.
 
 # Author
 * Islam Taha
