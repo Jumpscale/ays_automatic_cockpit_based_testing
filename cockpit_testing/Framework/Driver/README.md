@@ -75,7 +75,7 @@ This sample is following the following rules to identify the instance:
   * {random} : Driver will generate a random string.
   * {random_x} :  Driver will generate a random string and save its value to be set for other {random_x} in the blueprint.
   * {config_parameter} : Driver will replace it with the value of this parameter in the config file.
-  * ># 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE) : This line should be set before the testing service consuming line.
+  * # 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE) : This line should be set before the testing service consuming line.
 
 
 
