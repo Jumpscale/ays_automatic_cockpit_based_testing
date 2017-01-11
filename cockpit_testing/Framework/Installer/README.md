@@ -16,14 +16,12 @@ Clone this repo in your local machine and follow the following instructions to i
 * Enter Username, Password and the Environment values in the config.ini file.
 * From your terminal make sure that the current directory is ays_automatic_cockpit_based_testing
 * Execute the following commands:
-
-'''
+```
 export PYTHONPATH='./'
 python cockpit_testing/Framework/Installer/Installer.py -b <JS branch> -s <cockpit branch>
-'''
-
+```
 * Check logs in log.log file.
 * After the installation is completed, the cockpit_url variable in the config.ini file will be changed automatically to point the new cockpit.
 
 # Author
-* **Islam Taha
+* Islam Taha
