@@ -77,8 +77,8 @@ This sample is following the following rules to identify the instance:
   * {config_parameter} : Driver will replace it with the value of this parameter in the config file.
   * # 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE) : This line should be set before the testing service consuming line.
 
-# Add Blueprint templates and services to the repo:
-  The driver is looking for the blueprint templates in the /<repo_name>/tests/bp_test_templates directory.
+# Add Blueprint templates to the repo:
+  The driver is looking for the blueprint templates in the /<repo_name>/tests/bp_test_templates directory so you have to craete this path and add your blueprint templates under it.
 
 
 
