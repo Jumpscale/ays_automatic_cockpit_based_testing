@@ -3,8 +3,8 @@ The cockpit driver is a script to automate testing of the cockpit solution. It d
 * Clone a specific repo which has the blueprints templates.
 * Create an account.
 * Modify these bleuprints templates with a new random values.
-* Call the creation a new repo API.
-* Call the creation a new blueprint API and send the blueprint.
+* Call the creation new repo API.
+* Call the creation new blueprint API and send the blueprint.
 * Call the execution repo API and get the run key.
 * Call the checking running status API.
 * Get the result values after the execution status switch from 'NEW' to 'OK'.
