@@ -13,6 +13,7 @@ class RequestEnvAPI(BaseTest):
 
     def create_cloudspace(self):
         self.logging.info(' * Create new cloudspace .... ')
+        print ' * Create new cloudspace .... '
         self.cloudspace['name'] = self.random_string()
         api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/cloudspace/create'
         client_data = {
@@ -42,6 +43,7 @@ class RequestEnvAPI(BaseTest):
 
     def create_virtualmachine(self):
         self.logging.info(' * Create new virtual mahcine .... ')
+        print ' * Create new virtual mahcine .... '
         self.virtualmahine['name'] = self.random_string()
 
         api = 'https://' + self.values['environment'] + '/restmachine/cloudapi/machines/create'
@@ -80,6 +82,7 @@ class RequestEnvAPI(BaseTest):
 
     def create_port_forward(self, publicPorts):
         self.logging.info(' * Get cloudpsace public IP')
+        print ' * Get cloudpsace public IP'
         self.get_cloudspace_ip()
 
         for key in publicPorts:
