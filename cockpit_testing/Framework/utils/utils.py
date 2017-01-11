@@ -144,8 +144,12 @@ class BaseTest(object):
         repo = self.values['repo']
         branch = self.values['branch']
         bps_driver_path = 'TestCasesTemplate'
-        match = re.search(r'/(\S+).git', repo)
-        repo_name = match.group(1)
+        if 'https' in repo:
+            temp = repo.split('/')[-1]
+            repo_name = temp[:temp.find('.')]
+        else:
+            match = re.search(r'/(\S+).git', repo)
+            repo_name = match.group(1)
 
         # make directory to clone repos on
         if self.clone:
