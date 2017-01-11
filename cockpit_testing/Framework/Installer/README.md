@@ -12,7 +12,11 @@ cockpit installer is a script to automate the cockpit installation steps. It exe
 * Forward port 5000 to 5000.
 
 # Getting Started
-Clone this repo in your local machine and follow the following instructions to install the cockpit:
+Follow the following commands:
+* Clone the repo
+```
+git clone git@github.com:Jumpscale/ays_automatic_cockpit_based_testing.git
+```
 * Enter Username, Password and the Environment values in the config.ini file.
 * From your terminal make sure that the current directory is ays_automatic_cockpit_based_testing
 * Execute the following commands:
