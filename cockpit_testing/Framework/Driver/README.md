@@ -22,7 +22,7 @@ git clone git@github.com:Jumpscale/ays_automatic_cockpit_based_testing.git
 
 * From your terminal make sure that the current directory is ays_automatic_cockpit_based_testing
 * Execute the following commands:
-```
+```bash
 export PYTHONPATH='./'
 python cockpit_testing/Framework/Driver/Driver.py # This will clone the repo and execute all the blueprints.
 ```
@@ -37,8 +37,47 @@ Options:
   --no-clone            clone development repo
 
 ```
+So, If you need to execute a specific blueprint, you have to add its full name after -b and if you don't need to clone the repo, Just use --no-clone parameter.
+
 * Check logs in log.log file.
 * The results will be documented in testresults.xml file.
+
+
+# Blueprint Templates Creation:
+To create a new blueprint you have to follow the following sample:
+
+```yaml
+g8client__main:
+    url: '{environment}'
+    login: '{username}'
+    password: '{password}'
+
+vdc__{random_vdc}:
+    description: '{random}'
+    g8client: 'main'
+    account: '{account}'
+    location: '{location}'
+    uservdc:
+        - '{username}'
+
+# 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
+test_create_cloudspace__{random}:
+   vdc: {random_vdc}
+   g8client: 'main'
+
+actions:
+   - action: 'install'
+   - action: 'test_create_cloudspace'
+     actor: test_create_cloudspace
+```
+
+This sample is following the following rules to identify the instance:
+  * {random} : Driver will generate a random string.
+  * {random_x} :  Driver will generate a random string and save its value to be set for other {random_x} in the blueprint.
+  * {config_parameter} : Driver will replace it with the value of this parameter in the config file.
+  * ># 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE) : This line should be set before the testing service consuming line.
+
+
 
 # Author
 * Islam Taha
