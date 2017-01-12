@@ -28,7 +28,7 @@ class BaseTest(object):
                        'threads_number': ''
                        }
         self.get_config_values()
-        #self.get_jwt()
+        # self.get_jwt()
         self.header = {'Authorization': 'bearer ' + self.values['jwt'],
                        'content-type': 'application/json'}
 
@@ -262,7 +262,8 @@ class BaseTest(object):
         return test_cases_path
 
     def log(self):
-        self.logging.basicConfig(filename="log.log", filemode='w', level=logging.INFO)
+        self.logging.basicConfig(filename="log.log", filemode='w', level=logging.INFO,
+                                 format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         '''
         How to use:
             self.logging.debug("This is a debug message")
@@ -292,4 +293,3 @@ class BaseTest(object):
                 time.sleep(2)
 
         return [False, response]
-
