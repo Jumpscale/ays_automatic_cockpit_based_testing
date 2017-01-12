@@ -11,9 +11,6 @@ import time
 
 
 class BaseTest(object):
-
-    CREATE_ACCOUNT = True
-
     def __init__(self):
         self.clone = True
         self.account = ''
@@ -31,7 +28,7 @@ class BaseTest(object):
                        'threads_number': ''
                        }
         self.get_config_values()
-        # self.get_jwt()
+        #self.get_jwt()
         self.header = {'Authorization': 'bearer ' + self.values['jwt'],
                        'content-type': 'application/json'}
 
@@ -39,14 +36,23 @@ class BaseTest(object):
         self.requests = requests
         self.logging = logging
 
+        for _ in range(30):
+            try:
+                self.client = Client('https://' + self.values['environment'], self.values['username'],
+                                     self.values['password'])
+                break
+            except:
+                time.sleep(1)
+        else:
+            self.client = Client('https://' + self.values['environment'], self.values['username'],
+                                 self.values['password'])
+
     def setup(self):
         print ' * Execute setup method ..... '
         self.get_testcases_templates()
 
         if not self.values['password']:
             self.values['password'] = str(input("Please, Enter %s's password : " % self.values['username']))
-
-        self.create_account()
 
     def teardown(self):
         print ' * Execute teardown method .... '
@@ -90,24 +96,11 @@ class BaseTest(object):
                 value = line[line.index('=') + 2:]
                 value = value.replace('\n', '')
                 self.values[key] = value
-
         config.close()
 
     def create_account(self):
-        for _ in range(30):
-            try:
-                self.client = Client('https://' + self.values['environment'], self.values['username'],
-                                     self.values['password'])
-                break
-            except:
-                time.sleep(1)
-        else:
-            self.client = Client('https://' + self.values['environment'], self.values['username'],
-                                 self.values['password'])
-
         # create new account
-        print BaseTest.CREATE_ACCOUNT
-        if BaseTest.CREATE_ACCOUNT:
+        if not self.values['account']:
             self.logging.info(' * Create new account .... ')
             self.account = self.random_string()
             api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/create'
@@ -135,7 +128,8 @@ class BaseTest(object):
                 self.logging.error(' * ERROR : response content %s' % client_response.content)
                 client_response.raise_for_status()
         else:
-            self.logging.info(' * Use %s account' % self.account)
+            self.account = self.values['account']
+            self.logging.info(' * Use %s account' % self.values['account'])
 
     def run_cmd_via_subprocess(self, cmd):
         sub = Popen([cmd], stdout=PIPE, stderr=PIPE, shell=True)

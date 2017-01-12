@@ -11,6 +11,31 @@ class RequestEnvAPI(BaseTest):
         self.cloudspace = {}
         self.virtualmahine = {}
 
+    def get_account_ID(self, account):
+        self.logging.info(' * Get %s account ID .... ' % account)
+        print ' * Get account ID .... '
+        api = 'https://' + self.values['environment'] + '/restmachine/cloudapi/accounts/list'
+        client_response = self.client._session.post(url=api, headers=self.client_header)
+
+        if client_response.status_code == 200:
+            for element in client_response.json():
+                if account == element['name']:
+                    self.account_id = element['id']
+                    self.logging.info(' * DONE : Account ID : % d' % self.account_id)
+                    break
+            else:
+                self.logging.error(
+                    " * ERROR : Can't get %s account ID. Please, Make sure that %s username can get this account ID" % (
+                        account, self.values['username']))
+                raise NameError(
+                    " * ERROR : Can't get %s account ID. Please, Make sure that %s username can get this account ID" % (
+                        account, self.values['username']))
+        else:
+            self.logging.error(' * ERROR : response status code %i' % client_response.status_code)
+            self.logging.error(' * ERROR : response content %s' % client_response.content)
+            client_response.raise_for_status()
+
+
     def create_cloudspace(self):
         self.logging.info(' * Create new cloudspace .... ')
         print ' * Create new cloudspace .... '

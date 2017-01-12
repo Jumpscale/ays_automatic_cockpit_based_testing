@@ -20,12 +20,14 @@ if __name__ == '__main__':
 
     THREADS_NUMBER = int(base_test.values['threads_number'])
     BLUEPRINT_NAME = options.bpname
+
     if options.account:
-        BaseTest.CREATE_ACCOUNT = False
-        create_blueprint = CreateBluePrint(clone=options.clone, account=options.account)
+        create_blueprint = CreateBluePrint(clone=options.clone)
+        create_blueprint.values['account'] = options.account
     else:
         create_blueprint = CreateBluePrint(clone=options.clone)
-    import ipdb; ipdb.set_trace()
+        create_blueprint.create_account()
+
     create_blueprint.create_blueprint()
     role = {}
 
@@ -101,4 +103,5 @@ if __name__ == '__main__':
 
     queue.join()
     base_test.generate_xml_results()
-    create_blueprint.teardown()
+    if not options.account:
+        create_blueprint.teardown()

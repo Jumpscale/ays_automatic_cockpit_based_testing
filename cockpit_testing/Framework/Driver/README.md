@@ -1,7 +1,7 @@
 # Cockpit Driver
 The cockpit driver is a script to automate testing of the cockpit solution. It drivers the blueprints and generate a result XML file. It executes the following steps:
 * Clone a specific repo which has the blueprints templates.
-* Create an account.
+* Create an account if the user doesn't pass one as option.
 * Modify these bleuprints templates with a new random values.
 * Call the creation new repo API.
 * Call the creation new blueprint API and send the blueprint.
@@ -9,6 +9,7 @@ The cockpit driver is a script to automate testing of the cockpit solution. It d
 * Call the checking running status API.
 * Get the result values after the execution status switch from 'NEW' to 'OK'.
 * Generate a result XML file which is compatible with Jenkins.
+* Delete the created account.
 
 
 # Getting Started
@@ -36,9 +37,13 @@ Options:
   -b BPNAME, --bpname=BPNAME
                         blueprint name
   --no-clone            clone development repo
+  -u ACCOUNT, --use-account=ACCOUNT
+                        use a specific account
 
 ```
-So, If you need to execute a specific blueprint, you have to add its full name after -b and if you don't need to clone the repo, Just use --no-clone parameter.
+If you need to execute a specific blueprint, you have to add its full name after -b.
+If you don't need to clone the repo, Just use --no-clone parameter.
+If you need to use a specific account add its name after -u  and in this case, Driver won't delete this account.
 
 * Check logs in log.log file.
 * The results will be documented in testresults.xml file.

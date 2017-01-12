@@ -24,6 +24,19 @@ git clone git@github.com:Jumpscale/ays_automatic_cockpit_based_testing.git
 export PYTHONPATH='./'
 python cockpit_testing/Framework/Installer/Installer.py -b <JS branch> -s <cockpit branch>
 ```
+Hint: The Installer --help is:
+```
+Usage: Installer.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -b JS_BRANCH           * Jumpscale branch, Default : 8.1.0
+  -s CP_BRANCH           * Cockpit branch, Default : 8.1.0
+  -u ACCOUNT, --use-account=ACCOUNT
+                        use a specific account
+```
+If you need to use a specific account, Please set its name after -u option.
+
 * Check logs in log.log file.
 * After the installation is completed, the cockpit_url variable in the config.ini file will be changed automatically to point the new cockpit.
 

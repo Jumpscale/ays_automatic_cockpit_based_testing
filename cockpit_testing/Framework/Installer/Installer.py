@@ -9,13 +9,17 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-b', help=' * Jumpscale branch, Default : 8.1.0 ', dest='JS_branch', default='8.1.0', action='store')
     parser.add_option('-s', help=' * Cockpit branch, Default : 8.1.0 ', dest='CP_branch', default='8.1.0', action='store')
+    parser.add_option('-u', '--use-account', help='use a specific account', dest='account', default='', action='store')
     (options, args) = parser.parse_args()
 
     JS_branch = options.JS_branch
     CP_branch = options.CP_branch
 
     requestEnvAPI = RequestEnvAPI()
-    requestEnvAPI.create_account()
+    if options.account:
+       requestEnvAPI.get_account_ID(account=options.account)
+    else:
+        requestEnvAPI.create_account()
     requestEnvAPI.create_cloudspace()
     requestEnvAPI.create_virtualmachine()
     requestEnvAPI.create_port_forward(publicPorts={22: 2222,
