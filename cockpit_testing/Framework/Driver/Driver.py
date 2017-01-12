@@ -12,6 +12,7 @@ if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-b', '--bpname', help='blueprint name', dest='bpname', default='', action='store')
     parser.add_option('--no-clone', help='clone development repo', dest='clone', default=True, action='store_false')
+    parser.add_option('-u', '--use-account', help='use a specific account', dest='account', default='', action='store')
     (options, args) = parser.parse_args()
 
     base_test = BaseTest()
@@ -19,7 +20,12 @@ if __name__ == '__main__':
 
     THREADS_NUMBER = int(base_test.values['threads_number'])
     BLUEPRINT_NAME = options.bpname
-    create_blueprint = CreateBluePrint(clone=options.clone)
+    if options.account:
+        BaseTest.CREATE_ACCOUNT = False
+        create_blueprint = CreateBluePrint(clone=options.clone, account=options.account)
+    else:
+        create_blueprint = CreateBluePrint(clone=options.clone)
+    import ipdb; ipdb.set_trace()
     create_blueprint.create_blueprint()
     role = {}
 
@@ -84,10 +90,11 @@ if __name__ == '__main__':
                 base_test.logging.error(traceback.format_exc())
 
                 # Add error message to xml result
-                error_message = 'ERROR : %s %s' % (request_cockpit_api.response_error_content , traceback.format_exc())
+                error_message = 'ERROR : %s %s' % (request_cockpit_api.response_error_content, traceback.format_exc())
                 base_test.Testcases_results[bpFileName] = [error_message, 0]
 
                 queue.task_done()
+
 
     for _ in range(THREADS_NUMBER):
         threading.Thread(target=work).start()

@@ -11,6 +11,9 @@ import time
 
 
 class BaseTest(object):
+
+    CREATE_ACCOUNT = True
+
     def __init__(self):
         self.clone = True
         self.account = ''
@@ -103,7 +106,8 @@ class BaseTest(object):
                                  self.values['password'])
 
         # create new account
-        if not self.account:
+        print BaseTest.CREATE_ACCOUNT
+        if BaseTest.CREATE_ACCOUNT:
             self.logging.info(' * Create new account .... ')
             self.account = self.random_string()
             api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/create'
@@ -130,6 +134,8 @@ class BaseTest(object):
                 self.logging.error(' * ERROR : response status code %i' % client_response.status_code)
                 self.logging.error(' * ERROR : response content %s' % client_response.content)
                 client_response.raise_for_status()
+        else:
+            self.logging.info(' * Use %s account' % self.account)
 
     def run_cmd_via_subprocess(self, cmd):
         sub = Popen([cmd], stdout=PIPE, stderr=PIPE, shell=True)
