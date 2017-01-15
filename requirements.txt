@@ -1,5 +1,5 @@
 paramiko==2.0.2
 lxml==3.5.0
-bs4==4.4.1
+bs4
 requests==2.10.0
 optparse==1.5.3
