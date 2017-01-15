@@ -9,8 +9,10 @@ import shutil
 
 class CreateBluePrint(BaseTest):
 
-    def __init__(self, clone=True):
+    def __init__(self, clone=True, no_backend=False):
         super(CreateBluePrint, self).__init__()
+        if not no_backend:
+            self.get_client()
         self.clone = clone
         self.setup()
         script_dir = os.path.dirname(__file__)

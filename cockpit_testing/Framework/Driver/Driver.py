@@ -11,8 +11,9 @@ if __name__ == '__main__':
 
     parser = OptionParser()
     parser.add_option('-b', '--bpname', help='blueprint name', dest='bpname', default='', action='store')
-    parser.add_option('--no-clone', help='clone development repo', dest='clone', default=True, action='store_false')
     parser.add_option('-u', '--use-account', help='use a specific account', dest='account', default='', action='store')
+    parser.add_option('--no-clone', help='clone development repo', dest='clone', default=True, action='store_false')
+    parser.add_option('--no-backend', help='no backend environment', dest='no_backend', default=False, action='store_true')
     (options, args) = parser.parse_args()
 
     base_test = BaseTest()
@@ -21,11 +22,13 @@ if __name__ == '__main__':
     THREADS_NUMBER = int(base_test.values['threads_number'])
     BLUEPRINT_NAME = options.bpname
 
-    if options.account:
-        create_blueprint = CreateBluePrint(clone=options.clone)
+    if options.no_backend:
+        create_blueprint = CreateBluePrint(clone=options.clone, no_backend=options.no_backend)
+    elif options.account:
+        create_blueprint = CreateBluePrint(clone=options.clone, no_backend=options.no_backend)
         create_blueprint.values['account'] = options.account
     else:
-        create_blueprint = CreateBluePrint(clone=options.clone)
+        create_blueprint = CreateBluePrint(clone=options.clone, no_backend=options.no_backend)
         create_blueprint.create_account()
 
     create_blueprint.create_blueprint()
