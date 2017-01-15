@@ -34,6 +34,7 @@ if __name__ == '__main__':
     executeRemoteCommands.update_machine()
     executeRemoteCommands.install_js(branch=JS_branch)
     executeRemoteCommands.install_cockpit(branch=CP_branch)
+    executeRemoteCommands.check_cockpit_portal(cockpit_ip=requestEnvAPI.cloudspace['ip'])
 
     updateConfigFile = UpdateConfigFile()
     updateConfigFile.update_config_file(cockpit_ip=requestEnvAPI.cloudspace['ip'])

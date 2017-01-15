@@ -36,16 +36,6 @@ class BaseTest(object):
         self.requests = requests
         self.logging = logging
 
-        for _ in range(30):
-            try:
-                self.client = Client('https://' + self.values['environment'], self.values['username'],
-                                     self.values['password'])
-                break
-            except:
-                time.sleep(1)
-        else:
-            self.client = Client('https://' + self.values['environment'], self.values['username'],
-                                 self.values['password'])
 
     def setup(self):
         print ' * Execute setup method ..... '
@@ -293,3 +283,15 @@ class BaseTest(object):
                 time.sleep(2)
 
         return [False, response]
+
+    def get_client(self):
+        for _ in range(30):
+            try:
+                self.client = Client('https://' + self.values['environment'], self.values['username'],
+                                     self.values['password'])
+                break
+            except:
+                time.sleep(1)
+        else:
+            self.client = Client('https://' + self.values['environment'], self.values['username'],
+                                 self.values['password'])

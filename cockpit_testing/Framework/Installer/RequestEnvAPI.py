@@ -5,6 +5,7 @@ import time
 class RequestEnvAPI(BaseTest):
     def __init__(self):
         super(RequestEnvAPI, self).__init__()
+        self.get_client()
         self.log()
         self.client_header = {'Content-Type': 'application/x-www-form-urlencoded',
                               'Accept': 'application/json'}
@@ -71,7 +72,7 @@ class RequestEnvAPI(BaseTest):
         print ' * Create new virtual mahcine .... '
         self.virtualmahine['name'] = self.random_string()
 
-        api = 'https://' + self.values['environment'] + '/restmachine/cloudapi/machines/create'
+        api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/machine/create'
 
         client_data = {
             'cloudspaceId': self.cloudspace['id'],
@@ -80,14 +81,20 @@ class RequestEnvAPI(BaseTest):
             'imageId': self.get_ubunut_16_image_id(),
             'disksize': 50}
 
-        client_response = self.client._session.post(url=api, headers=self.client_header, data=client_data)
-        if client_response.status_code == 200:
-            self.virtualmahine['id'] = client_response.text
-            self.logging.info(' * DONE : Create %s virtual machine' % self.virtualmahine['name'])
-            self.get_virtualmachine_password()
+        for _ in range(5):
+            client_response = self.client._session.post(url=api, headers=self.client_header, data=client_data)
+            if client_response.status_code == 200:
+                self.virtualmahine['id'] = client_response.text
+                self.logging.info(' * DONE : Create %s virtual machine' % self.virtualmahine['name'])
+                self.get_virtualmachine_password()
+                break
+            else:
+                self.logging.error(' * ERROR : response status code %i' % client_response.status_code)
+                self.logging.error(' * ERROR : response content %s' % client_response.content)
+                time.sleep(1)
+
+                continue
         else:
-            self.logging.error(' * ERROR : response status code %i' % client_response.status_code)
-            self.logging.error(' * ERROR : response content %s' % client_response.content)
             client_response.raise_for_status()
 
     def get_ubunut_16_image_id(self):

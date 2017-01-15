@@ -1,6 +1,6 @@
 from cockpit_testing.Framework.utils.utils import BaseTest
 import paramiko
-import json
+import requests
 import time
 
 
@@ -46,11 +46,11 @@ class ExecuteRemoteCommands():
         print ' * Executing jsInstaller .... '
         command = 'echo %s | sudo -S bash jsInstaller.sh' % self.password
         result = self.execute_command(command=command)
-        '''
+
         if len(result) == 0:
             self.baseTest.logging.error(' * FAIL : fail in executing jsInstaller file .... ')
-            raise NameError(' * FAIL : fail in executing jsInstaller file .... ')
-        '''
+            #raise NameError(' * FAIL : fail in executing jsInstaller file .... ')
+
     def install_cockpit(self, branch):
         self.baseTest.logging.info(' * Creating cockpitInstaller.py file ... ')
         print ' * Creating cockpitInstaller.py file ... '
@@ -64,15 +64,27 @@ class ExecuteRemoteCommands():
         result = self.execute_command(command=command)
         if len(result) == 0:
             self.baseTest.logging.error(' * FAIL : fail in executing cockpitInstaller file .... ')
-            raise NameError(' * FAIL : fail in executing cockpitInstaller file .... ')
-        else:
-            self.baseTest.logging.info(' * You can access the new cockpit on : http:%s ' % self.ip)
-            print (' * You can access the new cockpit on : http:%s ' % self.ip)
+            #raise NameError(' * FAIL : fail in executing cockpitInstaller file .... ')
 
     def execute_command(self, command):
         try:
             stdin, stdout, stderr = self.ssh.exec_command(command)
-            self.baseTest.logging.info(stdout.readlines())
-            return stdout.readlines
+            tracback = stdout.readlines()
+            self.baseTest.logging.info(tracback)
+            print tracback
+            return tracback
         except:
             self.baseTest.logging.error(" * ERROR : Can't execute %s command" % command)
+
+    def check_cockpit_portal(self, cockpit_ip):
+        url = 'http://' + cockpit_ip
+        for _ in range(5):
+            response = requests.get(url=url)
+            if response.status_code == 200:
+                self.baseTest.logging.info(' * You can access the new cockpit on : http:%s ' % self.ip)
+                print (' * You can access the new cockpit on : http:%s ' % self.ip)
+                break
+            else:
+                time.sleep(5)
+        else:
+            self.baseTest.logging.error(' * FAIL : Please, Check installtion files in %s vm ' % cockpit_ip)
