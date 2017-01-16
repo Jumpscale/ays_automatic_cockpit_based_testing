@@ -87,6 +87,34 @@ This sample is following the following rules to identify the instance:
 # Add Blueprint Templates To The Repo:
   The driver is looking for the blueprint templates in the /<repo_name>/tests/bp_test_templates directory so you have to craete this path and add your blueprint templates under it.
 
+# 1.3 Service template:
+To create a new testing service, You have to follow this sample:
+```python
+def init_actions_(service, args):
+    return {
+
+        'test': ['install']
+
+    }
+
+
+def test(job):
+    RESULT_OK = 'OK : %s'
+    RESULT_FAILED = 'FAILED : %s'
+    RESULT_ERROR = 'ERROR : %s %%s' % job.service.name
+    try:
+        # write your test service body here.
+
+        if 'OK_condition':
+             service.model.data.result = RESULT_OK % ('Reason')
+        else 'FAILED_condition':
+            model.data.result = RESULT_FAILED % ('Trace back')
+    except:
+        model.data.result = RESULT_ERROR % ('Trace back')
+    finally:
+        job.service.save()
+```
+  
 # Add Testing Service To The AYS Repo:
   You have to add any new test service to the AYS repo and to consume these services you should have a cockpit machine which was installed from this repo.
 
