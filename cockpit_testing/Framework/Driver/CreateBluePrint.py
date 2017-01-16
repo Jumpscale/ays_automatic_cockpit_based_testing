@@ -8,31 +8,40 @@ import shutil
 
 
 class CreateBluePrint(BaseTest):
-
-    def __init__(self, clone=True, no_backend=False):
+    def __init__(self, clone=True, no_backend=False, bp_dir=''):
         super(CreateBluePrint, self).__init__()
         if not no_backend:
             self.get_client()
         self.clone = clone
         self.setup()
         script_dir = os.path.dirname(__file__)
-        self.testCasesTemplateDirectory = os.path.join(script_dir, "../TestCasesTemplate/")
+        self.testCasesTemplateDirectory = os.path.join(script_dir, "../TestCasesTemplate", bp_dir)
         self.TestCasesTemplatePath = []
         self.TestCasesPath = []
         self.testCasesDirectory = os.path.join(script_dir, "../TestCases/")
         self.get_TestcasesTemplate_files()
 
-        if not os.path.exists(self.testCasesDirectory):
-            os.makedirs(self.testCasesDirectory)
+        if os.path.exists(self.testCasesDirectory):
+            shutil.rmtree(self.testCasesDirectory)
+        os.makedirs(self.testCasesDirectory)
 
     def get_TestcasesTemplate_files(self):
 
-        files = os.listdir(self.testCasesTemplateDirectory)
-
-        for file_name in files:
-            if 'yaml' in file_name:
-                self.TestCasesTemplatePath.append(os.path.join(self.testCasesTemplateDirectory, file_name))
-                self.TestCasesPath.append(os.path.join(self.testCasesDirectory, file_name))
+        testcases_dirs = os.listdir(self.testCasesTemplateDirectory)
+        print testcases_dirs
+        for element in testcases_dirs:
+            element_path = os.path.join(self.testCasesTemplateDirectory, element)
+            if os.path.isdir(element_path):
+                files = os.listdir(element_path)
+                for file_name in files:
+                    print file_name
+                    if 'yaml' in file_name:
+                        self.TestCasesTemplatePath.append(os.path.join(self.testCasesTemplateDirectory, element, file_name))
+                        self.TestCasesPath.append(os.path.join(self.testCasesDirectory, file_name))
+            else:
+                if 'yaml' in element:
+                    self.TestCasesTemplatePath.append(os.path.join(self.testCasesTemplateDirectory, element))
+                    self.TestCasesPath.append(os.path.join(self.testCasesDirectory, element))
 
     def create_blueprint(self, name=''):
         if name:
@@ -48,7 +57,7 @@ class CreateBluePrint(BaseTest):
                 self.pre_blueprint(index, testCasesTemplatePath)
 
         # remove TestCasesTemplate
-        shutil.rmtree(self.testCasesTemplateDirectory)
+        shutil.rmtree(os.path.split(self.testCasesTemplateDirectory)[0])
 
     def pre_blueprint(self, index, testCasesTemplatePath):
         blueprintTemplate = open(testCasesTemplatePath, 'r')

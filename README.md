@@ -33,19 +33,19 @@ Hint: The driver --help is:
 Usage: Driver.py [options]
 
 Options:
-  -h, --help            show this help message and exit
-  -b BPNAME, --bpname=BPNAME
-                        blueprint name
-  -u ACCOUNT, --use-account=ACCOUNT
-                        use a specific account
-  --no-clone            clone development repo
-  --no-backend          no backend environment
+  -h, --help      show this help message and exit
+  -b BPNAME       run a specific blueprint name
+  -u ACCOUNT      use a specific account
+  -s BPDIRECTORY  use a specific blueprint directory
+  --no-clone      clone development repo
+  --no-backend    no backend environment
 
 ```
 If you need to execute a specific blueprint, you have to add its full name after -b option.
 If you don't need to clone the repo, Just use --no-clone option.
 If you need to use a specific account add its name after -u  and in this case, Driver won't delete this account.
-If your don't use the backend environment, Use --no-backend option.
+If you don't need to use the back end environment, Use --no-backend option.
+If you need to run a specific blueprints under a specific directory under bp_test_templates, set the directory name after -s option.
 
 * Check logs in log.log file.
 * The results will be documented in testresults.xml file.
@@ -114,7 +114,7 @@ def test(job):
     finally:
         job.service.save()
 ```
-  
+
 # Add Testing Service To The AYS Repo:
   You have to add any new test service to the AYS repo and to consume these services you should have a cockpit machine which was installed from this repo.
 

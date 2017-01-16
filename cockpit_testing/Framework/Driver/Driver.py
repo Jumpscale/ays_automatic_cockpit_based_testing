@@ -7,34 +7,31 @@ import time, traceback, sys
 from optparse import OptionParser
 
 if __name__ == '__main__':
-    print ' * Driver is running ..... '
-
     parser = OptionParser()
-    parser.add_option('-b', '--bpname', help='blueprint name', dest='bpname', default='', action='store')
-    parser.add_option('-u', '--use-account', help='use a specific account', dest='account', default='', action='store')
+    parser.add_option('-b', help='run a specific blueprint name', dest='bpName', default='', action='store')
+    parser.add_option('-u', help='use a specific account', dest='account', default='', action='store')
+    parser.add_option('-s', help='use a specific blueprint directory', dest='bpDirectory', default='', action='store')
     parser.add_option('--no-clone', help='clone development repo', dest='clone', default=True, action='store_false')
     parser.add_option('--no-backend', help='no backend environment', dest='no_backend', default=False, action='store_true')
     (options, args) = parser.parse_args()
 
+    print ' * Driver is running ..... '
     base_test = BaseTest()
     base_test.log()
 
     THREADS_NUMBER = int(base_test.values['threads_number'])
-    BLUEPRINT_NAME = options.bpname
+    BLUEPRINT_NAME = options.bpName
 
-    if options.no_backend:
-        create_blueprint = CreateBluePrint(clone=options.clone, no_backend=options.no_backend)
-    elif options.account:
-        create_blueprint = CreateBluePrint(clone=options.clone, no_backend=options.no_backend)
+    create_blueprint = CreateBluePrint(clone=options.clone, no_backend=options.no_backend, bp_dir=options.bpDirectory)
+    if options.account:
         create_blueprint.values['account'] = options.account
-    else:
-        create_blueprint = CreateBluePrint(clone=options.clone, no_backend=options.no_backend)
+    elif not options.no_backend:
         create_blueprint.create_account()
 
     create_blueprint.create_blueprint()
     role = {}
 
-
+    import ipdb; ipdb.set_trace()
     def get_testService_role(blueprint, thread_name):
         global role
         blueprint = blueprint.splitlines()
