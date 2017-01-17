@@ -28,13 +28,11 @@ class CreateBluePrint(BaseTest):
     def get_TestcasesTemplate_files(self):
 
         testcases_dirs = os.listdir(self.testCasesTemplateDirectory)
-        print testcases_dirs
         for element in testcases_dirs:
             element_path = os.path.join(self.testCasesTemplateDirectory, element)
             if os.path.isdir(element_path):
                 files = os.listdir(element_path)
                 for file_name in files:
-                    print file_name
                     if 'yaml' in file_name:
                         self.TestCasesTemplatePath.append(os.path.join(self.testCasesTemplateDirectory, element, file_name))
                         self.TestCasesPath.append(os.path.join(self.testCasesDirectory, file_name))

@@ -70,8 +70,6 @@ class ExecuteRemoteCommands():
         try:
             stdin, stdout, stderr = self.ssh.exec_command(command)
             tracback = stdout.readlines()
-            self.baseTest.logging.info(tracback)
-            print tracback
             return tracback
         except:
             self.baseTest.logging.error(" * ERROR : Can't execute %s command" % command)
@@ -79,12 +77,18 @@ class ExecuteRemoteCommands():
     def check_cockpit_portal(self, cockpit_ip):
         url = 'http://' + cockpit_ip
         for _ in range(5):
-            response = requests.get(url=url)
-            if response.status_code == 200:
-                self.baseTest.logging.info(' * You can access the new cockpit on : http:%s ' % self.ip)
-                print (' * You can access the new cockpit on : http:%s ' % self.ip)
-                break
-            else:
+            try:
+                response = requests.get(url=url)
+            except:
                 time.sleep(5)
+                continue
+            else:
+                if response.status_code == 200:
+                    self.baseTest.logging.info(' * You can access the new cockpit on : http:%s ' % self.ip)
+                    print (' * You can access the new cockpit on : http://%s ' % self.ip)
+                    break
+                else:
+                    time.sleep(5)
+                    continue
         else:
             self.baseTest.logging.error(' * FAIL : Please, Check installtion files in %s vm ' % cockpit_ip)

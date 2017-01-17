@@ -7,9 +7,9 @@ if __name__ == '__main__':
     print ' * Installer is running .... '
 
     parser = OptionParser()
-    parser.add_option('-b', help=' * Jumpscale branch, Default : 8.1.0 ', dest='JS_branch', default='8.1.0', action='store')
-    parser.add_option('-s', help=' * Cockpit branch, Default : 8.1.0 ', dest='CP_branch', default='8.1.0', action='store')
-    parser.add_option('-u', '--use-account', help='use a specific account', dest='account', default='', action='store')
+    parser.add_option('-j', help=' * Jumpscale branch, Default : 8.1.0 ', dest='JS_branch', default='8.1.0', action='store')
+    parser.add_option('-c', help=' * Cockpit branch, Default : 8.1.0 ', dest='CP_branch', default='8.1.0', action='store')
+    parser.add_option('-a', '--use-account', help='use a specific account', dest='account', default='', action='store')
     (options, args) = parser.parse_args()
 
     JS_branch = options.JS_branch
@@ -37,4 +37,5 @@ if __name__ == '__main__':
     executeRemoteCommands.check_cockpit_portal(cockpit_ip=requestEnvAPI.cloudspace['ip'])
 
     updateConfigFile = UpdateConfigFile()
-    updateConfigFile.update_config_file(cockpit_ip=requestEnvAPI.cloudspace['ip'])
+    updateConfigFile.update_config_file(cockpit_ip=requestEnvAPI.cloudspace['ip'],
+                                        account=requestEnvAPI.values['account'])

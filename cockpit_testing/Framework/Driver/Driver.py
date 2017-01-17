@@ -9,15 +9,16 @@ from optparse import OptionParser
 if __name__ == '__main__':
     parser = OptionParser()
     parser.add_option('-b', help='run a specific blueprint name', dest='bpName', default='', action='store')
-    parser.add_option('-u', help='use a specific account', dest='account', default='', action='store')
-    parser.add_option('-s', help='use a specific blueprint directory', dest='bpDirectory', default='', action='store')
+    parser.add_option('-a', help='use a specific account', dest='account', default='', action='store')
+    parser.add_option('-d', help='use a specific blueprint directory', dest='bpDirectory', default='', action='store')
     parser.add_option('--no-clone', help='clone development repo', dest='clone', default=True, action='store_false')
     parser.add_option('--no-backend', help='no backend environment', dest='no_backend', default=False, action='store_true')
+    parser.add_option('--no-teardown', help='no teardown', dest='no_teardown', default=False, action='store_true')
     (options, args) = parser.parse_args()
 
     print ' * Driver is running ..... '
     base_test = BaseTest()
-    base_test.log()
+    base_test.check_cockpit_is_exist()
 
     THREADS_NUMBER = int(base_test.values['threads_number'])
     BLUEPRINT_NAME = options.bpName
@@ -31,7 +32,6 @@ if __name__ == '__main__':
     create_blueprint.create_blueprint()
     role = {}
 
-    import ipdb; ipdb.set_trace()
     def get_testService_role(blueprint, thread_name):
         global role
         blueprint = blueprint.splitlines()
@@ -103,5 +103,5 @@ if __name__ == '__main__':
 
     queue.join()
     base_test.generate_xml_results()
-    if not options.account:
+    if not options.account and not options.no_teardown:
         create_blueprint.teardown()

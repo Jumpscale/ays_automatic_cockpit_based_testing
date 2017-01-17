@@ -35,10 +35,11 @@ Usage: Driver.py [options]
 Options:
   -h, --help      show this help message and exit
   -b BPNAME       run a specific blueprint name
-  -u ACCOUNT      use a specific account
-  -s BPDIRECTORY  use a specific blueprint directory
+  -a ACCOUNT      use a specific account
+  -d BPDIRECTORY  use a specific blueprint directory
   --no-clone      clone development repo
   --no-backend    no backend environment
+  --no-teardown   no teardown
 
 ```
 If you need to execute a specific blueprint, you have to add its full name after -b option.
@@ -46,6 +47,7 @@ If you don't need to clone the repo, Just use --no-clone option.
 If you need to use a specific account add its name after -u  and in this case, Driver won't delete this account.
 If you don't need to use the back end environment, Use --no-backend option.
 If you need to run a specific blueprints under a specific directory under bp_test_templates, set the directory name after -s option.
+If you don't wanna delete the created account, please use --no-teardown option.
 
 * Check logs in log.log file.
 * The results will be documented in testresults.xml file.
@@ -149,9 +151,9 @@ Usage: Installer.py [options]
 
 Options:
   -h, --help            show this help message and exit
-  -b JS_BRANCH           * Jumpscale branch, Default : 8.1.0
-  -s CP_BRANCH           * Cockpit branch, Default : 8.1.0
-  -u ACCOUNT, --use-account=ACCOUNT
+  -j JS_BRANCH           * Jumpscale branch, Default : 8.1.0
+  -c CP_BRANCH           * Cockpit branch, Default : 8.1.0
+  -a ACCOUNT, --use-account=ACCOUNT
                         use a specific account
 ```
 If you need to install from a specific jumpscale branch, add the branch number after -b option.

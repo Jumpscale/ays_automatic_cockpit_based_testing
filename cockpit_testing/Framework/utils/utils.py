@@ -14,6 +14,9 @@ class BaseTest(object):
     def __init__(self):
         self.clone = True
         self.account = ''
+        self.account_id = ''
+        self.logging = logging
+        self.log()
         self.values = {'environment': '',
                        'username': '',
                        'password': '',
@@ -34,7 +37,6 @@ class BaseTest(object):
 
         self.Testcases_results = {'Blueprint Name': ['Test Result', 'Execution Time']}
         self.requests = requests
-        self.logging = logging
 
 
     def setup(self):
@@ -47,13 +49,16 @@ class BaseTest(object):
     def teardown(self):
         print ' * Execute teardown method .... '
         # Delete account
+        if not self.account_id:
+            self.get_account_ID(account=self.account)
+
         api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/delete'
         client_header = {'Content-Type': 'application/x-www-form-urlencoded',
                          'Accept': 'application/json'}
         client_body = {'accountId': self.account_id,
                        'reason': 'TearDown by Cockpit Driver'}
         client_response = self.client._session.post(url=api, headers=client_header, data=client_body)
-
+        import ipdb; ipdb.set_trace()
         if client_response.status_code == 200:
             self.logging.info('DONE: Delete %s account' % self.values['account'])
         else:
@@ -92,6 +97,7 @@ class BaseTest(object):
         # create new account
         if not self.values['account']:
             self.logging.info(' * Create new account .... ')
+            print (' * Create new account .... ')
             self.account = self.random_string()
             api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/create'
             client_header = {'Content-Type': 'application/x-www-form-urlencoded',
@@ -267,7 +273,7 @@ class BaseTest(object):
         if method not in ['post', 'get']:
             raise NameError(" * %s method isn't handled" % method)
 
-        for _ in range(300):
+        for _ in range(50):
             try:
                 if method == 'get':
                     response = self.requests.get(url=api, headers=headers, data=body)
@@ -295,3 +301,44 @@ class BaseTest(object):
         else:
             self.client = Client('https://' + self.values['environment'], self.values['username'],
                                  self.values['password'])
+
+    def get_account_ID(self, account):
+        client_header = {'Content-Type': 'application/x-www-form-urlencoded',
+                              'Accept': 'application/json'}
+        self.logging.info(' * Get %s account ID .... ' % account)
+        api = 'https://' + self.values['environment'] + '/restmachine/cloudapi/accounts/list'
+        client_response = self.client._session.post(url=api, headers=client_header)
+
+        if client_response.status_code == 200:
+            for element in client_response.json():
+                if account == element['name']:
+                    self.account_id = element['id']
+                    self.logging.info(' * DONE : Account ID : % d' % self.account_id)
+                    break
+            else:
+                self.logging.error(
+                    " * ERROR : Can't get %s account ID. Please, Make sure that %s username can get this account ID" % (
+                        account, self.values['username']))
+                print (" * ERROR : Can't get %s account ID. Please, Make sure that %s username can get this account ID" % (
+                        account, self.values['username']))
+                raise NameError(
+                    " * ERROR : Can't get '%s' account ID. Please, Make sure that '%s' username can get this account ID" % (
+                        account, self.values['username']))
+        else:
+            self.logging.error(' * ERROR : response status code %i' % client_response.status_code)
+            self.logging.error(' * ERROR : response content %s' % client_response.content)
+            client_response.raise_for_status()
+
+    def check_cockpit_is_exist(self):
+        tmp = self.values['cockpit_url']
+        url = tmp[:tmp.find(':5')]
+
+        try:
+            response = self.requests.get(url=url)
+            if response.status_code != 200:
+                self.logging.error('ERROR : response status code %i' % response.status_code)
+                self.logging.error('ERROR : response content %s ' % response.content)
+                raise NameError('ERROR : response status code %i' % response.status_code)
+        except:
+            self.logging.error("Can't Create a connection to the '%s' cockpit machine" % url)
+            raise NameError("Can't Create a connection to the '%s' cockpit machine" % url)
