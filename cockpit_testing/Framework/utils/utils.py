@@ -284,7 +284,7 @@ class BaseTest(object):
                     return [True, response]
                 else:
                     time.sleep(2)
-                    print response.url, response.status_code
+                    #print response.url, response.status_code, response.content
             except:
                 time.sleep(2)
 
