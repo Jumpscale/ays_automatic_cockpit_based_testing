@@ -58,7 +58,6 @@ class BaseTest(object):
         client_body = {'accountId': self.account_id,
                        'reason': 'TearDown by Cockpit Driver'}
         client_response = self.client._session.post(url=api, headers=client_header, data=client_body)
-        import ipdb; ipdb.set_trace()
         if client_response.status_code == 200:
             self.logging.info('DONE: Delete %s account' % self.values['account'])
         else:
@@ -149,6 +148,9 @@ class BaseTest(object):
 
         # make directory to clone repos on
         if self.clone:
+            dir_path = '/cockpit_testing/Framework/%s' % bps_driver_path
+            if os.path.exists(os.getcwd() + dir_path):
+                self.run_cmd_via_subprocess('rm -rf %s' % dir_path)
             self.run_cmd_via_subprocess('cd cockpit_testing/Framework/; mkdir %s' % bps_driver_path)
             dirs = self.run_cmd_via_subprocess('ls').split('\n')[:-1]
             if 'repos' not in dirs:
@@ -188,7 +190,7 @@ class BaseTest(object):
         self.values['jwt'] = resp.content
 
     def generate_xml_results(self):
-        print ' * Generate XML results'
+        print(' * Generate XML results')
         Succeeded = 0
         Errors = 0
         Failures = 0
@@ -206,7 +208,7 @@ class BaseTest(object):
             elif 'OK' in self.Testcases_results[key][0]:
                 Succeeded += 1
             else:
-                print 'The result is missing an indicator element'
+                print('The result is missing an indicator element')
 
         testsuit_params = {'name': 'Cockpit_Testing',
                            'tests': str(len(self.Testcases_results)),
