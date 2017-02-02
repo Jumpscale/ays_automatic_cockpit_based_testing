@@ -148,8 +148,8 @@ class BaseTest(object):
 
         # make directory to clone repos on
         if self.clone:
-            dir_path = '/cockpit_testing/Framework/%s' % bps_driver_path
-            if os.path.exists(os.getcwd() + dir_path):
+            dir_path = os.getcwd() + '/cockpit_testing/Framework/%s' % bps_driver_path
+            if os.path.exists(dir_path):
                 self.run_cmd_via_subprocess('rm -rf %s' % dir_path)
             self.run_cmd_via_subprocess('cd cockpit_testing/Framework/; mkdir %s' % bps_driver_path)
             dirs = self.run_cmd_via_subprocess('ls').split('\n')[:-1]
