@@ -16,7 +16,7 @@ if __name__ == '__main__':
     parser.add_option('--no-teardown', help='no teardown', dest='no_teardown', default=False, action='store_true')
     (options, args) = parser.parse_args()
 
-    print ' * Driver is running ..... '
+    print(' * Driver is running ..... ')
     base_test = BaseTest()
     base_test.check_cockpit_is_exist()
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
         while not queue.empty():
             testCasesPath = queue.get()
             bpFileName = testCasesPath[testCasesPath.index('/TestCases/') + 11:]
-            print ' * Test case : %s' % bpFileName
+            print(' * Test case : %s' % bpFileName)
             base_test.logging.info('\n')
             base_test.logging.info('* Test case : %s' % bpFileName)
 
@@ -96,7 +96,6 @@ if __name__ == '__main__':
                 base_test.Testcases_results[bpFileName] = [error_message, 0]
 
                 queue.task_done()
-
 
     for _ in range(THREADS_NUMBER):
         threading.Thread(target=work).start()

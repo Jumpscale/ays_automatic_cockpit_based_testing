@@ -129,14 +129,14 @@ class RequestCockpitAPI(BaseTest):
                 state = str(content['state'])
 
                 if state == 'Running' or state == 'new':
-                    self.logging.info('The Running state is %s' % state)
+                    self.logging.info(' %s : The Running state is %s' % (run_key, state))
                     time.sleep(10)
                     continue
                 elif state == 'ok':
-                    self.logging.info('The Running state is %s' % state)
+                    self.logging.info(' %s : The Running state is %s' % (run_key, state))
                     return True
                 elif state == 'error':
-                    self.logging.error('ERROR : The Running state is %s' % state)
+                    self.logging.error('%s : ERROR : The Running state is %s' % (run_key, state))
                     self.blueprint['log'] = content['steps']
                     return False
             else:
