@@ -18,7 +18,7 @@ class ExecuteRemoteCommands():
 
     def connect_to_virtual_machine(self):
         self.baseTest.logging.info(' * Connecting to the virtual machine .. ')
-        print ' * Connecting to the virtual machine .. '
+        print(' * Connecting to the virtual machine .. ')
         for _ in range(300):
             try:
                 self.ssh.connect(self.ip, port=self.port, username=self.username, password=self.password)
@@ -31,19 +31,19 @@ class ExecuteRemoteCommands():
 
     def update_machine(self):
         self.baseTest.logging.info(' * Updating virtual machine OS ... ')
-        print ' * Updating virtual machine OS ... '
+        print(' * Updating virtual machine OS ... ')
         command = 'echo %s | sudo -S apt-get update' % self.password
         self.execute_command(command=command)
 
 
     def install_js(self, branch):
         self.baseTest.logging.info(' * Creating jsInstaller file .... ')
-        print ' * Creating jsInstaller file .... '
+        print(' * Creating jsInstaller file .... ')
         command = """echo 'cd $TMPDIR;\nexport JSBRANCH=%s;\ncurl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core8/$JSBRANCH/install/install.sh?$RANDOM > install.sh;\nbash install.sh;' > jsInstaller.sh""" % branch
         self.execute_command(command=command)
 
         self.baseTest.logging.info(' * Executing jsInstaller from %s branch .... ' % branch)
-        print ' * Executing jsInstaller .... '
+        print(' * Executing jsInstaller .... ')
         command = 'echo %s | sudo -S bash jsInstaller.sh' % self.password
         result = self.execute_command(command=command)
 
@@ -53,13 +53,13 @@ class ExecuteRemoteCommands():
 
     def install_cockpit(self, branch):
         self.baseTest.logging.info(' * Creating cockpitInstaller.py file ... ')
-        print ' * Creating cockpitInstaller.py file ... '
+        print(' * Creating cockpitInstaller.py file ... ')
         command = """echo 'from JumpScale import j\ncuisine = j.tools.cuisine.local\ncuisine.solutions.cockpit.install_all_in_one(start=True, branch="%s", reset=True, ip="%s")' >  cockpitInstaller.py""" % (
         branch, self.ip)
         self.execute_command(command=command)
 
         self.baseTest.logging.info(' * Executing cockpitInstaller from %s brnach ... ' % branch)
-        print ' * Executing cockpitInstaller.py file ... '
+        print(' * Executing cockpitInstaller.py file ... ')
         command = 'echo %s | sudo -S jspython cockpitInstaller.py' % self.password
         result = self.execute_command(command=command)
         if len(result) == 0:

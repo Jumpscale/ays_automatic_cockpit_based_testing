@@ -4,7 +4,7 @@ from UpdateConfig import UpdateConfigFile
 from optparse import OptionParser
 
 if __name__ == '__main__':
-    print ' * Installer is running .... '
+    print(' * Installer is running .... ')
 
     parser = OptionParser()
     parser.add_option('-j', help=' * Jumpscale branch, Default : 8.1.0 ', dest='JS_branch', default='8.1.0', action='store')

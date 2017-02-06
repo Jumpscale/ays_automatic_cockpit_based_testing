@@ -40,14 +40,14 @@ class BaseTest(object):
 
 
     def setup(self):
-        print ' * Execute setup method ..... '
+        print(' * Execute setup method ..... ')
         self.get_testcases_templates()
 
         if not self.values['password']:
             self.values['password'] = str(input("Please, Enter %s's password : " % self.values['username']))
 
     def teardown(self):
-        print ' * Execute teardown method .... '
+        print(' * Execute teardown method .... ')
         # Delete account
         if not self.account_id:
             self.get_account_ID(account=self.account)
@@ -154,16 +154,16 @@ class BaseTest(object):
             self.run_cmd_via_subprocess('cd cockpit_testing/Framework/; mkdir %s' % bps_driver_path)
             dirs = self.run_cmd_via_subprocess('ls').split('\n')[:-1]
             if 'repos' not in dirs:
-                print '* create repos directory'
+                print(' * create repos directory')
                 self.run_cmd_via_subprocess('mkdir repos')
             else:
-                print '* repos directory already exists'
+                print(' * repos directory already exists')
 
             dirs = self.run_cmd_via_subprocess('ls repos').split('\n')[:-1]
             if repo_name in dirs:
                 self.run_cmd_via_subprocess('cd repos; rm -rf %s' % repo_name)
-            print ' * clone repo %s' % repo
-            print ' * branch %s' % branch
+            print(' * clone repo %s' % repo)
+            print(' * branch %s' % branch)
             self.run_cmd_via_subprocess('cd repos; git clone -b %s %s' % (branch, repo))
         # copy blueprints test templates
         self.run_cmd_via_subprocess(
@@ -321,7 +321,7 @@ class BaseTest(object):
                 self.logging.error(
                     " * ERROR : Can't get %s account ID. Please, Make sure that %s username can get this account ID" % (
                         account, self.values['username']))
-                print (" * ERROR : Can't get %s account ID. Please, Make sure that %s username can get this account ID" % (
+                print(" * ERROR : Can't get %s account ID. Please, Make sure that %s username can get this account ID" % (
                         account, self.values['username']))
                 raise NameError(
                     " * ERROR : Can't get '%s' account ID. Please, Make sure that '%s' username can get this account ID" % (
