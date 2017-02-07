@@ -1,3 +1,17 @@
+# 0 Agenda :
+- 1- Introduction
+- 2- Cockpit Driver
+  - 2.1- Introduction
+  - 2.2- The Architecture
+  - 2.3- The Flow Description
+  - 2.4- The Execution Steps
+  - 2.5- The Blueprint Templates Creation
+  - 2.6- Add Blueprint Templates To The Repo
+  - 2.7- The Service template
+  - 2.8- Add Testing Service To The AYS Repo
+- 3- Cockpit Installer
+
+
 # 1 Introduction:
 This documentation includes the full details of **Cockpit Driver** and **Cockpit Installer**. The goal of **Cockpit Driver** is automating execution of blueprints. It takes a template of blueprints and produces the results in XML file. The goal of **Cockpit Installer** is automating the cockpit installation process in the development mode.
 
