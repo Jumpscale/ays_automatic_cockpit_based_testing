@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup
 from client import Client
 import logging
 import time
+import ConfigParser
+import ast
 
 
 class BaseTest(object):
@@ -37,7 +39,6 @@ class BaseTest(object):
 
         self.Testcases_results = {'Blueprint Name': ['Test Result', 'Execution Time']}
         self.requests = requests
-
 
     def setup(self):
         print(' * Execute setup method ..... ')
@@ -82,15 +83,13 @@ class BaseTest(object):
         script_dir = os.path.dirname(__file__)
         config_file = "../../Config/config.ini"
         config_path = os.path.join(script_dir, config_file)
-
-        config = open(config_path, 'r')
-        for line in config:
-            if '=' in line:
-                key = line[:line.index('=') - 1]
-                value = line[line.index('=') + 2:]
-                value = value.replace('\n', '')
-                self.values[key] = value
-        config.close()
+        config = ConfigParser.ConfigParser()
+        config.read(config_path)
+        section = config.sections()[0]
+        options = config.options(section)
+        for option in options:
+            value = config.get(section, option)
+            self.values[option] = value
 
     def create_account(self):
         # create new account
@@ -136,38 +135,41 @@ class BaseTest(object):
             raise RuntimeError("Failed to execute command.\n\ncommand:\n{}\n\n".format(cmd, error_output))
 
     def get_testcases_templates(self):
-        repo = self.values['repo']
-        branch = self.values['branch']
+        repos_list = ast.literal_eval(self.values['repo'])
+        branches_list = ast.literal_eval(self.values['branch'])
         bps_driver_path = 'TestCasesTemplate'
-        if 'https' in repo:
-            temp = repo.split('/')[-1]
-            repo_name = temp[:temp.find('.')]
-        else:
-            match = re.search(r'/(\S+).git', repo)
-            repo_name = match.group(1)
-
-        # make directory to clone repos on
         if self.clone:
             dir_path = os.getcwd() + '/cockpit_testing/Framework/%s' % bps_driver_path
             if os.path.exists(dir_path):
                 self.run_cmd_via_subprocess('rm -rf %s' % dir_path)
             self.run_cmd_via_subprocess('cd cockpit_testing/Framework/; mkdir %s' % bps_driver_path)
-            dirs = self.run_cmd_via_subprocess('ls').split('\n')[:-1]
-            if 'repos' not in dirs:
-                print(' * create repos directory')
-                self.run_cmd_via_subprocess('mkdir repos')
-            else:
-                print(' * repos directory already exists')
 
-            dirs = self.run_cmd_via_subprocess('ls repos').split('\n')[:-1]
-            if repo_name in dirs:
-                self.run_cmd_via_subprocess('cd repos; rm -rf %s' % repo_name)
-            print(' * clone repo %s' % repo)
-            print(' * branch %s' % branch)
-            self.run_cmd_via_subprocess('cd repos; git clone -b %s %s' % (branch, repo))
-        # copy blueprints test templates
-        self.run_cmd_via_subprocess(
-            'cp -r repos/%s/tests/bp_test_templates/. cockpit_testing/Framework/%s' % (repo_name, bps_driver_path))
+        for repo, branch in zip(repos_list, branches_list):
+            if 'https' in repo:
+                temp = repo.split('/')[-1]
+                repo_name = temp[:temp.find('.')]
+            else:
+                match = re.search(r'/(\S+).git', repo)
+                repo_name = match.group(1)
+
+            # make directory to clone repos on
+            if self.clone:
+                dirs = self.run_cmd_via_subprocess('ls').split('\n')[:-1]
+                if 'repos' not in dirs:
+                    print(' * create repos directory')
+                    self.run_cmd_via_subprocess('mkdir repos')
+                else:
+                    print(' * repos directory already exists')
+
+                dirs = self.run_cmd_via_subprocess('ls repos').split('\n')[:-1]
+                if repo_name in dirs:
+                    self.run_cmd_via_subprocess('cd repos; rm -rf %s' % repo_name)
+                print(' * clone repo %s' % repo)
+                print(' * branch %s' % branch)
+                self.run_cmd_via_subprocess('cd repos; git clone -b %s %s' % (branch, repo))
+            # copy blueprints test templates
+            self.run_cmd_via_subprocess(
+                'cp -r repos/%s/tests/bp_test_templates/. cockpit_testing/Framework/%s' % (repo_name, bps_driver_path))
 
     def get_jwt(self):
         client_id = self.values['client_id']
