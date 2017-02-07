@@ -1,25 +1,22 @@
 # 0 Agenda :
 - 1- Introduction
-- 2- Cockpit Driver
-  - 2.1- Introduction
-  - 2.2- The Architecture
-  - 2.3- The Flow Description
-  - 2.4- The Execution Steps
-  - 2.5- The Blueprint Templates Creation
-  - 2.6- Add Blueprint Templates To The Repo
-  - 2.7- The Service template
-  - 2.8- Add Testing Service To The AYS Repo
-- 3- Cockpit Installer
+- 2- The Framework Architecture:
+- 3- Cockpit Driver
+  - 3.1- Introduction
+  - 3.2- The Architecture
+  - 3.3- The Flow Description
+  - 3.4- The Execution Steps
+  - 3.5- The Blueprint Templates Creation
+  - 3.6- Add Blueprint Templates To The Repo
+  - 3.7- The Service template
+  - 3.8- Add Testing Service To The AYS Repo
+- 4- Cockpit Installer
 
 
-# 1 Introduction:
+# 1 Introduction
 This documentation includes the full details of **Cockpit Driver** and **Cockpit Installer**. The goal of **Cockpit Driver** is automating execution of blueprints. It takes a template of blueprints and produces the results in XML file. The goal of **Cockpit Installer** is automating the cockpit installation process in the development mode.
 
-# 2 Cockpit Driver
-#### 2.1 Introduction:
-The cockpit driver is a script to automate the execution of the blueprints and produce the results in XML file. The driver needs a cockpit machine which has the service which will be consumed by these blueprints. The driver will request the execution cockpit API to execute this blueprint and get the result back then it will create a result XML file.
-
-#### 2.2 The Architecture:
+### 2 The Framework Architecture
 ```bash
 ├── cockpit_testing
 │   ├── Config
@@ -49,7 +46,13 @@ The cockpit driver is a script to automate the execution of the blueprints and p
 ├── requirements.txt
 └── results.xml
 ```
-#### 2.3 The Flow Description:
+
+# 3 Cockpit Driver
+### 3.1 Introduction:
+The cockpit driver is a script to automate the execution of the blueprints and produce the results in XML file. The driver needs a cockpit machine which has the service which will be consumed by these blueprints. The driver will request the execution cockpit API to execute this blueprint and get the result back then it will create a result XML file.
+
+
+### 3.3 The Flow Description:
 The **Cockpit Drive** will parse the config.ini file then it will:
 * Connect to a remote environment and create an account (default). You can pass a specific account using **-u** option, or you can ignore accessing an environment at all by using **--no-clone** option.
 * Clone a specific repo which has the blueprints templates (make sure that you have access to clone this github repo via ssh).
@@ -63,7 +66,7 @@ The **Cockpit Drive** will parse the config.ini file then it will:
 * Delete the created account.
 
 
-#### 2.4 The Execution Steps:
+### 3.4 The Execution Steps:
 To use the Driver, follow the following commands:
 * Clone the repo
 ```
@@ -103,9 +106,11 @@ vim config.ini
 export PYTHONPATH='./'
 python cockpit_testing/Framework/Driver/Driver.py # This will clone the repo and execute all the blueprints.
 ```
+
   **Driver options:**
 
     The driver --help is:
+
     ```
     Usage: Driver.py [options]
 
@@ -130,7 +135,7 @@ python cockpit_testing/Framework/Driver/Driver.py # This will clone the repo and
 * Check logs in log.log file.
 * The results will be documented in testresults.xml file.
 
-#### 2.5 The Blueprint Templates Creation:
+### 3.5 The Blueprint Templates Creation:
 To create a new blueprint you have to follow the following sample:
 
 ```yaml
@@ -164,10 +169,10 @@ The sample rules are:
   * {config_parameter} : Driver will replace it with the value of this parameter in the config file.
   * #'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE) : This line should be set before the testing service consuming line.
 
-#### 2.6 Add Blueprint Templates To The Repo:
+### 3.6 Add Blueprint Templates To The Repo:
   The driver is looking for the blueprint templates in the /< repo_name>/tests/bp_test_templates directory so you have to create this path and add your blueprint templates under it.
 
-#### 2.7 The Service template:
+### 3.7 The Service template:
 To create a new testing service, You have to follow this sample:
 ```python
 def init_actions_(service, args):
@@ -193,48 +198,62 @@ def test(job):
         job.service.save()
 ```
 
-#### 2.8 Add Testing Service To The AYS Repo:
+### 3.8 Add Testing Service To The AYS Repo:
   You have to add any new test service to the AYS repo. To consume these services you should have a cockpit machine which was installed from this AYS repo or you have to update services directory on the cockpit machine.
 
-# 2. Cockpit Installer
-The cockpit installer is a script to automate the cockpit installation steps in the development mode. It executes the following steps:
-* Create a new account (default). You can pass a specific account using -u option.
+# 4. Cockpit Installer
+### 4.1 Introduction:
+The cockpit installer is a script to automate the cockpit installation steps in the development mode.
+
+### 4.2 The Flow Description:
+
+The **Cockpit Installer** will parse the config.ini file then it will:
+* Connect to a remote environment and create an account (default). You can pass a specific account using -u option
 * Create a new cloudspace.
 * Create a new virtual machine with Ubuntu 16.04.
 * Forward ports 2222 to 22, 80 to 82 and 5000 to 5000.
 * Create an ssh connection between your local machine and this virtual machine.
 * Update this virtual machine OS.
-* Install jumpscale using a specific branch.
-* Install cockpit using a specific branch.
+* Install jumpscale using the specific branch.
+* Install cockpit using the specific branch.
 * Update the config.ini file with the new cockpit url.
 
-# 2.1 Getting Started
-Follow the following commands:
-* Clone the repo
-```
+# 4.3 The Execution Steps:
+To use the Driver, follow the following commands:
+
+  * Clone the repo
+
+```bash
 git clone git@github.com:Jumpscale/ays_automatic_cockpit_based_testing.git
+cd ays_automatic_cockpit_based_testing/cockpit_testing/Config
+vim config.ini
 ```
+
 * Enter Username, Password and the Environment values in the config.ini file.
+
 * From your terminal make sure that the current directory is ays_automatic_cockpit_based_testing
 * Execute the following commands:
-```
+```bash
 export PYTHONPATH='./'
 python cockpit_testing/Framework/Installer/Installer.py
 ```
-Hint: The Installer --help is:
-```
-Usage: Installer.py [options]
+**Installer Options:**
 
-Options:
-  -h, --help            show this help message and exit
-  -b BRANCH              * branch, Default : 8.1.0
-  -a ACCOUNT, --use-account=ACCOUNT
-                        use a specific account
+   The Installer --help is:
+  ```
+  Usage: Installer.py [options]
 
-```
-If you need to install from a specific jumpscale branch, add the branch number after -b option.
-If you need to install from a specific cockpit branch, add the branch number after -s option.
-If you need to use a specific account, Please set its name after -u option.
+  Options:
+    -h, --help            show this help message and exit
+    -j JS_BRANCH           * Jumpscale branch, Default : 8.1.0
+    -c CP_BRANCH           * Cockpit branch, Default : 8.1.0
+    -a ACCOUNT, --use-account=ACCOUNT
+                          use a specific account
+  ```
+
+  - To install from a specific jumpscale branch, add the branch number after -b option.
+  - To install from a specific cockpit branch, add the branch number after -s option.
+  - To use a specific account, Please set its name after -u option.
 
 * Check logs in log.log file.
 * After the installation is completed, the cockpit_url variable in the config.ini file will be changed automatically to point the new cockpit.
