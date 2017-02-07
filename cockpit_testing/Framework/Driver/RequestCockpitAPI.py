@@ -128,7 +128,7 @@ class RequestCockpitAPI(BaseTest):
                 content = json.loads(response.content)
                 state = str(content['state'])
 
-                if state == 'Running' or state == 'new':
+                if state == 'running' or state == 'new':
                     self.logging.info(' %s : The Running state is %s' % (run_key, state))
                     time.sleep(10)
                     continue
