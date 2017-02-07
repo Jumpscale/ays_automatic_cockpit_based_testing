@@ -7,13 +7,12 @@ if __name__ == '__main__':
     print(' * Installer is running .... ')
 
     parser = OptionParser()
-    parser.add_option('-j', help=' * Jumpscale branch, Default : 8.1.0 ', dest='JS_branch', default='8.1.0', action='store')
-    parser.add_option('-c', help=' * Cockpit branch, Default : 8.1.0 ', dest='CP_branch', default='8.1.0', action='store')
+    parser.add_option('-b', help=' * branch, Default : 8.1.0 ', dest='branch', default='8.1.0', action='store')
     parser.add_option('-a', '--use-account', help='use a specific account', dest='account', default='', action='store')
     (options, args) = parser.parse_args()
 
-    JS_branch = options.JS_branch
-    CP_branch = options.CP_branch
+    JS_branch = options.branch
+    CP_branch = options.branch
 
     requestEnvAPI = RequestEnvAPI()
     if options.account:

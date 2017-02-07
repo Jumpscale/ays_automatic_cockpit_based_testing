@@ -151,10 +151,10 @@ Usage: Installer.py [options]
 
 Options:
   -h, --help            show this help message and exit
-  -j JS_BRANCH           * Jumpscale branch, Default : 8.1.0
-  -c CP_BRANCH           * Cockpit branch, Default : 8.1.0
+  -b BRANCH              * branch, Default : 8.1.0
   -a ACCOUNT, --use-account=ACCOUNT
                         use a specific account
+
 ```
 If you need to install from a specific jumpscale branch, add the branch number after -b option.
 If you need to install from a specific cockpit branch, add the branch number after -s option.
