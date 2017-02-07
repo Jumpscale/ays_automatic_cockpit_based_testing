@@ -1,11 +1,11 @@
 # 1 Introduction:
-This documentation includes the full details of **Cockpit Driver** and **Cockpit Installer**. The goal of **Cockpit Driver** is automating execution of blueprints. It takes a template of blueprint and produces a result XML file. The goal of **Cockpit Installer** is automating the cockpit installation process in the development mode.
+This documentation includes the full details of **Cockpit Driver** and **Cockpit Installer**. The goal of **Cockpit Driver** is automating execution of blueprints. It takes a template of blueprints and produces the results in XML file. The goal of **Cockpit Installer** is automating the cockpit installation process in the development mode.
 
 # 2 Cockpit Driver
 #### 2.1 Introduction:
-The cockpit driver is a script to automate the execution of the blueprints and produce a result XML file. The driver needs a cockpit machine which has the service which will be consumed by the blueprint. The driver will request the execution cockpit API to execute this blueprint and get the result back then it will create a result XML file.
+The cockpit driver is a script to automate the execution of the blueprints and produce the results in XML file. The driver needs a cockpit machine which has the service which will be consumed by these blueprints. The driver will request the execution cockpit API to execute this blueprint and get the result back then it will create a result XML file.
 
-#### 2.2 Architecture:
+#### 2.2 The Architecture:
 ```bash
 ├── cockpit_testing
 │   ├── Config
@@ -35,7 +35,7 @@ The cockpit driver is a script to automate the execution of the blueprints and p
 ├── requirements.txt
 └── results.xml
 ```
-#### 2.3  Flow Description:
+#### 2.3 The Flow Description:
 The **Cockpit Drive** will parse the config.ini file then it will:
 * Connect to a remote environment and create an account (default). You can pass a specific account using **-u** option, or you can ignore accessing an environment at all by using **--no-clone** option.
 * Clone a specific repo which has the blueprints templates (make sure that you have access to clone this github repo via ssh).
@@ -49,7 +49,7 @@ The **Cockpit Drive** will parse the config.ini file then it will:
 * Delete the created account.
 
 
-#### 2.4 Execution:
+#### 2.4 The Execution Steps:
 To use the Driver, follow the following commands:
 * Clone the repo
 ```
@@ -89,7 +89,7 @@ vim config.ini
 export PYTHONPATH='./'
 python cockpit_testing/Framework/Driver/Driver.py # This will clone the repo and execute all the blueprints.
 ```
-**Driver options:**
+  **Driver options:**
 
     The driver --help is:
     ```
@@ -116,7 +116,7 @@ python cockpit_testing/Framework/Driver/Driver.py # This will clone the repo and
 * Check logs in log.log file.
 * The results will be documented in testresults.xml file.
 
-#### 2.5 Blueprint Templates Creation:
+#### 2.5 The Blueprint Templates Creation:
 To create a new blueprint you have to follow the following sample:
 
 ```yaml
@@ -153,7 +153,7 @@ The sample rules are:
 #### 2.6 Add Blueprint Templates To The Repo:
   The driver is looking for the blueprint templates in the /< repo_name>/tests/bp_test_templates directory so you have to create this path and add your blueprint templates under it.
 
-#### 2.7 Service template:
+#### 2.7 The Service template:
 To create a new testing service, You have to follow this sample:
 ```python
 def init_actions_(service, args):
