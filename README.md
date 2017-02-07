@@ -219,17 +219,31 @@ The **Cockpit Installer** will parse the config.ini file then it will:
 * Update the config.ini file with the new cockpit url.
 
 # 4.3 The Execution Steps:
-To use the Driver, follow the following commands:
+To use the Installer, follow the following commands:
 
   * Clone the repo
 
 ```bash
 git clone git@github.com:Jumpscale/ays_automatic_cockpit_based_testing.git
+```
+
+* Edit the config.ini values:
+
+```bash
 cd ays_automatic_cockpit_based_testing/cockpit_testing/Config
 vim config.ini
 ```
 
-* Enter Username, Password and the Environment values in the config.ini file.
+```
+  [main]
+  environment = du-conv-2.demo.greenitglobe.com
+  username = <username>
+  password = <password>
+```
+ - environment : URL Of the environment
+ - username : environment username
+ - password : environment username password
+
 
 * From your terminal make sure that the current directory is ays_automatic_cockpit_based_testing
 * Execute the following commands:
@@ -245,8 +259,7 @@ python cockpit_testing/Framework/Installer/Installer.py
 
   Options:
     -h, --help            show this help message and exit
-    -j JS_BRANCH           * Jumpscale branch, Default : 8.1.0
-    -c CP_BRANCH           * Cockpit branch, Default : 8.1.0
+    -b BRANCH              * branch, Default : 8.1.0
     -a ACCOUNT, --use-account=ACCOUNT
                           use a specific account
   ```
