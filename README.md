@@ -1,8 +1,59 @@
-# 1 Cockpit Driver
-The cockpit driver is a script to automate testing of the cockpit solution. It drivers the blueprints and generate a result XML file. It executes the following steps:
-* Clone a specific repo which has the blueprints templates.
-* Create an account (default). You can pass a specific account using -u option, or you can ignore accessing an environment at all by using --no-clone option.
-* Create the blueprints by replacing all random values in these bleuprints with the specific values depending on the config.ini file.
+# 0 Agenda :
+- 1- Introduction
+- 2- Cockpit Driver
+  - 2.1- Introduction
+  - 2.2- The Architecture
+  - 2.3- The Flow Description
+  - 2.4- The Execution Steps
+  - 2.5- The Blueprint Templates Creation
+  - 2.6- Add Blueprint Templates To The Repo
+  - 2.7- The Service template
+  - 2.8- Add Testing Service To The AYS Repo
+- 3- Cockpit Installer
+
+
+# 1 Introduction:
+This documentation includes the full details of **Cockpit Driver** and **Cockpit Installer**. The goal of **Cockpit Driver** is automating execution of blueprints. It takes a template of blueprints and produces the results in XML file. The goal of **Cockpit Installer** is automating the cockpit installation process in the development mode.
+
+# 2 Cockpit Driver
+#### 2.1 Introduction:
+The cockpit driver is a script to automate the execution of the blueprints and produce the results in XML file. The driver needs a cockpit machine which has the service which will be consumed by these blueprints. The driver will request the execution cockpit API to execute this blueprint and get the result back then it will create a result XML file.
+
+#### 2.2 The Architecture:
+```bash
+├── cockpit_testing
+│   ├── Config
+│   │   ├── config.ini
+│   │   └── generate_config.py
+│   ├── Framework
+│   │   ├── Driver
+│   │   │   ├── CreateBluePrint.py
+│   │   │   ├── Driver.py
+│   │   │   ├── __init__.py
+│   │   │   ├── README.md
+│   │   │   └── RequestCockpitAPI.py
+│   │   ├── __init__.py
+│   │   ├── Installer
+│   │   │   ├── ExecuteRemoteCommands.py
+│   │   │   ├── __init__.py
+│   │   │   ├── Installer.py
+│   │   │   ├── README.md
+│   │   │   ├── RequestEnvAPI.py
+│   │   │   └── UpdateConfig.py
+│   │   └── utils
+│   │       ├── client.py
+│   │       ├── __init__.py
+│   │       └── utils.py
+│   └── __init__.py
+├── README.md
+├── requirements.txt
+└── results.xml
+```
+#### 2.3 The Flow Description:
+The **Cockpit Drive** will parse the config.ini file then it will:
+* Connect to a remote environment and create an account (default). You can pass a specific account using **-u** option, or you can ignore accessing an environment at all by using **--no-clone** option.
+* Clone a specific repo which has the blueprints templates (make sure that you have access to clone this github repo via ssh).
+* Create the blueprints by replacing all random values in these blueprints with the specific values depending on the config.ini file.
 * Call the cockpit API to create new repo.
 * Call the cockpit API to add a new blueprint to this repo.
 * Call the cockpit API to execute this repo get the run key.
@@ -12,47 +63,74 @@ The cockpit driver is a script to automate testing of the cockpit solution. It d
 * Delete the created account.
 
 
-# 1.1 Getting Started
+#### 2.4 The Execution Steps:
 To use the Driver, follow the following commands:
 * Clone the repo
 ```
 git clone git@github.com:Jumpscale/ays_automatic_cockpit_based_testing.git
+cd ays_automatic_cockpit_based_testing/cockpit_testing/Config
+vim config.ini
 ```
-* Enter Username, Password, Environment, Location, cockpit_url, client_id, client_secret, repo and the branch values in the config.ini file.
 
- Hint : client_id and client_secret are using to get JWT from itsyou.online for the production cockpit mode. Repo and the branch which are having the blueprints will be executed.
+* Edit the config.ini values:
+```
+  [main]
+  environment = du-conv-2.demo.greenitglobe.com
+  username = <username>
+  password = <password>
+  location = du-conv-2
+  cockpit_url = http://192.168.28.63:5000/ays
+  client_id =
+  client_secret =
+  repo = git@github.com:Jumpscale/ays_jumpscale8.git
+  branch = 8.1.0
+  # number of test cases to run in parallel
+  threads_number = 1
+```
+ - environment : URL Of the environment
+ - username : environment username
+ - password : environment username password
+ - location : One of the enviroment location
+ - cockpit_url : URL of the cockpit
+ - client_id and client_secret are using to get JWT from itsyou.online for the production cockpit mode.
+ - repo : Which has the blueprints templates
+ - branch : A specific repo branch
+ - threads_number : Number of threads to execute blueprints in parallel
 
-* From your terminal make sure that the current directory is ays_automatic_cockpit_based_testing
-* Execute the following commands:
+
+* From your terminal make sure that the current directory is ays_automatic_cockpit_based_testing, then execute the following command:
 ```bash
 export PYTHONPATH='./'
 python cockpit_testing/Framework/Driver/Driver.py # This will clone the repo and execute all the blueprints.
 ```
-Hint: The driver --help is:
-```
-Usage: Driver.py [options]
+  **Driver options:**
 
-Options:
-  -h, --help      show this help message and exit
-  -b BPNAME       run a specific blueprint name
-  -a ACCOUNT      use a specific account
-  -d BPDIRECTORY  use a specific blueprint directory
-  --no-clone      clone development repo
-  --no-backend    no backend environment
-  --no-teardown   no teardown
+    The driver --help is:
+    ```
+    Usage: Driver.py [options]
 
-```
-If you need to execute a specific blueprint, you have to add its full name after -b option.
-If you don't need to clone the repo, Just use --no-clone option.
-If you need to use a specific account add its name after -u  and in this case, Driver won't delete this account.
-If you don't need to use the back end environment, Use --no-backend option.
-If you need to run a specific blueprints under a specific directory under bp_test_templates, set the directory name after -s option.
-If you don't wanna delete the created account, please use --no-teardown option.
+    Options:
+      -h, --help      show this help message and exit
+      -b BPNAME       run a specific blueprint name
+      -d BPDIRECTORY  use a specific blueprint directory
+      -a ACCOUNT      use a specific account
+      --no-clone      clone development repo
+      --no-backend    no backend environment
+      --no-teardown   no teardown
+    ```
+
+    - To execute a specific blueprint which should be in the available blueprints directory, use -b option.
+    - To execute a specific blueprints in a directory, use -d option.
+    - To not clone the repo and use the exist one, use --no-clone option.
+    - To use a specific account, use -a option and in this case, Driver won't delete this account.
+    - To not use the back end environment, Use --no-backend option.
+    - To not delete the created account, use --no-teardown option.
+
 
 * Check logs in log.log file.
 * The results will be documented in testresults.xml file.
 
-# 1.2 Blueprint Templates Creation:
+#### 2.5 The Blueprint Templates Creation:
 To create a new blueprint you have to follow the following sample:
 
 ```yaml
@@ -80,23 +158,21 @@ actions:
      actor: test_create_cloudspace
 ```
 
-This sample is following the following rules to identify the instance:
+The sample rules are:
   * {random} : Driver will generate a random string.
   * {random_x} :  Driver will generate a random string and save its value to be set for other {random_x} in the blueprint.
   * {config_parameter} : Driver will replace it with the value of this parameter in the config file.
-  * # 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE) : This line should be set before the testing service consuming line.
+  * #'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE) : This line should be set before the testing service consuming line.
 
-# Add Blueprint Templates To The Repo:
-  The driver is looking for the blueprint templates in the /<repo_name>/tests/bp_test_templates directory so you have to craete this path and add your blueprint templates under it.
+#### 2.6 Add Blueprint Templates To The Repo:
+  The driver is looking for the blueprint templates in the /< repo_name>/tests/bp_test_templates directory so you have to create this path and add your blueprint templates under it.
 
-# 1.3 Service template:
+#### 2.7 The Service template:
 To create a new testing service, You have to follow this sample:
 ```python
 def init_actions_(service, args):
     return {
-
         'test': ['install']
-
     }
 
 
@@ -117,8 +193,8 @@ def test(job):
         job.service.save()
 ```
 
-# Add Testing Service To The AYS Repo:
-  You have to add any new test service to the AYS repo and to consume these services you should have a cockpit machine which was installed from this repo.
+#### 2.8 Add Testing Service To The AYS Repo:
+  You have to add any new test service to the AYS repo. To consume these services you should have a cockpit machine which was installed from this AYS repo or you have to update services directory on the cockpit machine.
 
 # 2. Cockpit Installer
 The cockpit installer is a script to automate the cockpit installation steps in the development mode. It executes the following steps:
