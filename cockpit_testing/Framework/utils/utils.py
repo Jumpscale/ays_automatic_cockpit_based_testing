@@ -9,7 +9,7 @@ from client import Client
 import logging
 import time
 import ConfigParser
-import ast
+
 
 
 class BaseTest(object):
@@ -135,41 +135,38 @@ class BaseTest(object):
             raise RuntimeError("Failed to execute command.\n\ncommand:\n{}\n\n".format(cmd, error_output))
 
     def get_testcases_templates(self):
-        repos_list = ast.literal_eval(self.values['repo'])
-        branches_list = ast.literal_eval(self.values['branch'])
+        repo = self.values['repo']
+        branch = self.values['branch']
         bps_driver_path = 'TestCasesTemplate'
+        if 'https' in repo:
+            temp = repo.split('/')[-1]
+            repo_name = temp[:temp.find('.')]
+        else:
+            match = re.search(r'/(\S+).git', repo)
+            repo_name = match.group(1)
+
+        # make directory to clone repos on
         if self.clone:
             dir_path = os.getcwd() + '/cockpit_testing/Framework/%s' % bps_driver_path
             if os.path.exists(dir_path):
                 self.run_cmd_via_subprocess('rm -rf %s' % dir_path)
             self.run_cmd_via_subprocess('cd cockpit_testing/Framework/; mkdir %s' % bps_driver_path)
-
-        for repo, branch in zip(repos_list, branches_list):
-            if 'https' in repo:
-                temp = repo.split('/')[-1]
-                repo_name = temp[:temp.find('.')]
+            dirs = self.run_cmd_via_subprocess('ls').split('\n')[:-1]
+            if 'repos' not in dirs:
+                print(' * create repos directory')
+                self.run_cmd_via_subprocess('mkdir repos')
             else:
-                match = re.search(r'/(\S+).git', repo)
-                repo_name = match.group(1)
+                print(' * repos directory already exists')
 
-            # make directory to clone repos on
-            if self.clone:
-                dirs = self.run_cmd_via_subprocess('ls').split('\n')[:-1]
-                if 'repos' not in dirs:
-                    print(' * create repos directory')
-                    self.run_cmd_via_subprocess('mkdir repos')
-                else:
-                    print(' * repos directory already exists')
-
-                dirs = self.run_cmd_via_subprocess('ls repos').split('\n')[:-1]
-                if repo_name in dirs:
-                    self.run_cmd_via_subprocess('cd repos; rm -rf %s' % repo_name)
-                print(' * clone repo %s' % repo)
-                print(' * branch %s' % branch)
-                self.run_cmd_via_subprocess('cd repos; git clone -b %s %s' % (branch, repo))
-            # copy blueprints test templates
-            self.run_cmd_via_subprocess(
-                'cp -r repos/%s/tests/bp_test_templates/. cockpit_testing/Framework/%s' % (repo_name, bps_driver_path))
+            dirs = self.run_cmd_via_subprocess('ls repos').split('\n')[:-1]
+            if repo_name in dirs:
+                self.run_cmd_via_subprocess('cd repos; rm -rf %s' % repo_name)
+            print(' * clone repo %s' % repo)
+            print(' * branch %s' % branch)
+            import ipdb;ipdb.set_trace()
+            self.run_cmd_via_subprocess('cd repos; git clone -b %s %s' % (branch, repo))
+        # copy blueprints test templates
+        self.run_cmd_via_subprocess('cp -r repos/%s/tests/bp_test_templates/. cockpit_testing/Framework/%s' % (repo_name, bps_driver_path))
 
     def get_jwt(self):
         client_id = self.values['client_id']
