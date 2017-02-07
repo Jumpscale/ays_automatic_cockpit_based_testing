@@ -8,9 +8,9 @@ from optparse import OptionParser
 
 if __name__ == '__main__':
     parser = OptionParser()
+    parser.add_option('-d', help='use a specific blueprint directory', dest='bpDirectory', default='', action='store')
     parser.add_option('-b', help='run a specific blueprint name', dest='bpName', default='', action='store')
     parser.add_option('-a', help='use a specific account', dest='account', default='', action='store')
-    parser.add_option('-d', help='use a specific blueprint directory', dest='bpDirectory', default='', action='store')
     parser.add_option('--no-clone', help='clone development repo', dest='clone', default=True, action='store_false')
     parser.add_option('--no-backend', help='no backend environment', dest='no_backend', default=False, action='store_true')
     parser.add_option('--no-teardown', help='no teardown', dest='no_teardown', default=False, action='store_true')
