@@ -163,7 +163,6 @@ class BaseTest(object):
                 self.run_cmd_via_subprocess('cd repos; rm -rf %s' % repo_name)
             print(' * clone repo %s' % repo)
             print(' * branch %s' % branch)
-            import ipdb;ipdb.set_trace()
             self.run_cmd_via_subprocess('cd repos; git clone -b %s %s' % (branch, repo))
         # copy blueprints test templates
         self.run_cmd_via_subprocess('cp -r repos/%s/tests/bp_test_templates/. cockpit_testing/Framework/%s' % (repo_name, bps_driver_path))
