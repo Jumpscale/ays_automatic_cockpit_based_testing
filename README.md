@@ -239,10 +239,12 @@ vim config.ini
   environment = du-conv-2.demo.greenitglobe.com
   username = <username>
   password = <password>
+  location = du-conv-2
 ```
  - environment : URL Of the environment
  - username : environment username
  - password : environment username password
+ - location : enviroment location to install cloudspace
 
 
 * From your terminal make sure that the current directory is ays_automatic_cockpit_based_testing
