@@ -5,7 +5,7 @@ import os, re
 from subprocess import Popen, PIPE
 from xml.etree.ElementTree import Element, SubElement, tostring
 from bs4 import BeautifulSoup
-from client import Client
+from .client import Client
 import logging
 import time
 
@@ -238,25 +238,28 @@ class BaseTest(object):
         resultFile = open('testresults.xml', 'w')
         resultFile.write(BeautifulSoup((tostring(testsuit)), 'xml').prettify())
 
-    def get_jobs(self, specific_blueprint):
+    def get_jobs(self, specific_blueprint_list):
         # Return : All paths which is under TestCases dir.
         utils_dir = os.path.dirname(__file__)
         test_cases_directory = os.path.join(utils_dir, "../TestCases/")
         test_cases_files = os.listdir(test_cases_directory)
         test_cases_path = []
-        for file in test_cases_files:
-            if specific_blueprint:
+
+        if specific_blueprint_list:
+            for specific_blueprint in specific_blueprint_list:
                 # if specific_blueprint != file[file.find('TestCases/') + 10:]:
-                if specific_blueprint != file:
-                    continue
-                else:
-                    test_cases_path.append(os.path.join(test_cases_directory, file))
-                    break
-            else:
+                for file in test_cases_files:
+                    if specific_blueprint != file:
+                        continue
+                    else:
+                        test_cases_path.append(os.path.join(test_cases_directory, file))
+                        break
+        else:
+            for file in test_cases_files:
                 test_cases_path.append(os.path.join(test_cases_directory, file))
 
         if len(test_cases_path) == 0 and len(test_cases_files) > 0:
-            raise NameError('There is no %s blueprint in TestCases dir' % specific_blueprint)
+            raise NameError('There is no %s blueprint in TestCases dir' % str(specific_blueprint_list))
         return test_cases_path
 
     def log(self):
