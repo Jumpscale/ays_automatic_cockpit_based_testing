@@ -125,7 +125,7 @@ class RequestCockpitAPI(BaseTest):
             response = self.requests.get(url=API, headers=self.header)
 
             if response.status_code == 200:
-                content = json.loads(response.content)
+                content = response.json()
                 state = str(content['state'])
 
                 if state == 'running' or state == 'new':
@@ -160,7 +160,7 @@ class RequestCockpitAPI(BaseTest):
                                                  expected_responce_code=200)
 
         if result:
-            temp = json.loads(response.content)['data']
+            temp = response.json()['data']
             result = temp['result']
             self.logging.info('RESULT: %s' % result)
             self.testcase_time = '{:0.2f}'.format(time.time() - self.start_time)
