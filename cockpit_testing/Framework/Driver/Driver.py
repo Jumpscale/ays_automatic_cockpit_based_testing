@@ -1,20 +1,20 @@
 import threading
-import Queue
+import queue
 from CreateBluePrint import CreateBluePrint
 from RequestCockpitAPI import RequestCockpitAPI
 from cockpit_testing.Framework.utils.utils import BaseTest
 import time, traceback, sys
-from optparse import OptionParser
+import argparse
 
 if __name__ == '__main__':
-    parser = OptionParser()
-    parser.add_option('-d', help='use a specific blueprint directory', dest='bpDirectory', default='', action='store')
-    parser.add_option('-b', help='run a specific blueprint name', dest='bpName', default='', action='store')
-    parser.add_option('-a', help='use a specific account', dest='account', default='', action='store')
-    parser.add_option('--no-clone', help='clone development repo', dest='clone', default=True, action='store_false')
-    parser.add_option('--no-backend', help='no backend environment', dest='no_backend', default=False, action='store_true')
-    parser.add_option('--no-teardown', help='no teardown', dest='no_teardown', default=False, action='store_true')
-    (options, args) = parser.parse_args()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', help='use a specific blueprint directory', dest='bpDirectory', default='', action='store')
+    parser.add_argument('-b', help='run list of blueprints name', dest='bpName',  action='store', default=[], nargs='+')
+    parser.add_argument('-a', help='use a specific account', dest='account', default='', action='store')
+    parser.add_argument('--no-clone', help='clone development repo', dest='clone', default=True, action='store_false')
+    parser.add_argument('--no-backend', help='no backend environment', dest='no_backend', default=False, action='store_true')
+    parser.add_argument('--no-teardown', help='no teardown', dest='no_teardown', default=False, action='store_true')
+    options = parser.parse_args()
 
     print(' * Driver is running ..... ')
     base_test = BaseTest()
@@ -45,8 +45,8 @@ if __name__ == '__main__':
         role[thread_name] = [role_line[:role_line.find('__')], role_line[role_line.find('__') + 2:-1]]
 
 
-    queue = Queue.Queue()
-    jobs = base_test.get_jobs(specific_blueprint=BLUEPRINT_NAME)
+    queue = queue.Queue()
+    jobs = base_test.get_jobs(BLUEPRINT_NAME)
     for job in jobs:
         queue.put(job)
 
@@ -55,7 +55,7 @@ if __name__ == '__main__':
         while not queue.empty():
             testCasesPath = queue.get()
             bpFileName = testCasesPath[testCasesPath.index('/TestCases/') + 11:]
-            print(' * Test case : %s' % bpFileName)
+            print((' * Test case : %s' % bpFileName))
             base_test.logging.info('\n')
             base_test.logging.info('* Test case : %s' % bpFileName)
 

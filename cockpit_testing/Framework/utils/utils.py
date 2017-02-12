@@ -5,7 +5,7 @@ import os, re
 from subprocess import Popen, PIPE
 from xml.etree.ElementTree import Element, SubElement, tostring
 from bs4 import BeautifulSoup
-from client import Client
+from .client import Client
 import logging
 import time
 
@@ -244,23 +244,23 @@ class BaseTest(object):
         test_cases_directory = os.path.join(utils_dir, "../TestCases/")
         test_cases_files = os.listdir(test_cases_directory)
         test_cases_path = []
-        for file in test_cases_files:
-            if specific_blueprint_list:
-                if type(specific_blueprint_list) == str:
-                    tmp = []
-                    tmp.append(specific_blueprint_list)
-                    specific_blueprint_list = tmp
 
+        if specific_blueprint_list:
+            for specific_blueprint in specific_blueprint_list:
                 # if specific_blueprint != file[file.find('TestCases/') + 10:]:
-                for specific_blueprint in specific_blueprint_list:
+                for file in test_cases_files:
                     if specific_blueprint != file:
                         continue
                     else:
                         test_cases_path.append(os.path.join(test_cases_directory, file))
-                        specific_blueprint_list.pop(specific_blueprint_list.index(specific_blueprint))
                         break
-            else:
+        else:
+            for file in test_cases_files:
                 test_cases_path.append(os.path.join(test_cases_directory, file))
+
+        if len(test_cases_path) == 0 and len(test_cases_files) > 0:
+            raise NameError('There is no %s blueprint in TestCases dir' % str(specific_blueprint_list))
+        return test_cases_path
 
     def log(self):
         self.logging.basicConfig(filename="log.log", filemode='w', level=logging.INFO,

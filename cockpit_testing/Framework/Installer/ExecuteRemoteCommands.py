@@ -85,10 +85,11 @@ class ExecuteRemoteCommands():
             else:
                 if response.status_code == 200:
                     self.baseTest.logging.info(' * You can access the new cockpit on : http:%s ' % self.ip)
-                    print (' * You can access the new cockpit on : http://%s ' % self.ip)
+                    print((' * You can access the new cockpit on : http://%s ' % self.ip))
                     break
                 else:
                     time.sleep(5)
                     continue
         else:
+            print(' * FAIL : Please, Check installtion files in %s vm ' % cockpit_ip)
             self.baseTest.logging.error(' * FAIL : Please, Check installtion files in %s vm ' % cockpit_ip)
