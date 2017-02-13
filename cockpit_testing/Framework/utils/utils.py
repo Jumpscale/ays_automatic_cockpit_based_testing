@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup
 from .client import Client
 import logging
 import time
+import ConfigParser
+
 
 
 class BaseTest(object):
@@ -37,7 +39,6 @@ class BaseTest(object):
 
         self.Testcases_results = {'Blueprint Name': ['Test Result', 'Execution Time']}
         self.requests = requests
-
 
     def setup(self):
         print(' * Execute setup method ..... ')
@@ -82,15 +83,13 @@ class BaseTest(object):
         script_dir = os.path.dirname(__file__)
         config_file = "../../Config/config.ini"
         config_path = os.path.join(script_dir, config_file)
-
-        config = open(config_path, 'r')
-        for line in config:
-            if '=' in line:
-                key = line[:line.index('=') - 1]
-                value = line[line.index('=') + 2:]
-                value = value.replace('\n', '')
-                self.values[key] = value
-        config.close()
+        config = ConfigParser.ConfigParser()
+        config.read(config_path)
+        section = config.sections()[0]
+        options = config.options(section)
+        for option in options:
+            value = config.get(section, option)
+            self.values[option] = value
 
     def create_account(self):
         # create new account
@@ -166,8 +165,7 @@ class BaseTest(object):
             print(' * branch %s' % branch)
             self.run_cmd_via_subprocess('cd repos; git clone -b %s %s' % (branch, repo))
         # copy blueprints test templates
-        self.run_cmd_via_subprocess(
-            'cp -r repos/%s/tests/bp_test_templates/. cockpit_testing/Framework/%s' % (repo_name, bps_driver_path))
+        self.run_cmd_via_subprocess('cp -r repos/%s/tests/bp_test_templates/. cockpit_testing/Framework/%s' % (repo_name, bps_driver_path))
 
     def get_jwt(self):
         client_id = self.values['client_id']
