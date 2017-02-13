@@ -61,11 +61,8 @@ if __name__ == '__main__':
 
             try:
                 blueprint = create_blueprint.load_blueprint(testCasesPath=testCasesPath)
-            except:
-                raise NameError("Error during loading the blueprint")
-            get_testService_role(blueprint=blueprint, thread_name=threading.current_thread().name)
-            request_cockpit_api = RequestCockpitAPI()
-            try:
+                get_testService_role(blueprint=blueprint, thread_name=threading.current_thread().name)
+                request_cockpit_api = RequestCockpitAPI()
                 request_cockpit_api.create_new_repository(repository=request_cockpit_api.repo['name'])
                 request_cockpit_api.send_blueprint(repository=request_cockpit_api.repo['name'],
                                                    blueprint=blueprint)
