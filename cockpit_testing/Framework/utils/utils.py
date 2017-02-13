@@ -197,16 +197,24 @@ class BaseTest(object):
         self.Testcases_results.pop("Blueprint Name")
 
         for key in self.Testcases_results:
-            if 'ERROR' in self.Testcases_results[key][0]:
-                Errors += 1
-            elif 'FAILED' in self.Testcases_results[key][0]:
-                Failures += 1
-            elif 'Skip' in self.Testcases_results[key][0]:
-                Skip += 1
-            elif 'OK' in self.Testcases_results[key][0]:
-                Succeeded += 1
-            else:
-                print('The result is missing an indicator element')
+            for item in self.Testcases_results[key]:
+                if 'ERROR' in item[0]:
+                    Errors += 1
+                    break
+                elif 'FAILED' in item[0]:
+                    Failures += 1
+                    break
+                elif 'Skip' in item[0]:
+                    Skip += 1
+                    break
+                elif 'OK' in item[0]:
+                    Succeeded += 1
+                    break
+                elif 'Time' in item[0]:
+                    continue
+                else:
+                    print('The result is missing an indicator element')
+                    break
 
         testsuit_params = {'name': 'Cockpit_Testing',
                            'tests': str(len(self.Testcases_results)),
@@ -220,19 +228,25 @@ class BaseTest(object):
         for key in self.Testcases_results:
             testcase_params = {'classname': "/cockpit_testing/Framework/TestCases/" + key,
                                'name': key,
-                               'time': str(self.Testcases_results[key][1])}
+                               'time': str(self.Testcases_results[key][0][1])}
 
             testcase = SubElement(testsuit, 'testcase', testcase_params)
-            if 'ERROR' in self.Testcases_results[key][0]:
-                error = SubElement(testcase, 'error')
-                error.text = str(self.Testcases_results[key][0])
-            elif 'FAILED' in self.Testcases_results[key][0]:
-                failuer = SubElement(testcase, 'failure')
-                failuer.text = str(self.Testcases_results[key][0])
-            elif 'Skip' in self.Testcases_results[key][0]:
-                skipped = SubElement(testcase, 'skipped')
-                skipped.text = str(self.Testcases_results[key][0])
-
+            for item in self.Testcases_results[key]:
+                if 'ERROR' in item[0]:
+                    error = SubElement(testcase, 'error')
+                    error_message = str(item[0])
+                    service_name = str(item[1])
+                    error.text = " service: %s - Message: %s" % (service_name, error_message)
+                elif 'FAILED' in item[0]:
+                    failuer = SubElement(testcase, 'failure')
+                    failuer_message = str(item[0])
+                    service_name = str(item[1])
+                    failuer.text = " service: %s - Message: %s" % (service_name, failuer_message)
+                elif 'Skip' in item[0]:
+                    skipped = SubElement(testcase, 'skipped')
+                    skipped_message = str(item[0])
+                    service_name = str(item[1])
+                    skipped.text = " service: %s - Message: %s" % (service_name, skipped_message)
         resultFile = open('testresults.xml', 'w')
         resultFile.write(BeautifulSoup((tostring(testsuit)), 'xml').prettify())
 

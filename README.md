@@ -152,7 +152,6 @@ vdc__{random_vdc}:
     uservdc:
         - '{username}'
 
-# 'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE)
 test_create_cloudspace__{random}:
    vdc: {random_vdc}
    g8client: 'main'
@@ -167,7 +166,7 @@ The sample rules are:
   * {random} : Driver will generate a random string.
   * {random_x} :  Driver will generate a random string and save its value to be set for other {random_x} in the blueprint.
   * {config_parameter} : Driver will replace it with the value of this parameter in the config file.
-  * #'QA SERVICE' (THE TEMPLATE SHOULD HAS THIS LINE) : This line should be set before the testing service consuming line.
+  * testing service should start with **'test_'** word.
 
 ### 3.6 Add Blueprint Templates To The Repo:
   The driver is looking for the blueprint templates in the /< repo_name>/tests/bp_test_templates directory so you have to create this path and add your blueprint templates under it.

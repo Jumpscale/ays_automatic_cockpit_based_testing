@@ -134,7 +134,8 @@ class RequestCockpitAPI(BaseTest):
                     continue
                 elif state == 'ok':
                     self.logging.info(' %s : The Running state is %s' % (run_key, state))
-                    return True
+                    self.testcase_time = '{:0.2f}'.format(time.time() - self.start_time)
+                    return self.testcase_time
                 elif state == 'error':
                     self.logging.error('%s : ERROR : The Running state is %s' % (run_key, state))
                     self.blueprint['log'] = content['steps']
@@ -163,8 +164,7 @@ class RequestCockpitAPI(BaseTest):
             temp = response.json()['data']
             result = temp['result']
             self.logging.info('RESULT: %s' % result)
-            self.testcase_time = '{:0.2f}'.format(time.time() - self.start_time)
-            return [result, self.testcase_time]
+            return [result, service]
         else:
             self.logging.error('ERROR : response status code %i' % response.status_code)
             self.logging.error('ERROR : response content %s ' % response.content)
