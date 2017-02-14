@@ -169,7 +169,7 @@ The sample rules are:
   * {config_parameter} : Driver will replace it with the value of this parameter in the config file.
   * testing service should start with **'test_'** word.
 
-The default ** Waiting execution time period** is 3000 seconds, after this period the **deriver** will raise an error. To set a specific waiting execution time period, You can add a new item to the **ExecutionTime** dictionary in ays_automatic_cockpit_based_testing/cockpit_testing/Config/blueprintExecutionTime.py
+The default **Waiting execution time period** is 3000 seconds, after this period the **deriver** will raise an error. To set a specific waiting execution time period, You can add a new item to the **ExecutionTime** dictionary in ays_automatic_cockpit_based_testing/cockpit_testing/Config/blueprintExecutionTime.py
 
 ### 3.5 Add Blueprint Templates To The Repo:
   The driver is looking for the blueprint templates in the /< repo_name>/tests/bp_test_templates directory so you have to create this path and add your blueprint templates under it.
