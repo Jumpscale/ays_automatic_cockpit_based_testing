@@ -8,8 +8,8 @@ from bs4 import BeautifulSoup
 from .client import Client
 import logging
 import time
-import ConfigParser
-
+import configparser
+from cockpit_testing.Config.blueprintExecutionTime import ExecutionTime
 
 
 class BaseTest(object):
@@ -39,6 +39,7 @@ class BaseTest(object):
 
         self.Testcases_results = {'Blueprint Name': ['Test Result', 'Execution Time']}
         self.requests = requests
+        self.execution_time = ExecutionTime
 
     def setup(self):
         print(' * Execute setup method ..... ')
@@ -83,7 +84,7 @@ class BaseTest(object):
         script_dir = os.path.dirname(__file__)
         config_file = "../../Config/config.ini"
         config_path = os.path.join(script_dir, config_file)
-        config = ConfigParser.ConfigParser()
+        config = configparser.ConfigParser()
         config.read(config_path)
         section = config.sections()[0]
         options = config.options(section)
@@ -95,7 +96,7 @@ class BaseTest(object):
         # create new account
         if not self.values['account']:
             self.logging.info(' * Create new account .... ')
-            print (' * Create new account .... ')
+            print(' * Create new account .... ')
             self.account = self.random_string()
             api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/create'
             client_header = {'Content-Type': 'application/x-www-form-urlencoded',
@@ -165,7 +166,8 @@ class BaseTest(object):
             print(' * branch %s' % branch)
             self.run_cmd_via_subprocess('cd repos; git clone -b %s %s' % (branch, repo))
         # copy blueprints test templates
-        self.run_cmd_via_subprocess('cp -r repos/%s/tests/bp_test_templates/. cockpit_testing/Framework/%s' % (repo_name, bps_driver_path))
+        self.run_cmd_via_subprocess(
+            'cp -r repos/%s/tests/bp_test_templates/. cockpit_testing/Framework/%s' % (repo_name, bps_driver_path))
 
     def get_jwt(self):
         client_id = self.values['client_id']
@@ -301,7 +303,7 @@ class BaseTest(object):
                     return [True, response]
                 else:
                     time.sleep(2)
-                    #print response.url, response.status_code, response.content
+                    # print response.url, response.status_code, response.content
             except:
                 time.sleep(2)
 
@@ -321,7 +323,7 @@ class BaseTest(object):
 
     def get_account_ID(self, account):
         client_header = {'Content-Type': 'application/x-www-form-urlencoded',
-                              'Accept': 'application/json'}
+                         'Accept': 'application/json'}
         self.logging.info(' * Get %s account ID .... ' % account)
         api = 'https://' + self.values['environment'] + '/restmachine/cloudapi/accounts/list'
         client_response = self.client._session.post(url=api, headers=client_header)
@@ -336,7 +338,8 @@ class BaseTest(object):
                 self.logging.error(
                     " * ERROR : Can't get %s account ID. Please, Make sure that %s username can get this account ID" % (
                         account, self.values['username']))
-                print(" * ERROR : Can't get %s account ID. Please, Make sure that %s username can get this account ID" % (
+                print(
+                    " * ERROR : Can't get %s account ID. Please, Make sure that %s username can get this account ID" % (
                         account, self.values['username']))
                 raise NameError(
                     " * ERROR : Can't get '%s' account ID. Please, Make sure that '%s' username can get this account ID" % (
@@ -359,3 +362,11 @@ class BaseTest(object):
         except:
             self.logging.error("Can't Create a connection to the '%s' cockpit machine" % url)
             raise NameError("Can't Create a connection to the '%s' cockpit machine" % url)
+
+    def get_waiting_time(self, bpFileName):
+        if bpFileName in self.execution_time:
+            time = self.execution_time[bpFileName]
+            if time > 10:
+                return int(time / 10)
+            else:
+                return int(time)

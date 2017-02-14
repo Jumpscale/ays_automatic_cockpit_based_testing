@@ -114,14 +114,15 @@ class RequestCockpitAPI(BaseTest):
             self.response_error_content = response.content
             raise NameError('ERROR : response status code %i' % response.status_code)
 
-    def get_run_status(self, repository, run_key):
+    def get_run_status(self, repository, run_key, bpFileName):
         '''
             GET : /ays/repository/{repository}/aysrun/{aysrun}
         '''
 
         API = self.build_api(['repository', repository, 'aysrun', run_key])
 
-        for _ in range(300):
+        waiting_time = self.get_waiting_time(bpFileName) or 300
+        for _ in range(waiting_time):
             response = self.requests.get(url=API, headers=self.header)
 
             if response.status_code == 200:
