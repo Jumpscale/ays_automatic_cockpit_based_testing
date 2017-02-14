@@ -16,7 +16,7 @@
 # 1 Introduction
 This documentation includes the full details of **Cockpit Driver** and **Cockpit Installer**. The goal of **Cockpit Driver** is automating execution of blueprints. It takes a template of blueprints and produces the results in XML file. The goal of **Cockpit Installer** is automating the cockpit installation process in the development mode.
 
-### 2 The Framework Architecture
+# 2 The Framework Architecture
 ```bash
 ├── cockpit_testing
 │   ├── Config
@@ -169,7 +169,7 @@ The sample rules are:
   * {config_parameter} : Driver will replace it with the value of this parameter in the config file.
   * testing service should start with **'test_'** word.
 
-The default **Waiting execution time period** is 3000 seconds, after this period the **deriver** will raise an error. To set a specific waiting execution time period, You can add a new item to the **ExecutionTime** dictionary in ays_automatic_cockpit_based_testing/cockpit_testing/Config/blueprintExecutionTime.py
+The default ** Waiting execution time period** is 3000 seconds, after this period the **deriver** will raise an error. To set a specific waiting execution time period, You can add a new item to the **ExecutionTime** dictionary in ays_automatic_cockpit_based_testing/cockpit_testing/Config/blueprintExecutionTime.py
 
 ### 3.5 Add Blueprint Templates To The Repo:
   The driver is looking for the blueprint templates in the /< repo_name>/tests/bp_test_templates directory so you have to create this path and add your blueprint templates under it.
@@ -266,12 +266,14 @@ python cockpit_testing/Framework/Installer/Installer.py
     -h, --help            show this help message and exit
     -b BRANCH              * branch, Default : 8.1.0
     -a ACCOUNT, --use-account=ACCOUNT
-                          use a specific account
+                           * use a specific account
+    --teardown             * Tear down the cockpit after installation
+
   ```
 
-  - To install from a specific jumpscale branch, add the branch number after -b option.
-  - To install from a specific cockpit branch, add the branch number after -s option.
-  - To use a specific account, Please set its name after -u option.
+  - To install from a specific branch, add the branch number after -b option.
+  - To use a specific account, Please set its name after -a option.
+  - To delete this cockpit, use --teardown option.
 
 * Check logs in log.log file.
 * After the installation is completed, the cockpit_url variable in the config.ini file will be changed automatically to point the new cockpit.
