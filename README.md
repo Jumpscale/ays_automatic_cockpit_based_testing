@@ -16,7 +16,7 @@
 # 1 Introduction
 This documentation includes the full details of **Cockpit Driver** and **Cockpit Installer**. The goal of **Cockpit Driver** is automating execution of blueprints. It takes a template of blueprints and produces the results in XML file. The goal of **Cockpit Installer** is automating the cockpit installation process in the development mode.
 
-### 2 The Framework Architecture
+# 2 The Framework Architecture
 ```bash
 ├── cockpit_testing
 │   ├── Config
