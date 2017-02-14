@@ -52,7 +52,7 @@ This documentation includes the full details of **Cockpit Driver** and **Cockpit
 The cockpit driver is a script to automate the execution of the blueprints and produce the results in XML file. The driver needs a cockpit machine which has the service which will be consumed by these blueprints. The driver will request the execution cockpit API to execute this blueprint and get the result back then it will create a result XML file.
 
 
-### 3.3 The Flow Description:
+### 3.2 The Flow Description:
 The **Cockpit Drive** will parse the config.ini file then it will:
 * Connect to a remote environment and create an account (default). You can pass a specific account using **-u** option, or you can ignore accessing an environment at all by using **--no-clone** option.
 * Clone a specific repo which has the blueprints templates (make sure that you have access to clone this github repo via ssh).
@@ -66,7 +66,7 @@ The **Cockpit Drive** will parse the config.ini file then it will:
 * Delete the created account.
 
 
-### 3.4 The Execution Steps:
+### 3.3 The Execution Steps:
 To use the Driver, follow the following commands:
 * Clone the repo
 ```
@@ -103,6 +103,7 @@ vim config.ini
 
 * From your terminal make sure that the current directory is ays_automatic_cockpit_based_testing, then execute the following command:
 ```bash
+pip3 install -r requirements.txt
 export PYTHONPATH='./'
 python cockpit_testing/Framework/Driver/Driver.py # This will clone the repo and execute all the blueprints.
 ```
@@ -135,7 +136,7 @@ python cockpit_testing/Framework/Driver/Driver.py # This will clone the repo and
 * Check logs in log.log file.
 * The results will be documented in testresults.xml file.
 
-### 3.5 The Blueprint Templates Creation:
+### 3.4 The Blueprint Templates Creation:
 To create a new blueprint you have to follow the following sample:
 
 ```yaml
@@ -168,10 +169,12 @@ The sample rules are:
   * {config_parameter} : Driver will replace it with the value of this parameter in the config file.
   * testing service should start with **'test_'** word.
 
-### 3.6 Add Blueprint Templates To The Repo:
+The default ** Waiting execution time period** is 3000 seconds, after this period the **deriver** will raise an error. To set a specific waiting execution time period, You can add a new item to the **ExecutionTime** dictionary in ays_automatic_cockpit_based_testing/cockpit_testing/Config/blueprintExecutionTime.py
+
+### 3.5 Add Blueprint Templates To The Repo:
   The driver is looking for the blueprint templates in the /< repo_name>/tests/bp_test_templates directory so you have to create this path and add your blueprint templates under it.
 
-### 3.7 The Service template:
+### 3.6 The Service template:
 To create a new testing service, You have to follow this sample:
 ```python
 def init_actions_(service, args):
@@ -197,7 +200,7 @@ def test(job):
         job.service.save()
 ```
 
-### 3.8 Add Testing Service To The AYS Repo:
+### 3.7 Add Testing Service To The AYS Repo:
   You have to add any new test service to the AYS repo. To consume these services you should have a cockpit machine which was installed from this AYS repo or you have to update services directory on the cockpit machine.
 
 # 4. Cockpit Installer
@@ -249,6 +252,7 @@ vim config.ini
 * From your terminal make sure that the current directory is ays_automatic_cockpit_based_testing
 * Execute the following commands:
 ```bash
+pip3 install -r requirements.txt
 export PYTHONPATH='./'
 python cockpit_testing/Framework/Installer/Installer.py
 ```

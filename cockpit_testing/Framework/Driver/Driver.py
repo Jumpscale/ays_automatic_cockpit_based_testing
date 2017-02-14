@@ -80,7 +80,8 @@ if __name__ == '__main__':
                 request_cockpit_api.run_repository(repository=request_cockpit_api.repo['name'])
 
                 testCase_time = request_cockpit_api.get_run_status(repository=request_cockpit_api.repo['name'],
-                                                                   run_key=request_cockpit_api.repo['key'])
+                                                                   run_key=request_cockpit_api.repo['key'],
+                                                                   bpFileName=bpFileName)
                 if testCase_time:
                     base_test.Testcases_results[bpFileName] = []
                     base_test.Testcases_results[bpFileName].append(['TestCase Time', testCase_time])
