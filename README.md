@@ -105,7 +105,7 @@ vim config.ini
 ```bash
 pip3 install -r requirements.txt
 export PYTHONPATH='./'
-python cockpit_testing/Framework/Driver/Driver.py # This will clone the repo and execute all the blueprints.
+python3 cockpit_testing/Framework/Driver/Driver.py # This will clone the repo and execute all the blueprints.
 ```
 
   **Driver options:**
@@ -254,7 +254,7 @@ vim config.ini
 ```bash
 pip3 install -r requirements.txt
 export PYTHONPATH='./'
-python cockpit_testing/Framework/Installer/Installer.py
+python3 cockpit_testing/Framework/Installer/Installer.py
 ```
 **Installer Options:**
 
