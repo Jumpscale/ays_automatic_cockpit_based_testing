@@ -163,11 +163,11 @@ class RequestEnvAPI(BaseTest):
 
     def verify_veriosn(self, cockpit_ip):
         # User this method when you install from the master cause the portal version isn't directly linked with branchs.
-        api = "%s/restmachine//system/usermanager/authenticate" % cockpit_ip
+        api = "http://%s/restmachine//system/usermanager/authenticate" % cockpit_ip
         data = {'name': 'admin', 'secret': 'admin'}
         session = requests.Session()
         key = session.post(url=api, json=data)
-        content = session.get('%s//ays81/version' % cockpit_ip, params={'authkey': key.json()}).content
+        content = session.get('http://%s//ays81/version' % cockpit_ip, params={'authkey': key.json()}).content
         soup = BeautifulSoup(content, 'lxml')
         for item in soup.find_all('li'):
             if 'Core' in item:
