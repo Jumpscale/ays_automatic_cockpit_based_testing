@@ -39,6 +39,7 @@ if __name__ == '__main__':
     executeRemoteCommands.install_js(branch=JS_branch)
     executeRemoteCommands.install_cockpit(branch=CP_branch)
     executeRemoteCommands.check_cockpit_portal(cockpit_ip=requestEnvAPI.cloudspace['ip'])
+    executeRemoteCommands.check_branchs_values(branch=JS_branch)
 
     if not DefaultAccount and tearDown:
         requestEnvAPI.teardown()

@@ -49,6 +49,7 @@ class ExecuteRemoteCommands():
 
         if len(result) == 0:
             self.baseTest.logging.error(' * FAIL : fail in executing jsInstaller file .... ')
+            print(' * FAIL : fail in executing jsInstaller file .... ')
             #raise NameError(' * FAIL : fail in executing jsInstaller file .... ')
 
     def install_cockpit(self, branch):
@@ -64,6 +65,7 @@ class ExecuteRemoteCommands():
         result = self.execute_command(command=command)
         if len(result) == 0:
             self.baseTest.logging.error(' * FAIL : fail in executing cockpitInstaller file .... ')
+            print((' * FAIL : fail in executing cockpitInstaller file .... '))
             #raise NameError(' * FAIL : fail in executing cockpitInstaller file .... ')
 
     def execute_command(self, command):
@@ -93,3 +95,18 @@ class ExecuteRemoteCommands():
         else:
             print(' * FAIL : Please, Check installtion files in %s vm ' % cockpit_ip)
             self.baseTest.logging.error(' * FAIL : Please, Check installtion files in %s vm ' % cockpit_ip)
+
+    def check_branchs_values(self, branch):
+        self.baseTest.logging.info(' * Getting branches versions ... ')
+        print(' * Getting branches versions ... ')
+        dir = ['ays_jumpscale8', 'jscockpit', 'jumpscale_core8', 'jumpscale_portal8']
+        for item in dir:
+            command = 'cd /opt/code/github/jumpscale/%s && git branch' % item
+            result = self.execute_command(command=command)
+            import ipdb; ipdb.set_trace()
+            if len(result) == 0:
+                self.baseTest.logging.error(' * FAIL : fail in getting %s branch .... ' % item)
+                print(' * FAIL : fail in getting %s branch version .... ' % item)
+            elif branch not in result[0]:
+                self.baseTest.logging.error(' * ERROR : %s branch is not matching with %s:%s branch' % (branch, item, result))
+                print(' * ERROR : %s branch is not matching with %s:%s branch' % (branch, item, result))
