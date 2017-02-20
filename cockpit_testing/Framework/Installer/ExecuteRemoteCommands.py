@@ -103,7 +103,6 @@ class ExecuteRemoteCommands():
         for item in dir:
             command = 'cd /opt/code/github/jumpscale/%s && git branch' % item
             result = self.execute_command(command=command)
-            import ipdb; ipdb.set_trace()
             if len(result) == 0:
                 self.baseTest.logging.error(' * FAIL : fail in getting %s branch .... ' % item)
                 print(' * FAIL : fail in getting %s branch version .... ' % item)
