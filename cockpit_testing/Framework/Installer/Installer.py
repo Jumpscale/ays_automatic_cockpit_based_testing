@@ -11,7 +11,7 @@ if __name__ == '__main__':
     parser.add_option('-a', '--use-account', help=' * use a specific account', dest='account', default='',
                       action='store')
     parser.add_option('--teardown', help=' * Tear down the cockpit after installation', dest='tearDown',
-                      default='False', action='store_true')
+                      default=False, action='store_true')
     (options, args) = parser.parse_args()
 
     JS_branch = options.branch
@@ -39,6 +39,7 @@ if __name__ == '__main__':
     executeRemoteCommands.install_js(branch=JS_branch)
     executeRemoteCommands.install_cockpit(branch=CP_branch)
     executeRemoteCommands.check_cockpit_portal(cockpit_ip=requestEnvAPI.cloudspace['ip'])
+    executeRemoteCommands.check_branchs_values(branch=JS_branch)
 
     if not DefaultAccount and tearDown:
         requestEnvAPI.teardown()

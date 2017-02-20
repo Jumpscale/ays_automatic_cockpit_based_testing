@@ -218,6 +218,8 @@ The **Cockpit Installer** will parse the config.ini file then it will:
 * Update this virtual machine OS.
 * Install jumpscale using the specific branch.
 * Install cockpit using the specific branch.
+* Check that the cockpit is reachable.
+* Check that all branches are installed correctly.
 * Update the config.ini file with the new cockpit url.
 
 # 4.3 The Execution Steps:
