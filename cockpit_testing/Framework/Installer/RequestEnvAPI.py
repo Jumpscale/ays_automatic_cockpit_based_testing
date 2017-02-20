@@ -1,6 +1,6 @@
 from cockpit_testing.Framework.utils.utils import BaseTest
-import time
-
+import time, requests
+from bs4 import BeautifulSoup
 
 class RequestEnvAPI(BaseTest):
     def __init__(self):
@@ -160,3 +160,21 @@ class RequestEnvAPI(BaseTest):
             self.logging.error(' * ERROR : response status code %i' % client_response.status_code)
             self.logging.error(' * ERROR : response content %s' % client_response.content)
             client_response.raise_for_status()
+
+    def verify_veriosn(self, cockpit_ip):
+        # User this method when you install from the master cause the portal version isn't directly linked with branchs.
+        api = "%s/restmachine//system/usermanager/authenticate" % cockpit_ip
+        data = {'name': 'admin', 'secret': 'admin'}
+        session = requests.Session()
+        key = session.post(url=api, json=data)
+        content = session.get('%s//ays81/version' % cockpit_ip, params={'authkey': key.json()}).content
+        soup = BeautifulSoup(content, 'lxml')
+        for item in soup.find_all('li'):
+            if 'Core' in item:
+                core = item.getText()
+            elif 'Portal' in item:
+                portal = item.getText()
+            elif 'JSCockpit' in item:
+                JSCockpit = item.getText()
+
+        return core, portal, JSCockpit

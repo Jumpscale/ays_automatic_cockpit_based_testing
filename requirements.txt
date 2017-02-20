@@ -1,3 +1,4 @@
+requests
 paramiko==2.0.2
 lxml==3.5.0
 bs4

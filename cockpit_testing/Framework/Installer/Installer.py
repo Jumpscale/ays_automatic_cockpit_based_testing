@@ -11,7 +11,7 @@ if __name__ == '__main__':
     parser.add_option('-a', '--use-account', help=' * use a specific account', dest='account', default='',
                       action='store')
     parser.add_option('--teardown', help=' * Tear down the cockpit after installation', dest='tearDown',
-                      default='False', action='store_true')
+                      default=False, action='store_true')
     (options, args) = parser.parse_args()
 
     JS_branch = options.branch
