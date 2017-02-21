@@ -14,7 +14,7 @@ if __name__ == '__main__':
     parser.add_argument('--no-clone', help='clone development repo', dest='clone', default=True, action='store_false')
     parser.add_argument('--no-backend', help='no backend environment', dest='no_backend', default=False,
                         action='store_true')
-    parser.add_argument('--no-teardown', help='no teardown', dest='no_teardown', default=False, action='store_true')
+    parser.add_argument('--teardown', help='teardown', dest='teardown', default=False, action='store_true')
     options = parser.parse_args()
 
     print(' * Driver is running ..... ')
@@ -116,5 +116,5 @@ if __name__ == '__main__':
 
     queue.join()
     base_test.generate_xml_results()
-    if not options.account and not options.no_teardown:
+    if options.teardown:
         create_blueprint.teardown()

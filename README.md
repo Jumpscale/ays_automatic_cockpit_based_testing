@@ -122,7 +122,7 @@ python3 cockpit_testing/Framework/Driver/Driver.py # This will clone the repo an
       -a ACCOUNT      use a specific account
       --no-clone      clone development repo
       --no-backend    no backend environment
-      --no-teardown   no teardown
+      --teardown      teardown
     ```
 
     - To execute a specific blueprint which should be in the available blueprints directory, use -b option.
@@ -130,7 +130,7 @@ python3 cockpit_testing/Framework/Driver/Driver.py # This will clone the repo an
     - To not clone the repo and use the exist one, use --no-clone option.
     - To use a specific account, use -a option and in this case, Driver won't delete this account.
     - To not use the back end environment, Use --no-backend option.
-    - To not delete the created account, use --no-teardown option.
+    - To delete the account, use --teardown option.
 
 
 * Check logs in log.log file.
