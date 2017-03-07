@@ -49,18 +49,19 @@ This documentation includes the full details of **Cockpit Driver** and **Cockpit
 
 # 3 Cockpit Driver
 ### 3.1 Introduction:
-The cockpit driver is a script to automate the execution of the blueprints and produce the results in XML file. The driver needs a cockpit machine which has the service which will be consumed by these blueprints. The driver will request the execution cockpit API to execute this blueprint and get the result back then it will create a result XML file.
+The cockpit driver is a script to automate the execution of the blueprints and produce the results in XML file. The driver needs a cockpit machine which has the service which will be consumed by these blueprints and the blueprints' templates which should be in /repo/< repo_name>/tests/bp_test_templates/ directory. The driver will request the execution cockpit API to execute this blueprint and get the result back then it will create a result XML file.
 
 
 ### 3.2 The Flow Description:
 The **Cockpit Drive** will parse the config.ini file then it will:
-* Connect to a remote environment and create an account (default). You can pass a specific account using **-u** option, or you can ignore accessing an environment at all by using **--no-clone** option.
-* Clone a specific repo which has the blueprints templates (make sure that you have access to clone this github repo via ssh).
-* Create the blueprints by replacing all random values in these blueprints with the specific values depending on the config.ini file.
+* Connect to a remote environment and create an account (default). You can use a specific account using **-u** option, or you can ignore accessing an environment at all by using **--no-clone** option.
+* Clone a specific repo which has the blueprints templates **(make sure that you have access to clone this github repo via ssh)**.
+* Create the blueprints by replacing all random values in these blueprints' templates with the specific values depending on the config.ini file.
 * Call the cockpit API to create new repo.
 * Call the cockpit API to add a new blueprint to this repo.
 * Call the cockpit API to execute this repo get the run key.
 * Call the cockpit API to check the running status (NEW, OK and ERROR).
+* Call the cockpit API to delete the repo.
 * Get the result values after the execution status switch from 'NEW' to 'OK' or 'ERROR'.
 * Generate a result XML file which is compatible with Jenkins.
 * Delete the created account.
@@ -95,8 +96,8 @@ vim config.ini
  - password : environment username password
  - location : One of the enviroment location
  - cockpit_url : URL of the cockpit
- - client_id and client_secret are using to get JWT from itsyou.online for the production cockpit mode.
- - repo : Which has the blueprints templates
+ - client_id and client_secret are using to get JWT from itsyou.online for the production cockpit.
+ - repo : Which has the blueprints templates in /repo/< repo_name>/tests/bp_test_templates/
  - branch : A specific repo branch
  - threads_number : Number of threads to execute blueprints in parallel
 
@@ -105,8 +106,9 @@ vim config.ini
 ```bash
 pip3 install -r requirements.txt
 export PYTHONPATH='./'
-python3 cockpit_testing/Framework/Driver/Driver.py # This will clone the repo and execute all the blueprints.
+python3 cockpit_testing/Framework/Driver/Driver.py --clone -b <blueprint_name> # This will clone the repo and execute all the blueprints.
 ```
+Note : You should **clone the repo** in the first time only.
 
   **Driver options:**
 
@@ -115,19 +117,20 @@ python3 cockpit_testing/Framework/Driver/Driver.py # This will clone the repo an
     ```
     Usage: Driver.py [options]
 
-    Options:
-      -h, --help      show this help message and exit
-      -b BPNAME       run a specific blueprint name
-      -d BPDIRECTORY  use a specific blueprint directory
-      -a ACCOUNT      use a specific account
-      --no-clone      clone development repo
-      --no-backend    no backend environment
-      --teardown      teardown
+    optional arguments:
+      -h, --help            show this help message and exit
+      -d BPDIRECTORY        use a specific blueprint directory
+      -b BPNAME [BPNAME ...]
+                            run list of blueprints name
+      -a ACCOUNT            use a specific account
+      --clone               clone development repo
+      --teardown            teardown
+      --no-backend          no backend environment
     ```
 
     - To execute a specific blueprint which should be in the available blueprints directory, use -b option.
     - To execute a specific blueprints in a directory, use -d option.
-    - To not clone the repo and use the exist one, use --no-clone option.
+    - To clone the repo, use --clone option.
     - To use a specific account, use -a option and in this case, Driver won't delete this account.
     - To not use the back end environment, Use --no-backend option.
     - To delete the account, use --teardown option.

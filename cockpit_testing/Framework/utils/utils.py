@@ -14,7 +14,7 @@ from cockpit_testing.Config.blueprintExecutionTime import ExecutionTime
 
 class BaseTest(object):
     def __init__(self):
-        self.clone = True
+        self.clone = False
         self.account = ''
         self.account_id = ''
         self.logging = logging
@@ -42,7 +42,6 @@ class BaseTest(object):
         self.execution_time = ExecutionTime
 
     def setup(self):
-        print(' * Execute setup method ..... ')
         self.get_testcases_templates()
 
         if not self.values['password']:
@@ -261,7 +260,8 @@ class BaseTest(object):
 
         if specific_blueprint_list:
             for specific_blueprint in specific_blueprint_list:
-                # if specific_blueprint != file[file.find('TestCases/') + 10:]:
+                if '.yaml' not in specific_blueprint:
+                    specific_blueprint += '.yaml'
                 for file in test_cases_files:
                     if specific_blueprint != file:
                         continue
@@ -289,7 +289,7 @@ class BaseTest(object):
     def request_handling(self, method, api, headers, body, expected_responce_code=200):
         # This method handle the api request errors for 10 times.
 
-        if method not in ['post', 'get']:
+        if method not in ['post', 'get', 'delete']:
             raise NameError(" * %s method isn't handled" % method)
 
         for _ in range(50):
@@ -298,6 +298,8 @@ class BaseTest(object):
                     response = self.requests.get(url=api, headers=headers, data=body)
                 elif method == 'post':
                     response = self.requests.post(url=api, headers=headers, data=body)
+                elif method == 'delete':
+                    response = self.requests.delete(url=api, headers=headers, data=body)
 
                 if response.status_code == expected_responce_code:
                     return [True, response]

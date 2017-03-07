@@ -11,10 +11,10 @@ if __name__ == '__main__':
     parser.add_argument('-d', help='use a specific blueprint directory', dest='bpDirectory', default='', action='store')
     parser.add_argument('-b', help='run list of blueprints name', dest='bpName', action='store', default=[], nargs='+')
     parser.add_argument('-a', help='use a specific account', dest='account', default='', action='store')
-    parser.add_argument('--no-clone', help='clone development repo', dest='clone', default=True, action='store_false')
+    parser.add_argument('--clone', help='clone development repo', dest='clone', default=False, action='store_true')
+    parser.add_argument('--teardown', help='teardown', dest='teardown', default=False, action='store_true')
     parser.add_argument('--no-backend', help='no backend environment', dest='no_backend', default=False,
                         action='store_true')
-    parser.add_argument('--teardown', help='teardown', dest='teardown', default=False, action='store_true')
     options = parser.parse_args()
 
     print(' * Driver is running ..... ')
@@ -95,12 +95,8 @@ if __name__ == '__main__':
                     request_cockpit_api.testcase_time = '{:0.2f}'.format(time.time() - request_cockpit_api.start_time)
                     error_message = 'ERROR : %s %s' % (
                         request_cockpit_api.blueprint['name'], request_cockpit_api.blueprint['log'])
-                    #import ipdb; ipdb.set_trace()
                     base_test.Testcases_results[bpFileName] = [['TestCase Time', request_cockpit_api.testcase_time],
                                                                [error_message, role[threading.current_thread().name][0]]]
-
-                queue.task_done()
-
             except:
                 base_test.logging.error(traceback.format_exc())
 
@@ -108,7 +104,8 @@ if __name__ == '__main__':
                 error_message = 'ERROR : %s %s' % (traceback.format_exc(), request_cockpit_api.response_error_content)
                 base_test.Testcases_results[bpFileName] = [['TestCase Time', 0], [error_message, 'Unknown service']]
 
-                queue.task_done()
+            request_cockpit_api.clean_cockpit()
+            queue.task_done()
 
 
     for _ in range(THREADS_NUMBER):

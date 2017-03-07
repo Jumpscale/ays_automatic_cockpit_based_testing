@@ -8,7 +8,7 @@ import shutil
 
 
 class CreateBluePrint(BaseTest):
-    def __init__(self, clone=True, no_backend=False, bp_dir=''):
+    def __init__(self, clone=False, no_backend=False, bp_dir=''):
         super(CreateBluePrint, self).__init__()
         if not no_backend:
             self.get_client()
