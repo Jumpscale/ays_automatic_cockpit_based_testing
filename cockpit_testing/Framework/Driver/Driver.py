@@ -11,10 +11,10 @@ if __name__ == '__main__':
     parser.add_argument('-d', help='use a specific blueprint directory', dest='bpDirectory', default='', action='store')
     parser.add_argument('-b', help='run list of blueprints name', dest='bpName', action='store', default=[], nargs='+')
     parser.add_argument('-a', help='use a specific account', dest='account', default='', action='store')
-    parser.add_argument('--no-clone', help='clone development repo', dest='clone', default=True, action='store_false')
+    parser.add_argument('--clone', help='clone development repo', dest='clone', default=False, action='store_true')
+    parser.add_argument('--teardown', help='teardown', dest='teardown', default=False, action='store_true')
     parser.add_argument('--no-backend', help='no backend environment', dest='no_backend', default=False,
                         action='store_true')
-    parser.add_argument('--teardown', help='teardown', dest='teardown', default=False, action='store_true')
     options = parser.parse_args()
 
     print(' * Driver is running ..... ')

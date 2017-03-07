@@ -14,7 +14,7 @@ from cockpit_testing.Config.blueprintExecutionTime import ExecutionTime
 
 class BaseTest(object):
     def __init__(self):
-        self.clone = True
+        self.clone = False
         self.account = ''
         self.account_id = ''
         self.logging = logging

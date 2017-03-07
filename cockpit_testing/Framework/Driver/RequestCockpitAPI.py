@@ -167,7 +167,6 @@ class RequestCockpitAPI(BaseTest):
             self.logging.info('RESULT: %s' % result)
             return [result, service]
         else:
-            self.logging.error('ERROR : response status code %i' % response.status_code)
-            self.logging.error('ERROR : response content %s ' % response.content)
+            self.logging.error('ERROR : response status code %i %s ' % (response.status_code, response.content))
             self.response_error_content = response.content
             raise NameError('ERROR : response status code %i' % response.status_code)
