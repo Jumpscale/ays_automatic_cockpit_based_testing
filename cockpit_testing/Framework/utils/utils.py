@@ -290,7 +290,7 @@ class BaseTest(object):
     def request_handling(self, method, api, headers, body, expected_responce_code=200):
         # This method handle the api request errors for 10 times.
 
-        if method not in ['post', 'get']:
+        if method not in ['post', 'get', 'delete']:
             raise NameError(" * %s method isn't handled" % method)
 
         for _ in range(50):
@@ -299,6 +299,8 @@ class BaseTest(object):
                     response = self.requests.get(url=api, headers=headers, data=body)
                 elif method == 'post':
                     response = self.requests.post(url=api, headers=headers, data=body)
+                elif method == 'delete':
+                    response = self.requests.delete(url=api, headers=headers, data=body)
 
                 if response.status_code == expected_responce_code:
                     return [True, response]

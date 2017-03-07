@@ -15,6 +15,7 @@ class RequestCockpitAPI(BaseTest):
         self.repo = {'name': self.random_string()}
         self.blueprint = {'name': self.random_string()}
         self.response_error_content = ''
+        self.cockpit_repos=[]
 
     def create_new_repository(self, repository):
         '''
@@ -35,6 +36,7 @@ class RequestCockpitAPI(BaseTest):
 
         if result:
             self.logging.info('* CREATED : %s repo' % self.repo['name'])
+            self.cockpit_repos.append(self.repo['name'])
         else:
             self.logging.error('* ERROR : response status code %i' % response.status_code)
             self.logging.error('* ERROR : response content %s ' % response.content)
@@ -168,5 +170,24 @@ class RequestCockpitAPI(BaseTest):
             return [result, service]
         else:
             self.logging.error('ERROR : response status code %i %s ' % (response.status_code, response.content))
+            self.response_error_content = response.content
+            raise NameError('ERROR : response status code %i' % response.status_code)
+
+    def clean_cockpit(self):
+        repo = self.repo['name']
+        self.logging.info('* deleting %s repository .....' % repo)
+        API = self.build_api(['repository', repo])
+
+        result, response = self.request_handling(method='delete',
+                                                 api=API,
+                                                 headers=self.header,
+                                                 body='',
+                                                 expected_responce_code=204)
+
+        if result:
+            self.logging.info('* DELETED : %s repo' % repo)
+        else:
+            self.logging.error('* ERROR : response status code %i' % response.status_code)
+            self.logging.error('* ERROR : response content %s ' % response.content)
             self.response_error_content = response.content
             raise NameError('ERROR : response status code %i' % response.status_code)

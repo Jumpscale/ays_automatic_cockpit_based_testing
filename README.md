@@ -61,6 +61,7 @@ The **Cockpit Drive** will parse the config.ini file then it will:
 * Call the cockpit API to add a new blueprint to this repo.
 * Call the cockpit API to execute this repo get the run key.
 * Call the cockpit API to check the running status (NEW, OK and ERROR).
+* Call the cockpit API to delete the repo.
 * Get the result values after the execution status switch from 'NEW' to 'OK' or 'ERROR'.
 * Generate a result XML file which is compatible with Jenkins.
 * Delete the created account.
