@@ -15,7 +15,7 @@ class RequestCockpitAPI(BaseTest):
         self.repo = {'name': self.random_string()}
         self.blueprint = {'name': self.random_string()}
         self.response_error_content = ''
-        self.cockpit_repos=[]
+        self.cockpit_repos = []
 
     def create_new_repository(self, repository):
         '''
@@ -36,10 +36,12 @@ class RequestCockpitAPI(BaseTest):
 
         if result:
             self.logging.info('* CREATED : %s repo' % self.repo['name'])
+            print(' * CREATED : %s repo' % self.repo['name'])
             self.cockpit_repos.append(self.repo['name'])
         else:
-            self.logging.error('* ERROR : response status code %i' % response.status_code)
-            self.logging.error('* ERROR : response content %s ' % response.content)
+            self.logging.error(
+                '* ERROR : response status code %i response content %s ' % (response.status_code, response.content))
+            print(' * ERROR : response status code %i response content %s ' % (response.status_code, response.content))
             self.response_error_content = response.content
             raise NameError('ERROR : response status code %i' % response.status_code)
 
@@ -60,10 +62,12 @@ class RequestCockpitAPI(BaseTest):
                                                  expected_responce_code=201)
 
         if result:
-            self.logging.info('CREATED : %s blueprint in %s repo' % (self.blueprint['name'], self.repo['name']))
+            self.logging.info(' * CREATED : %s blueprint in %s repo' % (self.blueprint['name'], self.repo['name']))
+            print((' * CREATED : %s blueprint in %s repo' % (self.blueprint['name'], self.repo['name'])))
         else:
-            self.logging.error('ERROR : response status code %i' % response.status_code)
-            self.logging.error('ERROR : response content %s ' % response.content)
+            self.logging.error(
+                '* ERROR : response status code %i response content %s ' % (response.status_code, response.content))
+            print(' * ERROR : response status code %i response content %s ' % (response.status_code, response.content))
             self.response_error_content = response.content
             raise NameError('ERROR : response status code %i' % response.status_code)
 
@@ -83,10 +87,12 @@ class RequestCockpitAPI(BaseTest):
                                                  expected_responce_code=200)
 
         if result:
-            self.logging.info('EXECUTED : %s blueprint in %s repo' % (self.blueprint['name'], self.repo['name']))
+            self.logging.info(' * EXECUTED : %s blueprint in %s repo' % (self.blueprint['name'], self.repo['name']))
+            print(' * EXECUTED : %s blueprint in %s repo' % (self.blueprint['name'], self.repo['name']))
         else:
-            self.logging.error('ERROR : response status code %i %s ' % (response.status_code, response.content))
-            self.logging.error('ERROR : response content %s ' % response.content)
+            self.logging.error(
+                '* ERROR : response status code %i response content %s ' % (response.status_code, response.content))
+            print(' * ERROR : response status code %i response content %s ' % (response.status_code, response.content))
             self.response_error_content = response.content
             raise NameError('ERROR : response status code %i %s ' % (response.status_code, response.content))
 
@@ -106,13 +112,15 @@ class RequestCockpitAPI(BaseTest):
                                                  expected_responce_code=200)
 
         if result:
-            self.logging.info('RAN : %s repo' % self.repo['name'])
+            self.logging.info(' * RAN : %s repo' % self.repo['name'])
+            print(' * RAN : %s repo' % self.repo['name'])
             self.repo['key'] = response.json()['key']
             self.logging.info('key : %s' % self.repo['key'])
             self.start_time = time.time()
         else:
-            self.logging.error('ERROR : response status code %i' % response.status_code)
-            self.logging.error('ERROR : response content %s ' % response.content)
+            self.logging.error(
+                '* ERROR : response status code %i response content %s ' % (response.status_code, response.content))
+            print(' * ERROR : response status code %i response content %s ' % (response.status_code, response.content))
             self.response_error_content = response.content
             raise NameError('ERROR : response status code %i' % response.status_code)
 
@@ -137,15 +145,20 @@ class RequestCockpitAPI(BaseTest):
                     continue
                 elif state == 'ok':
                     self.logging.info(' %s : The Running state is %s' % (run_key, state))
+                    print(' * The Running state is %s ' % state)
                     self.testcase_time = '{:0.2f}'.format(time.time() - self.start_time)
                     return self.testcase_time
                 elif state == 'error':
                     self.logging.error('%s : ERROR : The Running state is %s' % (run_key, state))
+                    print(' * %s : ERROR : The Running state is %s' % (run_key, state))
                     self.blueprint['log'] = content['steps']
                     return False
             else:
-                self.logging.error('ERROR : response status code %i' % response.status_code)
-                self.logging.error('ERROR : response content %s ' % response.content)
+                self.logging.error(
+                    '* ERROR : response status code %i response content %s ' % (response.status_code, response.content))
+                print(
+                    ' * ERROR : response status code %i response content %s ' % (
+                    response.status_code, response.content))
                 self.response_error_content = response.content
                 raise NameError('ERROR : response status code %i' % response.status_code)
         else:
@@ -166,16 +179,19 @@ class RequestCockpitAPI(BaseTest):
         if result:
             temp = response.json()['data']
             result = temp['result']
-            self.logging.info('RESULT: %s' % result)
+            self.logging.info(' * RESULT: %s' % result)
+            print(' * RESULT: %s' % result)
             return [result, service]
         else:
-            self.logging.error('ERROR : response status code %i %s ' % (response.status_code, response.content))
+            self.logging.error(
+                ' * ERROR : response status code %i response content %s ' % (response.status_code, response.content))
+            print(' * ERROR : response status code %i %s ' % (response.status_code, response.content))
             self.response_error_content = response.content
             raise NameError('ERROR : response status code %i' % response.status_code)
 
     def clean_cockpit(self):
         repo = self.repo['name']
-        self.logging.info('* deleting %s repository .....' % repo)
+        self.logging.info(' * Deleting %s repository .....' % repo)
         API = self.build_api(['repository', repo])
 
         result, response = self.request_handling(method='delete',
@@ -185,9 +201,11 @@ class RequestCockpitAPI(BaseTest):
                                                  expected_responce_code=204)
 
         if result:
-            self.logging.info('* DELETED : %s repo' % repo)
+            self.logging.info(' * DELETED : %s repo' % repo)
+            print(' * DELETED : %s repo' % repo)
         else:
-            self.logging.error('* ERROR : response status code %i' % response.status_code)
-            self.logging.error('* ERROR : response content %s ' % response.content)
+            self.logging.error(
+                ' * ERROR : response status code %i response content %s ' % (response.status_code, response.content))
+            print(' * ERROR : response status code %i %s ' % (response.status_code, response.content))
             self.response_error_content = response.content
             raise NameError('ERROR : response status code %i' % response.status_code)

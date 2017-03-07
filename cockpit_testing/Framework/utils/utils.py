@@ -42,7 +42,6 @@ class BaseTest(object):
         self.execution_time = ExecutionTime
 
     def setup(self):
-        print(' * Execute setup method ..... ')
         self.get_testcases_templates()
 
         if not self.values['password']:
