@@ -15,7 +15,6 @@ class RequestCockpitAPI(BaseTest):
         self.repo = {'name': self.random_string()}
         self.blueprint = {'name': self.random_string()}
         self.response_error_content = ''
-        self.cockpit_repos = []
 
     def create_new_repository(self, repository):
         '''
@@ -37,7 +36,6 @@ class RequestCockpitAPI(BaseTest):
         if result:
             self.logging.info('* CREATED : %s repo' % self.repo['name'])
             print(' * CREATED : %s repo' % self.repo['name'])
-            self.cockpit_repos.append(self.repo['name'])
         else:
             self.logging.error(
                 '* ERROR : response status code %i response content %s ' % (response.status_code, response.content))
