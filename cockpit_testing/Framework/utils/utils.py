@@ -261,7 +261,8 @@ class BaseTest(object):
 
         if specific_blueprint_list:
             for specific_blueprint in specific_blueprint_list:
-                # if specific_blueprint != file[file.find('TestCases/') + 10:]:
+                if '.yaml' not in specific_blueprint:
+                    specific_blueprint += '.yaml'
                 for file in test_cases_files:
                     if specific_blueprint != file:
                         continue
