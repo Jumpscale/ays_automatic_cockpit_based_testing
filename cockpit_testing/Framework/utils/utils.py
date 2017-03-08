@@ -123,6 +123,7 @@ class BaseTest(object):
                 client_response.raise_for_status()
         else:
             self.account = self.values['account']
+            self.get_account_ID(self.account)
             self.logging.info(' * Use %s account' % self.values['account'])
 
     def run_cmd_via_subprocess(self, cmd):

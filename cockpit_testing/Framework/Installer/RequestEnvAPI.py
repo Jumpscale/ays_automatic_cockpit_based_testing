@@ -2,6 +2,7 @@ from cockpit_testing.Framework.utils.utils import BaseTest
 import time, requests
 from bs4 import BeautifulSoup
 
+
 class RequestEnvAPI(BaseTest):
     def __init__(self):
         super(RequestEnvAPI, self).__init__()
