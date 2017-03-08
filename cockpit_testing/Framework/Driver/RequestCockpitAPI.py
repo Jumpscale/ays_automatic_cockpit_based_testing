@@ -12,6 +12,7 @@ import time
 class RequestCockpitAPI(BaseTest):
     def __init__(self):
         super(RequestCockpitAPI, self).__init__()
+        self.log('Driver.log')
         self.repo = {'name': self.random_string()}
         self.blueprint = {'name': self.random_string()}
         self.response_error_content = ''

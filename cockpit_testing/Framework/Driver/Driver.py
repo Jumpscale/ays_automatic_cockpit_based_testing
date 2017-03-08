@@ -19,6 +19,7 @@ if __name__ == '__main__':
 
     print(' * Driver is running ..... ')
     base_test = BaseTest()
+    base_test.log('Driver.log')
     base_test.check_cockpit_is_exist()
 
     THREADS_NUMBER = int(base_test.values['threads_number'])
