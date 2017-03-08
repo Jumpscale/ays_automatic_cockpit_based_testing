@@ -109,3 +109,7 @@ class ExecuteRemoteCommands():
             elif branch not in result[0]:
                 self.baseTest.logging.error(' * ERROR : %s branch is not matching with %s:%s branch' % (branch, item, result))
                 print(' * ERROR : %s branch is not matching with %s:%s branch' % (branch, item, result))
+            else:
+                self.baseTest.logging.error(' * OK : %s branch is matching with %s:%s branch' % (branch, item, result))
+                print(' * OK : %s branch is matching with %s:%s branch' % (branch, item, result))
+                
