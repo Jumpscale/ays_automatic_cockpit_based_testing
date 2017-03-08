@@ -18,7 +18,7 @@ class BaseTest(object):
         self.account = ''
         self.account_id = ''
         self.logging = logging
-        self.log()
+        #self.log()
         self.values = {'environment': '',
                        'username': '',
                        'password': '',
@@ -277,8 +277,8 @@ class BaseTest(object):
             raise NameError('There is no %s blueprint in TestCases dir' % str(specific_blueprint_list))
         return test_cases_path
 
-    def log(self):
-        self.logging.basicConfig(filename="log.log", filemode='w', level=logging.INFO,
+    def log(self, log_file_name='log.log'):
+        self.logging.basicConfig(filename=log_file_name, filemode='w', level=logging.INFO,
                                  format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
         '''
         How to use:

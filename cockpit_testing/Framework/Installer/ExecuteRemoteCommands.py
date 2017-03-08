@@ -112,4 +112,3 @@ class ExecuteRemoteCommands():
             else:
                 self.baseTest.logging.error(' * OK : %s branch is matching with %s:%s branch' % (branch, item, result))
                 print(' * OK : %s branch is matching with %s:%s branch' % (branch, item, result))
-                

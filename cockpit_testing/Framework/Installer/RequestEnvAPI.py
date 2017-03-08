@@ -7,7 +7,7 @@ class RequestEnvAPI(BaseTest):
     def __init__(self):
         super(RequestEnvAPI, self).__init__()
         self.get_client()
-        self.log()
+        self.log('Installer.log')
         self.client_header = {'Content-Type': 'application/x-www-form-urlencoded',
                               'Accept': 'application/json'}
         self.cloudspace = {}
