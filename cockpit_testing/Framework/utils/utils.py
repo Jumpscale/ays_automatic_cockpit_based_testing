@@ -10,7 +10,7 @@ import logging
 import time
 import configparser
 from cockpit_testing.Config.blueprintExecutionTime import ExecutionTime
-
+from random import randint
 
 class BaseTest(object):
     def __init__(self):
@@ -67,6 +67,10 @@ class BaseTest(object):
     @staticmethod
     def random_string():
         return str(uuid.uuid4()).replace("-", "")[:10]
+
+    @staticmethod
+    def random_integer(min_val, max_val):
+        return randint(int(min_val), int(max_val))
 
     def build_api(self, api_list):
         api = self.values['cockpit_url'] + '/'
