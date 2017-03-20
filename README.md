@@ -247,11 +247,15 @@ vim config.ini
   username = <username>
   password = <password>
   location = du-conv-2
+  client_id =
+  client_secret =  
 ```
  - environment : URL Of the environment
  - username : environment username
  - password : environment username password
  - location : enviroment location to install cloudspace
+ - client_id : itsyouonlne organization name
+ - client_secret : itsyouonlne client secret
 
 
 * From your terminal make sure that the current directory is ays_automatic_cockpit_based_testing
