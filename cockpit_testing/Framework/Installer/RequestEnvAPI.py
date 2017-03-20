@@ -67,6 +67,7 @@ class RequestEnvAPI(BaseTest):
             else:
                 self.logging.error(' * ERROR : response status code %i' % client_response.status_code)
                 self.logging.error(' * ERROR : response content %s' % client_response.content)
+                print(' * ERROR : response content %s' % client_response.content)
                 time.sleep(1)
 
                 continue
