@@ -1,0 +1,36 @@
+param.cfg.admingroups          =
+    'admin',
+
+param.cfg.appdir               = '$base/apps/portals/portalbase'
+param.cfg.authentication.method = 'me'
+param.cfg.client_id = 'quality_cockpit_'
+param.cfg.client_logout_url    = ''
+param.cfg.client_scope = 'user:email:main,user:memberof:quality_cockpit_'
+param.cfg.client_secret = '5AdYaoxNe42G-FDWGPB_H3xJ2eKMgyM6DJE4BUqquM_Lfla9bKjN'
+param.cfg.client_url           = 'https://itsyou.online/v1/oauth/authorize'
+param.cfg.client_user_info_url = 'https://itsyou.online/api/users/'
+param.cfg.contentdirs          = ''
+param.cfg.defaultspace         = 'system'
+param.cfg.filesroot            = '$vardir/portal/files'
+param.cfg.force_oauth_instance = 'itsyou.online'
+param.cfg.gitlab.connection    = 'main'
+param.cfg.grafana              =
+    host:'127.0.0.1',
+    port:'3000',
+
+param.cfg.influx               =
+    host:'127.0.0.1',
+    port:'8086',
+
+param.cfg.ipaddr               = '127.0.0.1'
+param.cfg.port                 = '82'
+param.cfg.production = true
+param.cfg.redirect_url = 'https://192.168.28.61/restmachine/system/oauth/authorize'
+param.cfg.token_url = 'https://itsyou.online/v1/oauth/access_token'
+param.mongoengine.connection   =
+    host:'127.0.0.1',
+    port:'27017',
+
+param.portal.rootpasswd        = 'admin'
+param.cfg.organization = 'quality_cockpit_'
+param.cfg.oauth.default_groups =

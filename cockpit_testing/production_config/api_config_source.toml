@@ -1,0 +1,15 @@
+[mode]
+prod = true
+
+[oauth]
+client_secret = "5AdYaoxNe42G-FDWGPB_H3xJ2eKMgyM6DJE4BUqquM_Lfla9bKjN"
+redirect_uri = "https://192.168.28.61/api/oauth/callback"
+client_id = "quality_cockpit_"
+organization = "quality_cockpit_"
+jwt_key = ""
+
+[api]
+[api.ays]
+port = 5000
+host = "0.0.0.0"
+debug = true
