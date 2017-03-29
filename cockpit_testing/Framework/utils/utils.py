@@ -11,7 +11,7 @@ import time
 import configparser
 from cockpit_testing.Config.blueprintExecutionTime import ExecutionTime
 from random import randint
-
+from cockpit_testing.Framework.utils.skiptest import skiptests
 class BaseTest(object):
     def __init__(self):
         self.clone = False
@@ -40,6 +40,7 @@ class BaseTest(object):
         self.Testcases_results = {'Blueprint Name': ['Test Result', 'Execution Time']}
         self.requests = requests
         self.execution_time = ExecutionTime
+        self.skiptests=skiptests.copy()
 
     def setup(self):
         self.get_testcases_templates()
@@ -250,8 +251,8 @@ class BaseTest(object):
                     failuer.text = " service: %s - Message: %s" % (service_name, failuer_message)
                 elif 'Skip' in item[0]:
                     skipped = SubElement(testcase, 'skipped')
-                    skipped_message = str(item[0])
-                    service_name = str(item[1])
+                    skipped_message = str(item[2])
+                    service_name = str(item[3])
                     skipped.text = " service: %s - Message: %s" % (service_name, skipped_message)
         resultFile = open('testresults.xml', 'w')
         resultFile.write(BeautifulSoup((tostring(testsuit)), 'xml').prettify())
@@ -262,11 +263,18 @@ class BaseTest(object):
         test_cases_directory = os.path.join(utils_dir, "../TestCases/")
         test_cases_files = os.listdir(test_cases_directory)
         test_cases_path = []
-
+        skip_testcases=[]
         if specific_blueprint_list:
             for specific_blueprint in specific_blueprint_list:
                 if '.yaml' not in specific_blueprint:
                     specific_blueprint += '.yaml'
+                if specific_blueprint in self.skiptests:
+                    print((' * Test case : %s --skip' % specific_blueprint))
+                    self.Testcases_results[specific_blueprint] = []
+                    self.Testcases_results[specific_blueprint].append(['Skip',0, skiptests[specific_blueprint],specific_blueprint])
+                    skip_testcases.append(specific_blueprint)
+                    continue
+
                 for file in test_cases_files:
                     if specific_blueprint != file:
                         continue
@@ -277,7 +285,7 @@ class BaseTest(object):
             for file in test_cases_files:
                 test_cases_path.append(os.path.join(test_cases_directory, file))
 
-        if len(test_cases_path) == 0 and len(test_cases_files) > 0:
+        if len(test_cases_path) == 0 and len(test_cases_files) > 0 and len(skip_testcases) == 0:
             raise NameError('There is no %s blueprint in TestCases dir' % str(specific_blueprint_list))
         return test_cases_path
 
