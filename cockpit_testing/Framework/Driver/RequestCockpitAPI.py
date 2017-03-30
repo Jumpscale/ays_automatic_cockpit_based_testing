@@ -130,7 +130,7 @@ class RequestCockpitAPI(BaseTest):
 
         API = self.build_api(['repository', repository, 'aysrun', run_key])
 
-        waiting_time = self.get_waiting_time(bpFileName) or 300
+        waiting_time = self.get_waiting_time(bpFileName) or 100
         for _ in range(waiting_time):
             response = self.requests.get(url=API, headers=self.header)
 

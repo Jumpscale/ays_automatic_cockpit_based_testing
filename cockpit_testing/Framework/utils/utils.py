@@ -9,7 +9,7 @@ from .client import Client
 import logging
 import time
 import configparser
-from cockpit_testing.Config.blueprintExecutionTime import ExecutionTime
+from cockpit_testing.Framework.utils.blueprintExecutionTime import ExecutionTime
 from random import randint
 from cockpit_testing.Framework.utils.skiptest import skiptests
 class BaseTest(object):
@@ -62,6 +62,7 @@ class BaseTest(object):
         client_response = self.client._session.post(url=api, headers=client_header, data=client_body)
         if client_response.status_code == 200:
             self.logging.info('DONE: Delete %s account' % self.values['account'])
+            print(' [*] DONE: Deleted %s account' % self.values['account'])
         else:
             client_response.raise_for_status()
 
@@ -305,7 +306,7 @@ class BaseTest(object):
         if method not in ['post', 'get', 'delete']:
             raise NameError(" * %s method isn't handled" % method)
 
-        for _ in range(50):
+        for _ in range(30):
             try:
                 if method == 'get':
                     response = self.requests.get(url=api, headers=headers, data=body)
