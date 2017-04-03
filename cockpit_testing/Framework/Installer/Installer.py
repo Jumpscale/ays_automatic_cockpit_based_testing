@@ -4,7 +4,7 @@ from UpdateConfig import UpdateConfigFile
 from optparse import OptionParser
 
 if __name__ == '__main__':
-    print(' * Installer is running .... ')
+    print(' [*] Installer is running .... ')
 
     parser = OptionParser()
     parser.add_option('-b', help=' * branch, Default : 8.1.0 ', dest='branch', default='8.1.0', action='store')
@@ -29,9 +29,14 @@ if __name__ == '__main__':
         requestEnvAPI.create_account()
     requestEnvAPI.create_cloudspace()
     requestEnvAPI.create_virtualmachine()
-    requestEnvAPI.create_port_forward(publicPorts={22: 2222,
-                                                   82: 80,
-                                                   5000: 5000})
+    if JS_branch == '8.1.0' or JS_branch == '8.1.1':
+        requestEnvAPI.create_port_forward(publicPorts={22: 2222,
+                                                       82: 80,
+                                                       5000: 5000})
+    else:
+        requestEnvAPI.create_port_forward(publicPorts={22: 2222,
+                                                       8200: 80,
+                                                       5000: 5000})
     executeRemoteCommands = ExecuteRemoteCommands(ip=requestEnvAPI.cloudspace['ip'],
                                                   port=2222,
                                                   username='cloudscalers',

@@ -22,54 +22,64 @@ class ExecuteRemoteCommands:
         self.portal_config = os.path.join(script_dir, '../../production_config/portal_config.hrd')
 
     def connect_to_virtual_machine(self):
-        self.baseTest.logging.info(' * Connecting to the virtual machine .. ')
-        print(' * Connecting to the virtual machine .. ')
+        self.baseTest.logging.info(' [*] Connecting to the virtual machine .. ')
+        print(' [*] Connecting to the virtual machine .. ')
         for _ in range(300):
             try:
                 self.ssh.connect(self.ip, port=self.port, username=self.username, password=self.password)
                 break
             except:
                 time.sleep(2)
-                self.baseTest.logging.info(' * Trying to connect to the virtual machine .. ')
+                self.baseTest.logging.info(' [*] Trying to connect to the virtual machine .. ')
         else:
             self.ssh.connect(self.ip, port=self.port, username=self.username, password=self.password)
 
     def update_machine(self):
-        self.baseTest.logging.info(' * Updating virtual machine OS ... ')
-        print(' * Updating virtual machine OS ... ')
+        self.baseTest.logging.info(' [*] Updating virtual machine OS ... ')
+        print(' [*] Updating virtual machine OS ... ')
         command = 'echo %s | sudo -S apt-get update' % self.password
         self.execute_command(command=command)
 
     def install_js(self, branch):
-        self.baseTest.logging.info(' * Creating jsInstaller file .... ')
-        print(' * Creating jsInstaller file .... ')
+        self.baseTest.logging.info(' [*] Creating jsInstaller file .... ')
+        print(' [*] Creating jsInstaller file .... ')
         command = """echo 'cd $TMPDIR;\nexport JSBRANCH=%s;\ncurl -k https://raw.githubusercontent.com/Jumpscale/jumpscale_core8/$JSBRANCH/install/install.sh?$RANDOM > install.sh;\nbash install.sh;' > jsInstaller.sh""" % branch
         self.execute_command(command=command)
 
-        self.baseTest.logging.info(' * Executing jsInstaller from %s branch .... ' % branch)
-        print(' * Executing jsInstaller .... ')
+        self.baseTest.logging.info(' [*] Executing jsInstaller from %s branch .... ' % branch)
+        print(' [*] Executing jsInstaller .... ')
         command = 'echo %s | sudo -S bash jsInstaller.sh' % self.password
         result = self.execute_command(command=command)
 
         if len(result) == 0:
-            self.baseTest.logging.error(' * FAIL : fail in executing jsInstaller file .... ')
-            print(' * FAIL : fail in executing jsInstaller file .... ')
-            # raise NameError(' * FAIL : fail in executing jsInstaller file .... ')
+            self.baseTest.logging.error(' [*] FAIL : fail in executing jsInstaller file .... ')
+            print(' [*] FAIL : fail in executing jsInstaller file .... ')
+            # raise NameError(' [*] FAIL : fail in executing jsInstaller file .... ')
 
     def install_cockpit(self, branch):
-        self.baseTest.logging.info(' * Creating cockpitInstaller.py file ... ')
-        print(' * Creating cockpitInstaller.py file ... ')
-        command = """echo 'from JumpScale import j\ncuisine = j.tools.cuisine.local\ncuisine.solutions.cockpit.install_all_in_one(start=True, branch="%s", reset=True, ip="%s")' >  cockpitInstaller.py""" % (
-            branch, self.ip)
+        self.baseTest.logging.info(' [*] Creating cockpitInstaller.py file ... ')
+        print(' [*] Creating cockpitInstaller.py file ... ')
+        if branch == '8.1.0' or branch == '8.1.1':
+            command = """echo 'from JumpScale import j\ncuisine = j.tools.cuisine.local\ncuisine.solutions.cockpit.install_all_in_one(start=True, branch="%s", reset=True, ip="%s")' >  cockpitInstaller.py""" % (
+                branch, self.ip)
+        else:
+            command = """echo 'from JumpScale import j\ncuisine = j.tools.cuisine.local\ncuisine.apps.portal.install()' >  cockpitInstaller.py"""
+
         self.execute_command(command=command)
 
-        self.baseTest.logging.info(' * Executing cockpitInstaller from %s brnach ... ' % branch)
-        print(' * Executing cockpitInstaller.py file ... ')
+        self.baseTest.logging.info(' [*] Executing cockpitInstaller from %s brnach ... ' % branch)
+        print(' [*] Executing cockpitInstaller.py file ... ')
         command = 'echo %s | sudo -S jspython cockpitInstaller.py' % self.password
         result = self.execute_command(command=command)
         if len(result) == 0:
-            self.baseTest.logging.error(' * FAIL : fail in executing cockpitInstaller file .... ')
-            print((' * FAIL : fail in executing cockpitInstaller file .... '))
+            self.baseTest.logging.error(' [*] FAIL : fail in executing cockpitInstaller file .... ')
+            print((' [*] FAIL : fail in executing cockpitInstaller file .... '))
+        elif branch != '8.1.0' and branch != '8.1.1':
+            command = 'echo %s | sudo -S ays start' % self.password
+            result = self.execute_command(command=command)
+            if len(result) == 0:
+                self.baseTest.logging.error(' [*] FAIL : fail in running "ays start" .... ')
+                print((' [*] FAIL :fail in running "ays start" .... '))
 
     def execute_command(self, command):
         try:
@@ -77,7 +87,7 @@ class ExecuteRemoteCommands:
             tracback = stdout.readlines()
             return tracback
         except:
-            self.baseTest.logging.error(" * ERROR : Can't execute %s command" % command)
+            self.baseTest.logging.error(" [*] ERROR : Can't execute %s command" % command)
 
     def check_cockpit_portal(self, cockpit_ip):
         url = 'http://' + cockpit_ip
@@ -89,34 +99,35 @@ class ExecuteRemoteCommands:
                 continue
             else:
                 if response.status_code == 200:
-                    self.baseTest.logging.info(' * You can access the new cockpit on : http:%s ' % self.ip)
-                    print((' * You can access the new cockpit on : http://%s ' % self.ip))
+                    self.baseTest.logging.info(' [*] You can access the new cockpit on : http:%s ' % self.ip)
+                    print((' [*] You can access the new cockpit on : http://%s ' % self.ip))
                     return True
                 else:
                     time.sleep(5)
                     continue
         else:
-            print(' * [X] FAIL : Please, Check installtion files in %s vm ' % cockpit_ip)
-            self.baseTest.logging.error(' * FAIL : Please, Check installtion files in %s vm ' % cockpit_ip)
+            print(' [*] [X] FAIL : Please, Check installtion files in %s vm ' % cockpit_ip)
+            self.baseTest.logging.error(' [*] FAIL : Please, Check installtion files in %s vm ' % cockpit_ip)
             return False
 
     def check_branchs_values(self, branch):
-        self.baseTest.logging.info(' * Getting branches versions ... ')
-        print(' * Getting branches versions ... ')
+        self.baseTest.logging.info(' [*] Getting branches versions ... ')
+        print(' [*] Getting branches versions ... ')
         dir = ['ays_jumpscale8', 'jscockpit', 'jumpscale_core8', 'jumpscale_portal8']
         for item in dir:
             command = 'cd /opt/code/github/jumpscale/%s && git branch' % item
             result = self.execute_command(command=command)
             if len(result) == 0:
-                self.baseTest.logging.error(' * FAIL : fail in getting %s branch .... ' % item)
-                print(' * FAIL : fail in getting %s branch version .... ' % item)
+                self.baseTest.logging.error(' [*] FAIL : fail in getting %s branch .... ' % item)
+                print(' [*] FAIL : fail in getting %s branch version .... ' % item)
             elif branch not in result[0]:
                 self.baseTest.logging.error(
-                    ' * ERROR : %s branch is not matching with %s:%s branch' % (branch, item, result))
-                print(' * ERROR : %s branch is not matching with %s:%s branch' % (branch, item, result))
+                    ' [*] ERROR : %s branch is not matching with %s:%s branch' % (branch, item, result))
+                print(' [*] ERROR : %s branch is not matching with %s:%s branch' % (branch, item, result))
             else:
-                self.baseTest.logging.error(' * OK : %s branch is matching with %s:%s branch' % (branch, item, result))
-                print(' * OK : %s branch is matching with %s:%s branch' % (branch, item, result))
+                self.baseTest.logging.error(
+                    ' [*] OK : %s branch is matching with %s:%s branch' % (branch, item, result))
+                print(' [*] OK : %s branch is matching with %s:%s branch' % (branch, item, result))
 
     def trasport_file(self, filepath):
         file_name = filepath.split('/')[-1]
@@ -176,8 +187,8 @@ class ExecuteRemoteCommands:
         api.close()
 
     def move_produciton_file(self):
-        self.baseTest.logging.info(' * Moving production config files .... ')
-        print(' * Moving production config files .... ')
+        self.baseTest.logging.info(' [*] Moving production config files .... ')
+        print(' [*] Moving production config files .... ')
 
         command = 'echo %s | sudo -S mv -f /home/cloudscalers/api_config.toml /optvar/cfg/cockpit_api/config.toml' % self.password
         self.execute_command(command=command)
@@ -186,8 +197,8 @@ class ExecuteRemoteCommands:
         self.execute_command(command=command)
 
     def restart_cockpit_services(self):
-        self.baseTest.logging.info(' * Restarting cockpit services .... ')
-        print(' * Restarting cockpit services .... ')
+        self.baseTest.logging.info(' [*] Restarting cockpit services .... ')
+        print(' [*] Restarting cockpit services .... ')
         command = 'echo %s | sudo -S service portal restart && sudo -S service cockpit_main restart && sudo -S service cockpit_daemon_main restart' % self.password
         self.execute_command(command=command)
 
