@@ -272,7 +272,7 @@ class BaseTest(object):
 
                 if specific_blueprint in self.skiptests:
                     print((' [*] Test case : %s --skip' % specific_blueprint))
-                    self.Testcases_results[specific_blueprint] = ['Skip', 0, skiptests[specific_blueprint], specific_blueprint]
+                    self.Testcases_results[specific_blueprint] = [['Skip', 0, skiptests[specific_blueprint], specific_blueprint]]
                     skip_testcases.append(specific_blueprint)
                     continue
 
@@ -286,7 +286,7 @@ class BaseTest(object):
             for file in test_cases_files:
                 if file in self.skiptests:
                     print((' [*] Test case : %s --skip' % file))
-                    self.Testcases_results[file] = ['Skip', 0, skiptests[file], file]
+                    self.Testcases_results[file] = [['Skip', 0, skiptests[file], file]]
                     skip_testcases.append(file)
                     continue
                 test_cases_path.append(os.path.join(test_cases_directory, file))
