@@ -77,8 +77,45 @@ class CreateBluePrint(BaseTest):
                     generate = self.random_string()
                     self.blueprint_values[key] = generate
                 new_line = line.replace('{' + key + '}', self.blueprint_values[key])
+
+            elif '{randint_' in line:
+                if '=' in line:
+                    key = line[line.index('{') + 1: line.index('=')]
+                    min_val = line[line.index('=')+1: line.index(',')]
+                    max_val = line[line.index(',')+1: line.index('}')]
+                    if key not in self.blueprint_values:
+                        generate = self.random_integer(min_val, max_val)
+                        self.blueprint_values[key] = generate
+                    new_line = line.replace('{' + key + '=%s,%s}'%(min_val, max_val) , str(self.blueprint_values[key]))
+                else:
+                    key = line[line.index('{') + 1: line.index('}')]
+                    new_line = line.replace('{' + key + '}' , str(self.blueprint_values[key]))
+
+            elif '{randitem_' in line:
+                if '[' in line:
+                    key = line[line.index('{') + 1: line.index('[')]
+                    if key not in self.blueprint_values:
+                        items_list = line[line.index('[') + 1:line.index(']')].split(',')
+                        item_index = self.random_integer(0, len(items_list)-1)
+                        self.blueprint_values[key] = items_list[item_index]
+                    new_line = line.replace(line[line.index('{'):line.index('}')+1] , str(self.blueprint_values[key]))
+                else:
+                    key = line[line.index('{') + 1: line.index('}')]
+                    new_line = line.replace(line[line.index('{'):line.index('}')+1] , str(self.blueprint_values[key]))
+
             elif '{random}' in line:
                 new_line = line.replace('{random}', self.random_string())
+
+            elif '{randint=' in line:
+                 min_val = line[line.index('=')+1: line.index(',')]
+                 max_val = line[line.index(',')+1: line.index('}')]
+                 new_line = line.replace('{randint=%s,%s}'%(min_val, max_val), str(self.random_integer(min_val, max_val)))
+
+            elif '{randitem[' in line:
+                 items_list = line[line.index('[') + 1:line.index(']')].split(',')
+                 item_index = self.random_integer(0, len(items_list)-1)
+                 new_line = line.replace(line[line.index('{'):line.index('}')+1], items_list[item_index])
+
             elif '{' in line and '}' in line:
                 key = line[line.index('{') + 1: line.index('}')]
                 new_line = line.replace('{' + key + '}', self.blueprint_values[key])

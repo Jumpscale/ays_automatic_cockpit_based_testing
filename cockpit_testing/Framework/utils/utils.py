@@ -9,9 +9,9 @@ from .client import Client
 import logging
 import time
 import configparser
-from cockpit_testing.Config.blueprintExecutionTime import ExecutionTime
-
-
+from cockpit_testing.Framework.utils.blueprintExecutionTime import ExecutionTime
+from random import randint
+from cockpit_testing.Framework.utils.skiptest import skiptests
 class BaseTest(object):
     def __init__(self):
         self.clone = False
@@ -40,6 +40,7 @@ class BaseTest(object):
         self.Testcases_results = {'Blueprint Name': ['Test Result', 'Execution Time']}
         self.requests = requests
         self.execution_time = ExecutionTime
+        self.skiptests=skiptests.copy()
 
     def setup(self):
         self.get_testcases_templates()
@@ -48,7 +49,7 @@ class BaseTest(object):
             self.values['password'] = str(input("Please, Enter %s's password : " % self.values['username']))
 
     def teardown(self):
-        print(' * Execute teardown method .... ')
+        print(' [*] Execute teardown method .... ')
         # Delete account
         if not self.account_id:
             self.get_account_ID(account=self.account)
@@ -61,12 +62,17 @@ class BaseTest(object):
         client_response = self.client._session.post(url=api, headers=client_header, data=client_body)
         if client_response.status_code == 200:
             self.logging.info('DONE: Delete %s account' % self.values['account'])
+            print(' [*] DONE: Deleted %s account' % self.values['account'])
         else:
             client_response.raise_for_status()
 
     @staticmethod
     def random_string():
         return str(uuid.uuid4()).replace("-", "")[:10]
+
+    @staticmethod
+    def random_integer(min_val, max_val):
+        return randint(int(min_val), int(max_val))
 
     def build_api(self, api_list):
         api = self.values['cockpit_url'] + '/'
@@ -94,8 +100,8 @@ class BaseTest(object):
     def create_account(self):
         # create new account
         if not self.values['account']:
-            self.logging.info(' * Create new account .... ')
-            print(' * Create new account .... ')
+            self.logging.info(' [*] Create new account .... ')
+            print(' [*] Create new account .... ')
             self.account = self.random_string()
             api = 'https://' + self.values['environment'] + '/restmachine/cloudbroker/account/create'
             client_header = {'Content-Type': 'application/x-www-form-urlencoded',
@@ -116,15 +122,15 @@ class BaseTest(object):
             if client_response.status_code == 200:
                 self.account_id = client_response.text
                 self.values['account'] = self.account
-                self.logging.info(' * DONE : Create %s account' % self.account)
+                self.logging.info(' [*] DONE : Create %s account' % self.account)
             else:
-                self.logging.error(' * ERROR : response status code %i' % client_response.status_code)
-                self.logging.error(' * ERROR : response content %s' % client_response.content)
+                self.logging.error(' [*] ERROR : response status code %i' % client_response.status_code)
+                self.logging.error(' [*] ERROR : response content %s' % client_response.content)
                 client_response.raise_for_status()
         else:
             self.account = self.values['account']
             self.get_account_ID(self.account)
-            self.logging.info(' * Use %s account' % self.values['account'])
+            self.logging.info(' [*] Use %s account' % self.values['account'])
 
     def run_cmd_via_subprocess(self, cmd):
         sub = Popen([cmd], stdout=PIPE, stderr=PIPE, shell=True)
@@ -154,16 +160,16 @@ class BaseTest(object):
             self.run_cmd_via_subprocess('cd cockpit_testing/Framework/; mkdir %s' % bps_driver_path)
             dirs = self.run_cmd_via_subprocess('ls').split('\n')[:-1]
             if 'repos' not in dirs:
-                print(' * create repos directory')
+                print(' [*] create repos directory')
                 self.run_cmd_via_subprocess('mkdir repos')
             else:
-                print(' * repos directory already exists')
+                print(' [*] repos directory already exists')
 
             dirs = self.run_cmd_via_subprocess('ls repos').split('\n')[:-1]
             if repo_name in dirs:
                 self.run_cmd_via_subprocess('cd repos; rm -rf %s' % repo_name)
-            print(' * clone repo %s' % repo)
-            print(' * branch %s' % branch)
+            print(' [*] clone repo %s' % repo)
+            print(' [*] branch %s' % branch)
             self.run_cmd_via_subprocess('cd repos; git clone -b %s %s' % (branch, repo))
         # copy blueprints test templates
         self.run_cmd_via_subprocess(
@@ -190,7 +196,7 @@ class BaseTest(object):
         self.values['jwt'] = resp.content
 
     def generate_xml_results(self):
-        print(' * Generate XML results')
+        print(' [*] Generate XML results')
         Succeeded = 0
         Errors = 0
         Failures = 0
@@ -246,8 +252,8 @@ class BaseTest(object):
                     failuer.text = " service: %s - Message: %s" % (service_name, failuer_message)
                 elif 'Skip' in item[0]:
                     skipped = SubElement(testcase, 'skipped')
-                    skipped_message = str(item[0])
-                    service_name = str(item[1])
+                    skipped_message = str(item[2])
+                    service_name = str(item[3])
                     skipped.text = " service: %s - Message: %s" % (service_name, skipped_message)
         resultFile = open('testresults.xml', 'w')
         resultFile.write(BeautifulSoup((tostring(testsuit)), 'xml').prettify())
@@ -258,11 +264,18 @@ class BaseTest(object):
         test_cases_directory = os.path.join(utils_dir, "../TestCases/")
         test_cases_files = os.listdir(test_cases_directory)
         test_cases_path = []
-
+        skip_testcases=[]
         if specific_blueprint_list:
             for specific_blueprint in specific_blueprint_list:
                 if '.yaml' not in specific_blueprint:
                     specific_blueprint += '.yaml'
+
+                if specific_blueprint in self.skiptests:
+                    print((' [*] Test case : %s --skip' % specific_blueprint))
+                    self.Testcases_results[specific_blueprint] = [['Skip', 0, skiptests[specific_blueprint], specific_blueprint]]
+                    skip_testcases.append(specific_blueprint)
+                    continue
+
                 for file in test_cases_files:
                     if specific_blueprint != file:
                         continue
@@ -271,9 +284,14 @@ class BaseTest(object):
                         break
         else:
             for file in test_cases_files:
+                if file in self.skiptests:
+                    print((' [*] Test case : %s --skip' % file))
+                    self.Testcases_results[file] = [['Skip', 0, skiptests[file], file]]
+                    skip_testcases.append(file)
+                    continue
                 test_cases_path.append(os.path.join(test_cases_directory, file))
 
-        if len(test_cases_path) == 0 and len(test_cases_files) > 0:
+        if len(test_cases_path) == 0 and len(test_cases_files) > 0 and len(skip_testcases) == 0:
             raise NameError('There is no %s blueprint in TestCases dir' % str(specific_blueprint_list))
         return test_cases_path
 
@@ -291,9 +309,9 @@ class BaseTest(object):
         # This method handle the api request errors for 10 times.
 
         if method not in ['post', 'get', 'delete']:
-            raise NameError(" * %s method isn't handled" % method)
+            raise NameError(" [*] %s method isn't handled" % method)
 
-        for _ in range(50):
+        for _ in range(30):
             try:
                 if method == 'get':
                     response = self.requests.get(url=api, headers=headers, data=body)
@@ -327,7 +345,7 @@ class BaseTest(object):
     def get_account_ID(self, account):
         client_header = {'Content-Type': 'application/x-www-form-urlencoded',
                          'Accept': 'application/json'}
-        self.logging.info(' * Get %s account ID .... ' % account)
+        self.logging.info(' [*] Get %s account ID .... ' % account)
         api = 'https://' + self.values['environment'] + '/restmachine/cloudapi/accounts/list'
         client_response = self.client._session.post(url=api, headers=client_header)
 
@@ -335,21 +353,21 @@ class BaseTest(object):
             for element in client_response.json():
                 if account == element['name']:
                     self.account_id = element['id']
-                    self.logging.info(' * DONE : Account ID : % d' % self.account_id)
+                    self.logging.info(' [*] DONE : Account ID : % d' % self.account_id)
                     break
             else:
                 self.logging.error(
-                    " * ERROR : Can't get %s account ID. Please, Make sure that %s username can get this account ID" % (
+                    " [*] ERROR : Can't get %s account ID. Please, Make sure that %s username can get this account ID" % (
                         account, self.values['username']))
                 print(
-                    " * ERROR : Can't get %s account ID. Please, Make sure that %s username can get this account ID" % (
+                    " [*] ERROR : Can't get %s account ID. Please, Make sure that %s username can get this account ID" % (
                         account, self.values['username']))
                 raise NameError(
-                    " * ERROR : Can't get '%s' account ID. Please, Make sure that '%s' username can get this account ID" % (
+                    " [*] ERROR : Can't get '%s' account ID. Please, Make sure that '%s' username can get this account ID" % (
                         account, self.values['username']))
         else:
-            self.logging.error(' * ERROR : response status code %i' % client_response.status_code)
-            self.logging.error(' * ERROR : response content %s' % client_response.content)
+            self.logging.error(' [*] ERROR : response status code %i' % client_response.status_code)
+            self.logging.error(' [*] ERROR : response content %s' % client_response.content)
             client_response.raise_for_status()
 
     def check_cockpit_is_exist(self):

@@ -208,7 +208,7 @@ def test(job):
 
 # 4. Cockpit Installer
 ### 4.1 Introduction:
-The cockpit installer is a script to automate the cockpit installation steps in the development mode.
+The cockpit installer is a script to automate the cockpit installation steps in the development/production mode.
 
 ### 4.2 The Flow Description:
 
@@ -247,11 +247,15 @@ vim config.ini
   username = <username>
   password = <password>
   location = du-conv-2
+  client_id =
+  client_secret =  
 ```
  - environment : URL Of the environment
  - username : environment username
  - password : environment username password
  - location : enviroment location to install cloudspace
+ - client_id : itsyouonlne organization name
+ - client_secret : itsyouonlne client secret
 
 
 * From your terminal make sure that the current directory is ays_automatic_cockpit_based_testing
@@ -272,12 +276,14 @@ python3 cockpit_testing/Framework/Installer/Installer.py
     -b BRANCH              * branch, Default : 8.1.0
     -a ACCOUNT, --use-account=ACCOUNT
                            * use a specific account
+    --production           * Install the cockpit in production mode
     --teardown             * Tear down the cockpit after installation
 
   ```
 
   - To install from a specific branch, add the branch number after -b option.
   - To use a specific account, Please set its name after -a option.
+  - To install a cockpit in production mode, use --production option.
   - To delete this cockpit, use --teardown option.
 
 * Check logs in log.log file.
