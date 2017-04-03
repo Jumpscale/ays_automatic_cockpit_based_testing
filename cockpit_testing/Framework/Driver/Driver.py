@@ -17,7 +17,7 @@ if __name__ == '__main__':
                         action='store_true')
     options = parser.parse_args()
 
-    print(' * Driver is running ..... ')
+    print(' [*] Driver is running ..... ')
     base_test = BaseTest()
     base_test.log('Driver.log')
     base_test.check_cockpit_is_exist()
@@ -64,9 +64,9 @@ if __name__ == '__main__':
         while not queue.empty():
             testCasesPath = queue.get()
             bpFileName = testCasesPath[testCasesPath.index('/TestCases/') + 11:]
-            print((' * Test case : %s' % bpFileName))
+            print(('\n [*] Test case : %s' % bpFileName))
             base_test.logging.info('\n')
-            base_test.logging.info('* Test case : %s' % bpFileName)
+            base_test.logging.info('[*] Test case : %s' % bpFileName)
 
             try:
                 blueprint = create_blueprint.load_blueprint(testCasesPath=testCasesPath)
